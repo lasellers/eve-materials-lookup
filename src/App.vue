@@ -1,28 +1,67 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+    <div id="app">
+        <div class="row">
+            <div class="col-2">
+                <LoaderBox/>
+            </div>
+            <div class="col-10">
+                <TitleBox/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <RegionBox/>
+            </div>
+            <div class="col-2">
+                <ConstellationBox/>
+            </div>
+            <div class="col-2">
+                <ResourcesBox box="0"/>
+            </div>
+            <div class="col-2">
+                <ResourcesBox box="1"/>
+            </div>
+            <div class="col-2">
+                <ResourcesBox box="2"/>
+            </div>
+            <div class="col-2">
+                <ResourcesBox box="3"/>
+            </div>
+            <div class="col-2">
+                <ResourcesBox box="4"/>
+            </div>
+        </div>
+        <DisplayedResources/>
+    </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+    import TitleBox from './components/TitleBox.vue'
+    import LoaderBox from './components/LoaderBox.vue'
+    import RegionBox from './components/RegionBox.vue'
+    import ConstellationBox from './components/ConstellationBox.vue'
+    import ResourcesBox from './components/ResourcesBox.vue'
+    import DisplayedResources from '@/components/DisplayedResources'
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+    export default {
+        name: 'App',
+        components: {
+            DisplayedResources,
+            TitleBox,
+            LoaderBox,
+            RegionBox,
+            ConstellationBox,
+            ResourcesBox
+        }
+    }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+    #app {
+        font-family: Avenir, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-align: center;
+        color: #2c3e50;
+    }
 </style>
