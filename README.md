@@ -31,12 +31,13 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ## Deploy
 
+```
 git checkout -b gh-pages
 git add dist
 npm run build
 git subtree push --prefix dist origin gh-pages 
 git push origin gh-pages
-
+```
 
 ## Versions
 * v1 September 19 2020. Pulled together in a few hours Saturday partly to practice using VueJS and
