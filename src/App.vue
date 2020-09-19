@@ -1,47 +1,46 @@
 <template>
     <div id="app">
-        <div class="row">
-            <div class="col-2">
-                <LoaderBox/>
-            </div>
-            <div class="col-10">
-                <TitleBox/>
-            </div>
-        </div>
+        <LoaderBox/>
+
+        <TitleBox/>
 
         <div class="row">
-            <div class="col-5">
+            <div class="col-md-5 col-ld-5">
                 <RegionBox/>
             </div>
-            <div class="col-2">
+            <div class="col-md-2 col-lg-1">
                 <b>Or</b>
             </div>
-            <div class="col-5">
+            <div class="col-md-5 col-lg-5">
                 <ConstellationBox/>
             </div>
         </div>
 
+        <hr/>
+
         <div class="row">
-            <div class="col-1">
-                Resources:
+            <div class="col-md-1 col-lg-1">
+                <b>Resources</b>
             </div>
-            <div class="col-2">
+            <div class="col-md-3 col-lg-2">
                 <ResourcesBox box="0"/>
             </div>
-            <div class="col-2">
+            <div class="col-md-3 col-lg-2">
                 <ResourcesBox box="1"/>
             </div>
-            <div class="col-2">
+            <div class="col-md-3 col-lg-2">
                 <ResourcesBox box="2"/>
             </div>
-            <div class="col-2">
+            <div class="col-md-3 col-lg-2">
                 <ResourcesBox box="3"/>
             </div>
-            <div class="col-2">
+            <div class="col-md-3 col-lg-2">
                 <ResourcesBox box="4"/>
             </div>
         </div>
         <DisplayedResources/>
+        <Notice/>
+
     </div>
 </template>
 
@@ -52,6 +51,7 @@
     import ConstellationBox from './components/ConstellationBox.vue'
     import ResourcesBox from './components/ResourcesBox.vue'
     import DisplayedResources from '@/components/DisplayedResources'
+    import Notice from './components/Notice.vue'
 
     export default {
         name: 'App',
@@ -61,7 +61,8 @@
             LoaderBox,
             RegionBox,
             ConstellationBox,
-            ResourcesBox
+            ResourcesBox,
+            Notice
         }
     }
 </script>
@@ -73,5 +74,11 @@
         -moz-osx-font-smoothing: grayscale;
         text-align: center;
         color: #2c3e50;
+    }
+
+    @media only screen and (max-width: 1024px) {
+        body, p, th, td {
+            font-size: smaller;
+        }
     }
 </style>

@@ -1,16 +1,12 @@
 <template>
     <div class="displayedResources">
+
         <div class="row">
-            <div class="col-2">Region: {{region}}</div>
-            <div class="col-2">Cons: {{constellation}}</div>
-            <div class="col-6">Resource Filters: {{resourceFilters.join(',')}}</div>
-            <div class="col-2">Displayed Resources: {{displayedResourcesCount}}</div>
+            <div class="col-6"><small>Resources: {{resourcesCount}}</small></div>
+            <div class="col-6"><small>Displayed Resources: {{displayedResourcesCount}}</small></div>
         </div>
-        <br/>
 
-        <p v-if="!(rows.length>0)">None.</p>
-
-        <table v-if="rows.length>0" id="displayed-resources-list" class="table table-striped">
+        <table id="displayed-resources-list" class="table table-striped">
             <thead>
             <tr>
                 <th>Planet Id</th>
@@ -39,6 +35,8 @@
             </tbody>
         </table>
 
+        <p v-if="!(rows.length>0)">No displayed resources -- Select Region or Constellation to begin.</p>
+
     </div>
 </template>
 
@@ -66,6 +64,9 @@
             resourceFilters() {
                 return this.$store.getters.resourceFilters
             },
+            resourcesCount() {
+                return this.$store.getters.resourcesCount
+            },
             displayedResourcesCount() {
                 return this.$store.getters.displayedResourcesCount
             },
@@ -74,21 +75,13 @@
 </script>
 
 <style scoped lang="scss">
-    h3 {
-        margin: 40px 0 0;
-    }
-
-    ul {
+    select {
         list-style-type: none;
         padding: 0;
     }
 
-    li {
+    option {
         display: inline-block;
         margin: 0 10px;
-    }
-
-    a {
-        color: #42b983;
     }
 </style>

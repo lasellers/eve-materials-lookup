@@ -12,7 +12,7 @@ export default new Vuex.Store({
         displayedResources: [],
         resourceFilters: [null, null, null, null, null],
         regionsForSelection: [],
-        region: null,
+        region: 'Delve',
         constellationsForSelection: [],
         constellation: null
     },
