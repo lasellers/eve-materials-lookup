@@ -104,38 +104,39 @@ export default new Vuex.Store({
             store.resourceFilters[index] = resource
         },
         computeDisplayedResources(store) {
-            let rows = store.resources
-            // get list of resource filters without nulls
-            const resourceFilters = store.resourceFilters.filter(item => {
-                return (item !== null)
-            })
             // filter out everything by regions or constellations and optionally up to 5 resource types
-            const newRows = rows.filter(row => {
+            if (store.region === null && store.constellation === null) {
                 // short circuit
-                if (store.region === null && store.constellation === null) {
-                    return false
-                }
+                store.displayedResources = [];
+            } else {
+                // get list of resource filters without nulls
+                const resourceFilters = store.resourceFilters.filter(item => {
+                    return (item !== null)
+                })
 
-                if (resourceFilters.length === 0) {
-                    if (store.region !== null && row[1] === store.region) {
+                //
+                const newRows = store.resources.filter(row => {
+                    if (resourceFilters.length === 0) {
+                        if (store.region !== null && row[1] === store.region) {
+                            return true;
+                        } else if (store.constellation !== null && row[2] === store.constellation) {
+                            return true;
+                        }
+                        return false;
+                    }
+
+                    if ((store.region !== null && row[1] === store.region) &&
+                        resourceFilters.includes(row[6])) {
                         return true;
-                    } else if (store.constellation !== null && row[2] === store.constellation) {
+                    } else if ((store.constellation !== null && row[2] === store.constellation) &&
+                        resourceFilters.includes(row[6])) {
                         return true;
                     }
+
                     return false;
-                }
-
-                if ((store.region !== null && row[1] === store.region) &&
-                    resourceFilters.includes(row[6])) {
-                    return true;
-                } else if ((store.constellation !== null && row[2] === store.constellation) &&
-                    resourceFilters.includes(row[6])) {
-                    return true;
-                }
-
-                return false;
-            });
-            store.displayedResources = newRows
+                });
+                store.displayedResources = newRows
+            }
 
             store.displayedResources.sort(function (a, b) {
                 return b[8] - a[8]
