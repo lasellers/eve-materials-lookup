@@ -67,57 +67,79 @@ export default new Vuex.Store({
             store.resources = rows
 
             // regions
-            let regions = []
+            store.regionsForSelection = []
             rows.map(row => {
                 const region = row[1]
-                if (!regions.includes(region))
-                    regions.push(region)
+                if (!store.regionsForSelection.includes(region))
+                    store.regionsForSelection.push(region)
             })
-            console.log(regions)
-            store.regionsForSelection = regions.slice(0, 500)
+            store.regionsForSelection.sort()
 
             // resources
-            let resources = []
+            store.resourcesForSelection = []
             rows.map(row => {
                 const resource = row[6]
-                if (!resources.includes(resource))
-                    resources.push(resource)
+                if (!store.resourcesForSelection.includes(resource))
+                    store.resourcesForSelection.push(resource)
             })
-            console.log(resources)
-            store.resourcesForSelection = resources.slice(0, 500)
+            store.resourcesForSelection.sort()
 
             // constellations
-            let constellations = []
+            store.constellationsForSelection = []
             rows.map(row => {
                 const constellation = row[2]
-                if (!constellations.includes(constellation))
-                    constellations.push(constellation)
+                if (!store.constellationsForSelection.includes(constellation))
+                    store.constellationsForSelection.push(constellation)
             })
-            console.log(constellations)
-            store.constellationsForSelection = constellations.slice(0, 500)
-        },
-        computeDisplayedResources(store, rows) {
-            if (store.region === null) {
-                store.displayedResources = rows
-            } else {
-                const newRows = store.resources.filter(row => {
-                    if (row[1] === store.region) {
-                        return true;
-                    }
-                    return false;
-                });
-                store.displayedResources = newRows
-            }
+            store.constellationsForSelection.sort()
         },
         changeRegion(store, value) {
-            store.region = value
+            store.region = value === "" ? null : value
         },
         changeConstellation(store, value) {
-            store.constellation = value
+            store.constellation = value === "" ? null : value
         },
         changeResourceFilter(store, values) {
             const [index, resource] = values
             store.resourceFilters[index] = resource
+        },
+        computeDisplayedResources(store) {
+            let rows = store.resources
+            // get list of resource filters without nulls
+            const resourceFilters = store.resourceFilters.filter(item => {
+                return (item !== null)
+            })
+            // filter out everything by regions or constellations and optionally up to 5 resource types
+            const newRows = rows.filter(row => {
+                // short circuit
+                if (store.region === null && store.constellation === null) {
+                    return false
+                }
+
+                if (resourceFilters.length === 0) {
+                    if (store.region !== null && row[1] === store.region) {
+                        return true;
+                    } else if (store.constellation !== null && row[2] === store.constellation) {
+                        return true;
+                    }
+                    return false;
+                }
+
+                if ((store.region !== null && row[1] === store.region) &&
+                    resourceFilters.includes(row[6])) {
+                    return true;
+                } else if ((store.constellation !== null && row[2] === store.constellation) &&
+                    resourceFilters.includes(row[6])) {
+                    return true;
+                }
+
+                return false;
+            });
+            store.displayedResources = newRows
+
+            store.displayedResources.sort(function (a, b) {
+                return b[8] - a[8]
+            });
         },
     },
 
@@ -128,19 +150,17 @@ export default new Vuex.Store({
         addResources(context, value) {
             context.commit('addResources', value)
         },
-        computeDisplayedResources(context, values) {
-            // let values = context.store.state.materials.slice(0, 900)
-            let newValues = values.slice(0, 900)
-            context.commit('computeDisplayedResources', newValues)
-        },
-        changeResourceFilter(context, values) {
-            context.commit('changeResourceFilter', values)
-        },
         changeRegion(context, value) {
             context.commit('changeRegion', value)
         },
         changeConstellation(context, value) {
             context.commit('changeConstellation', value)
+        },
+        changeResourceFilter(context, values) {
+            context.commit('changeResourceFilter', values)
+        },
+        computeDisplayedResources(context) {
+            context.commit('computeDisplayedResources')
         },
     }
 })

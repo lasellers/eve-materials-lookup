@@ -2,9 +2,7 @@
   <div class="constellationbox">
     Constellation: <select v-bind:id="constellationsForSelection" v-on:change="onChange">
       <option key=-1 value=""> (None)</option>
-      <option v-for="(constellation, index) in constellationsForSelection"
-              :key="index"
-              v-bind:value="constellation">
+      <option v-for="(constellation, index) in constellationsForSelection" :key="index" v-bind:value="constellation">
         {{constellation}}
       </option>
     </select>
@@ -31,6 +29,7 @@
       onChange: async function (event) {
         this.constellation = event.target.value
         this.$store.dispatch('changeConstellation', this.constellation)
+        this.$store.dispatch('computeDisplayedResources')
       },
     }
   }

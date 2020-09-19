@@ -8,12 +8,22 @@
                 <TitleBox/>
             </div>
         </div>
+
         <div class="row">
-            <div class="col-2">
+            <div class="col-5">
                 <RegionBox/>
             </div>
             <div class="col-2">
+                <b>Or</b>
+            </div>
+            <div class="col-5">
                 <ConstellationBox/>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-1">
+                Resources:
             </div>
             <div class="col-2">
                 <ResourcesBox box="0"/>

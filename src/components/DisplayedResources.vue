@@ -1,8 +1,12 @@
 <template>
     <div class="displayedResources">
-        Region: {{region}}
-        Resource Filters: {{resourceFilters.join(',')}}
-        <br />
+        <div class="row">
+            <div class="col-2">Region: {{region}}</div>
+            <div class="col-2">Cons: {{constellation}}</div>
+            <div class="col-6">Resource Filters: {{resourceFilters.join(',')}}</div>
+            <div class="col-2">Displayed Resources: {{displayedResourcesCount}}</div>
+        </div>
+        <br/>
 
         <p v-if="!(rows.length>0)">None.</p>
 
@@ -56,9 +60,15 @@
             region() {
                 return this.$store.getters.region
             },
+            constellation() {
+                return this.$store.getters.constellation
+            },
             resourceFilters() {
                 return this.$store.getters.resourceFilters
-            }
+            },
+            displayedResourcesCount() {
+                return this.$store.getters.displayedResourcesCount
+            },
         },
     }
 </script>

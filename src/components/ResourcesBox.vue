@@ -1,9 +1,7 @@
 <template>
         <select v-bind:id="resourcesForSelection" v-on:change="onChange">
             <option key=-1 value="">(None)</option>
-            <option v-for="(resource, index) in resourcesForSelection"
-                    :key="index"
-                    v-bind:value="resource">
+            <option v-for="(resource, index) in resourcesForSelection" :key="index" v-bind:value="resource">
                 {{resource}}
             </option>
         </select>
@@ -30,6 +28,7 @@
             onChange: async function (event) {
                 this.resource = event.target.value
                 this.$store.dispatch('changeResourceFilter', [this.box, this.resource])
+                this.$store.dispatch('computeDisplayedResources')
             },
         }
     }

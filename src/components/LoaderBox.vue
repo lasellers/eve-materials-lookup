@@ -1,6 +1,5 @@
 <template>
     <div class="loaderbox">
-        <p v-if="resourcesCount>0">Loaded</p>
         <p v-if="resourcesCount===0">Loading</p>
     </div>
 </template>
@@ -27,7 +26,7 @@
 
                 this.$store.dispatch('addHeaders', headers)
                 this.$store.dispatch('addResources', rawRows)
-                this.$store.dispatch('computeDisplayedResources', rawRows)
+                this.$store.dispatch('computeDisplayedResources')
 
                 this.resourcesCount = this.$store.getters.resourcesCount
             },
@@ -36,12 +35,9 @@
                 const rows = csv.trim().split('\n')
                 const headers = rows.shift().trim().split(',')
                 const newRows = []
-                let count = 0
                 rows.forEach(row => {
-                    if (++count < 1000) {
-                        const line = row.trim()
-                        newRows.push(line.split(','))
-                    }
+                    const line = row.trim()
+                    newRows.push(line.split(','))
                 })
                 return [
                     headers,

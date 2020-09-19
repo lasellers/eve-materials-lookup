@@ -2,8 +2,7 @@
     <div class="titlebox">
         <h1>Eve Echoes Planetary Materials Lookup</h1>
         <div class="row">
-            <div class="col-6">Resources Count: {{resourcesCount}}</div>
-            <div class="col-6">Displayed Resources Count: {{displayedResourcesCount}}</div>
+            <div class="col-12">Resources Count: {{resourcesCount}}</div>
         </div>
     </div>
 </template>
@@ -13,8 +12,7 @@
         name: 'TitleBox',
         data() {
             return {
-                resourcesCount: 0,
-                displayedResourcesCount: 0,
+                resourcesCount: 0
             }
         },
         created() {
@@ -23,7 +21,6 @@
         methods: {
             onFileLoad: function () {
                 this.resourcesCount = this.$store.getters.resourcesCount
-                this.displayedResourcesCount = this.$store.getters.displayedResourcesCount
             },
         }
     }
