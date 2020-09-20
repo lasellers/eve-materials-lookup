@@ -6,7 +6,7 @@
         <div class="container-fluid">
 
             <div class="row">
-                <div class="col-md-3 col-ld-3">
+                <div class="col-md-4 col-ld-4">
                     <RegionBox/>
                 </div>
                 <div class="col-md-1 col-lg-1 d-flex align-items-md-center" v-if="unimportant">
