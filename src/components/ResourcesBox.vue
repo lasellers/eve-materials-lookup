@@ -1,5 +1,5 @@
 <template>
-    <select v-bind:id="resourcesForSelection" v-on:change="onChange" class="form-control">
+    <select v-bind:id="index" v-on:change="onChange" class="form-control">
         <option key=-1 value="">(None)</option>
         <option v-for="(resource, index) in resourcesForSelection" :key="index" v-bind:value="resource">
             {{resource}}
@@ -11,19 +11,15 @@
     export default {
         name: 'ResourcesBox',
         props: ['box'],
-        components: {},
         data() {
-            return {
-                resourcesForSelection: []
-            }
+            return {}
         },
-        created() {
-            this.onLoad()
+        computed: {
+            resourcesForSelection: function () {
+                return this.$store.getters.resourcesForSelection
+            },
         },
         methods: {
-            onLoad: function () {
-                this.resourcesForSelection = this.$store.getters.resourcesForSelection
-            },
             onChange: async function (event) {
                 const resource = event.target.value
                 this.$store.dispatch('changeResourceFilter', [this.box, resource])

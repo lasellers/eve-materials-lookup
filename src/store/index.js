@@ -114,55 +114,67 @@ export default new Vuex.Store({
                     return (item !== null)
                 })
 
-                //
-                const newRows = store.resources.filter(row => {
-                    if (resourceFilters.length === 0) {
+                // if no resource filters, just region and/or constellation
+                if (resourceFilters.length === 0) {
+                    store.displayedResources = store.resources.filter(row => {
                         if (store.region !== null && row[1] === store.region) {
                             return true;
                         } else if (store.constellation !== null && row[2] === store.constellation) {
                             return true;
                         }
                         return false;
-                    }
+                    });
+                }
 
-                    if ((store.region !== null && row[1] === store.region) &&
-                        resourceFilters.includes(row[6])) {
-                        return true;
-                    } else if ((store.constellation !== null && row[2] === store.constellation) &&
-                        resourceFilters.includes(row[6])) {
-                        return true;
-                    }
+                // if region and/or constellation and resource filters
+                if (!(resourceFilters.length === 0)) {
+                    store.displayedResources = store.resources.filter(row => {
+                        if ((store.region !== null && row[1] === store.region) &&
+                            resourceFilters.includes(row[6])) {
+                            return true;
+                        } else if ((store.constellation !== null && row[2] === store.constellation) &&
+                            resourceFilters.includes(row[6])) {
+                            return true;
+                        }
 
-                    return false;
-                });
-                store.displayedResources = newRows
+                        return false;
+                    });
+                }
 
                 // sort by output DESC
                 store.displayedResources.sort(function (a, b) {
                     return b[8] - a[8]
                 });
+
             }
         },
     },
 
-    actions: {
-        addHeaders(context, value) {
-            context.commit('addHeaders', value)
-        },
-        addResources(context, value) {
-            context.commit('addResources', value)
-        },
-        changeRegion(context, value) {
-            context.commit('changeRegion', value)
-        },
-        changeConstellation(context, value) {
-            context.commit('changeConstellation', value)
-        },
-        changeResourceFilter(context, values) {
-            context.commit('changeResourceFilter', values)
-        },
-        computeDisplayedResources(context) {
-            context.commit('computeDisplayedResources')
-        },
-    }
+    actions:
+        {
+            addHeaders(context, value) {
+                context.commit('addHeaders', value)
+            }
+            ,
+            addResources(context, value) {
+                context.commit('addResources', value)
+            }
+            ,
+            changeRegion(context, value) {
+                context.commit('changeRegion', value)
+            }
+            ,
+            changeConstellation(context, value) {
+                context.commit('changeConstellation', value)
+            }
+            ,
+            changeResourceFilter(context, values) {
+                context.commit('changeResourceFilter', values)
+            }
+            ,
+            computeDisplayedResources(context) {
+                context.commit('computeDisplayedResources')
+            }
+            ,
+        }
 })
