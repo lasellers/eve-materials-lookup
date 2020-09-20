@@ -1,4 +1,4 @@
-# eve-planetary-lookup
+# Eve Planetary Lookup
 
 See https://lasellers.github.io/eve-materials-lookup/ for a live running version.
 
@@ -10,6 +10,10 @@ Data pulled from https://docs.google.com/spreadsheets/d/1ZxHoEcl-831osyZT8eXBvSH
 * If I can find a data sheet for the blueprints, could add a dropdown with blueprint names that you would
 select which would auto-select all the resources.
 * https://docs.google.com/spreadsheets/d/1qY5K7CfyuPZPun9hUf_RnchMNVpKPtMlN0iACmUOemA/edit#gid=0
+* Change the production.csv loader to something that happens after the app starts we we can get 
+a loader spinner. As-is, the almost 12mb (147k records) load that happens is a bit ...
+slow on some devices.
+* Hmm. Could re-process it so the resource column had all the resources for a single planet. Hmm...
 
 
 ## Versions
@@ -44,7 +48,6 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 
 ## Deploy
-
 ```
 git checkout -b gh-pages
 git add dist
