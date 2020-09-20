@@ -114,9 +114,12 @@ export default new Vuex.Store({
                     return (item !== null)
                 })
 
+                // temp hold for new data-- we update the store only once at the end
+                let newRows = []
+
                 // if no resource filters, just region and/or constellation
                 if (resourceFilters.length === 0) {
-                    store.displayedResources = store.resources.filter(row => {
+                    newRows = store.resources.filter(row => {
                         if (store.region !== null && row[1] === store.region) {
                             return true;
                         } else if (store.constellation !== null && row[2] === store.constellation) {
@@ -128,7 +131,7 @@ export default new Vuex.Store({
 
                 // if region and/or constellation and resource filters
                 if (!(resourceFilters.length === 0)) {
-                    store.displayedResources = store.resources.filter(row => {
+                    newRows = store.resources.filter(row => {
                         if ((store.region !== null && row[1] === store.region) &&
                             resourceFilters.includes(row[6])) {
                             return true;
@@ -142,10 +145,12 @@ export default new Vuex.Store({
                 }
 
                 // sort by output DESC
-                store.displayedResources.sort(function (a, b) {
+                newRows.sort(function (a, b) {
                     return b[8] - a[8]
                 });
 
+                // update the store once
+                store.displayedResources = newRows;
             }
         },
     },

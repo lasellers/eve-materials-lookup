@@ -80,7 +80,7 @@
 
     @media only screen and (max-width: 1024px) {
         body, p, th, td {
-            font-size: smaller;
+            font-size: 90%;
         }
     }
 </style>

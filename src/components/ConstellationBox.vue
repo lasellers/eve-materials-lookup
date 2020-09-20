@@ -41,12 +41,9 @@
 
 <style scoped lang="scss">
     select {
-        list-style-type: none;
-        padding: 0;
+        margin: .25em;
     }
 
     option {
-        display: inline-block;
-        margin: 0 10px;
     }
 </style>
