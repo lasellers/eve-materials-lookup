@@ -69,27 +69,27 @@ export default new Vuex.Store({
             // regions
             store.regionsForSelection = []
             rows.map(row => {
-                const region = row[1]
-                if (!store.regionsForSelection.includes(region))
-                    store.regionsForSelection.push(region)
+                const regionValue = row[1]
+                if (!store.regionsForSelection.includes(regionValue))
+                    store.regionsForSelection.push(regionValue)
             })
             store.regionsForSelection.sort()
 
             // resources
             store.resourcesForSelection = []
             rows.map(row => {
-                const resource = row[6]
-                if (!store.resourcesForSelection.includes(resource))
-                    store.resourcesForSelection.push(resource)
+                const resourceValue = row[6]
+                if (!store.resourcesForSelection.includes(resourceValue))
+                    store.resourcesForSelection.push(resourceValue)
             })
             store.resourcesForSelection.sort()
 
             // constellations
             store.constellationsForSelection = []
             rows.map(row => {
-                const constellation = row[2]
-                if (!store.constellationsForSelection.includes(constellation))
-                    store.constellationsForSelection.push(constellation)
+                const constellationValue = row[2]
+                if (!store.constellationsForSelection.includes(constellationValue))
+                    store.constellationsForSelection.push(constellationValue)
             })
             store.constellationsForSelection.sort()
         },
@@ -136,11 +136,12 @@ export default new Vuex.Store({
                     return false;
                 });
                 store.displayedResources = newRows
-            }
 
-            store.displayedResources.sort(function (a, b) {
-                return b[8] - a[8]
-            });
+                // sort by output DESC
+                store.displayedResources.sort(function (a, b) {
+                    return b[8] - a[8]
+                });
+            }
         },
     },
 

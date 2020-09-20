@@ -1,5 +1,5 @@
 <template>
-    <select v-bind:id="resourcesForSelection" v-on:change="onChange">
+    <select v-bind:id="resourcesForSelection" v-on:change="onChange" class="form-control">
         <option key=-1 value="">(None)</option>
         <option v-for="(resource, index) in resourcesForSelection" :key="index" v-bind:value="resource">
             {{resource}}

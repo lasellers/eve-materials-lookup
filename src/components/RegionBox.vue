@@ -1,7 +1,7 @@
 <template>
     <div class="regionbox">
-        <b>Region</b>
-        <select v-bind:id="regionsForSelection" v-on:change="onChange" v-model="region">
+        <b>Region</b>&nbsp;
+        <select v-bind:id="regionsForSelection" v-on:change="onChange" v-model="region" class="form-control">
             <option key=-1 value="">(None)</option>
             <option v-for="(regionOption, index) in regionsForSelection" :key="index" v-bind:value="regionOption">
                 {{regionOption}}

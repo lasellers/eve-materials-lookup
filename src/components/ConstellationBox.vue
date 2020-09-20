@@ -1,7 +1,7 @@
 <template>
     <div class="constellationbox">
-        <b>Constellation</b>
-        <select v-bind:id="constellationsForSelection" v-on:change="onChange">
+        <b>Constellation</b>&nbsp;
+        <select v-bind:id="constellationsForSelection" v-on:change="onChange" class="form-control">
             <option key=-1 value=""> (None)</option>
             <option v-for="(constellation, index) in constellationsForSelection" :key="index"
                     v-bind:value="constellation">

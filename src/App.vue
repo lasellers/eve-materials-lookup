@@ -1,43 +1,45 @@
 <template>
     <div id="app">
         <LoaderBox/>
-
         <TitleBox/>
 
-        <div class="row">
-            <div class="col-md-5 col-ld-5">
-                <RegionBox/>
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-md-5 col-ld-5">
+                    <RegionBox/>
+                </div>
+                <div class="col-md-2 col-lg-1">
+                    <b>Or</b>
+                </div>
+                <div class="col-md-5 col-lg-5">
+                    <ConstellationBox/>
+                </div>
             </div>
-            <div class="col-md-2 col-lg-1">
-                <b>Or</b>
+
+            <hr/>
+
+            <b>Resources</b>&nbsp;
+            <div class="row">
+                <div class="col-md-3 col-lg-2">
+                    <ResourcesBox box="0"/>
+                </div>
+                <div class="col-md-3 col-lg-2">
+                    <ResourcesBox box="1"/>
+                </div>
+                <div class="col-md-3 col-lg-2">
+                    <ResourcesBox box="2"/>
+                </div>
+                <div class="col-md-3 col-lg-2">
+                    <ResourcesBox box="3"/>
+                </div>
+                <div class="col-md-3 col-lg-2">
+                    <ResourcesBox box="4"/>
+                </div>
             </div>
-            <div class="col-md-5 col-lg-5">
-                <ConstellationBox/>
-            </div>
+
         </div>
 
-        <hr/>
-
-        <div class="row">
-            <div class="col-md-1 col-lg-1">
-                <b>Resources</b>
-            </div>
-            <div class="col-md-3 col-lg-2">
-                <ResourcesBox box="0"/>
-            </div>
-            <div class="col-md-3 col-lg-2">
-                <ResourcesBox box="1"/>
-            </div>
-            <div class="col-md-3 col-lg-2">
-                <ResourcesBox box="2"/>
-            </div>
-            <div class="col-md-3 col-lg-2">
-                <ResourcesBox box="3"/>
-            </div>
-            <div class="col-md-3 col-lg-2">
-                <ResourcesBox box="4"/>
-            </div>
-        </div>
         <DisplayedResources/>
         <Notice/>
 
