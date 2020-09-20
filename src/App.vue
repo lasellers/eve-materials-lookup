@@ -6,14 +6,20 @@
         <div class="container-fluid">
 
             <div class="row">
-                <div class="col-md-5 col-ld-5">
+                <div class="col-md-3 col-ld-3">
                     <RegionBox/>
                 </div>
-                <div class="col-md-2 col-lg-1">
+                <div class="col-md-1 col-lg-1 d-flex align-items-md-center" v-if="unimportant">
                     <b>And/Or</b>
                 </div>
-                <div class="col-md-5 col-lg-5">
+                <div class="col-md-3 col-lg-3">
                     <ConstellationBox/>
+                </div>
+                <div class="col-md-1 col-lg-1 d-flex align-items-md-center" v-if="unimportant">
+                    <b>And/Or</b>
+                </div>
+                <div class="col-md-3 col-lg-3">
+                    <SystemBox/>
                 </div>
             </div>
 
@@ -54,6 +60,7 @@
     import ResourcesBox from './components/ResourcesBox.vue'
     import DisplayedResources from '@/components/DisplayedResources'
     import Notice from './components/Notice.vue'
+    import SystemBox from './components/SystemBox.vue'
 
     export default {
         name: 'App',
@@ -64,7 +71,13 @@
             RegionBox,
             ConstellationBox,
             ResourcesBox,
-            Notice
+            Notice,
+            SystemBox
+        },
+        computed: {
+            unimportant() {
+                return !(window.innerWidth < 1024)
+            },
         }
     }
 </script>

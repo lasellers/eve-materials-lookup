@@ -14,7 +14,9 @@ export default new Vuex.Store({
         regionsForSelection: [],
         region: 'Delve',
         constellationsForSelection: [],
-        constellation: null
+        constellation: null,
+        systemsForSelection: [],
+        system: null
     },
 
     getters: {
@@ -57,6 +59,15 @@ export default new Vuex.Store({
         constellation: store => {
             return store.constellation
         },
+        systemsForSelection: store => {
+            return store.systemsForSelection
+        },
+        systemsCount: store => {
+            return store.systemsForSelection.length
+        },
+        system: store => {
+            return store.system
+        },
     },
 
     mutations: {
@@ -75,6 +86,24 @@ export default new Vuex.Store({
             })
             store.regionsForSelection.sort()
 
+            // constellations
+            store.constellationsForSelection = []
+            rows.map(row => {
+                const constellationValue = row[2]
+                if (!store.constellationsForSelection.includes(constellationValue))
+                    store.constellationsForSelection.push(constellationValue)
+            })
+            store.constellationsForSelection.sort()
+
+            // systems
+            store.systemsForSelection = []
+            rows.map(row => {
+                const systemValue = row[3]
+                if (!store.systemsForSelection.includes(systemValue))
+                    store.systemsForSelection.push(systemValue)
+            })
+            store.systemsForSelection.sort()
+
             // resources
             store.resourcesForSelection = []
             rows.map(row => {
@@ -84,14 +113,6 @@ export default new Vuex.Store({
             })
             store.resourcesForSelection.sort()
 
-            // constellations
-            store.constellationsForSelection = []
-            rows.map(row => {
-                const constellationValue = row[2]
-                if (!store.constellationsForSelection.includes(constellationValue))
-                    store.constellationsForSelection.push(constellationValue)
-            })
-            store.constellationsForSelection.sort()
         },
         changeRegion(store, value) {
             store.region = value === "" ? null : value
@@ -99,13 +120,16 @@ export default new Vuex.Store({
         changeConstellation(store, value) {
             store.constellation = value === "" ? null : value
         },
+        changeSystem(store, value) {
+            store.system = value === "" ? null : value
+        },
         changeResourceFilter(store, values) {
             const [index, resource] = values
             store.resourceFilters[index] = resource
         },
         computeDisplayedResources(store) {
             // filter out everything by regions or constellations and optionally up to 5 resource types
-            if (store.region === null && store.constellation === null) {
+            if (store.region === null && store.constellation === null && store.system === null) {
                 // short circuit
                 store.displayedResources = [];
             } else {
@@ -124,6 +148,8 @@ export default new Vuex.Store({
                             return true;
                         } else if (store.constellation !== null && row[2] === store.constellation) {
                             return true;
+                        } else if (store.system !== null && row[3] === store.system) {
+                            return true;
                         }
                         return false;
                     });
@@ -136,6 +162,9 @@ export default new Vuex.Store({
                             resourceFilters.includes(row[6])) {
                             return true;
                         } else if ((store.constellation !== null && row[2] === store.constellation) &&
+                            resourceFilters.includes(row[6])) {
+                            return true;
+                        } else if ((store.system !== null && row[3] === store.system) &&
                             resourceFilters.includes(row[6])) {
                             return true;
                         }
@@ -159,27 +188,24 @@ export default new Vuex.Store({
         {
             addHeaders(context, value) {
                 context.commit('addHeaders', value)
-            }
-            ,
+            },
             addResources(context, value) {
                 context.commit('addResources', value)
-            }
-            ,
+            },
             changeRegion(context, value) {
                 context.commit('changeRegion', value)
-            }
-            ,
+            },
             changeConstellation(context, value) {
                 context.commit('changeConstellation', value)
-            }
-            ,
+            },
+            changeSystem(context, value) {
+                context.commit('changeSystem', value)
+            },
             changeResourceFilter(context, values) {
                 context.commit('changeResourceFilter', values)
-            }
-            ,
+            },
             computeDisplayedResources(context) {
                 context.commit('computeDisplayedResources')
             }
-            ,
         }
 })
