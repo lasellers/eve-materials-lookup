@@ -6,7 +6,7 @@
             <div class="col-6"><small>Displayed Resources: {{displayedResourcesCount}}</small></div>
         </div>
 
-        <table id="displayed-resources-list" class="table table-striped">
+        <table id="displayed-resources-list" class="table table-striped table-sm">
             <thead>
             <tr>
                 <th>Planet Id</th>
@@ -14,10 +14,10 @@
                 <th>Constellation</th>
                 <th>System</th>
                 <th>Planet Name</th>
-                <th>Planet Type</th>
                 <th>Resource</th>
-                <th>Richness</th>
                 <th>Output</th>
+                <th>Planet Type</th>
+                <th>Richness</th>
             </tr>
             </thead>
             <tbody>
@@ -27,10 +27,10 @@
                 <td>{{planet[2]}}</td>
                 <td>{{planet[3]}}</td>
                 <td>{{planet[4]}}</td>
-                <td>{{planet[5]}}</td>
                 <td>{{planet[6]}}</td>
-                <td>{{planet[7]}}</td>
                 <td>{{planet[8]}}</td>
+                <td>{{planet[5]}}</td>
+                <td>{{planet[7]}}</td>
             </tr>
             </tbody>
         </table>

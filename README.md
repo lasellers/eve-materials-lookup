@@ -42,3 +42,4 @@ git push origin gh-pages
 ## Versions
 * v1 September 19 2020. Pulled together in a few hours Saturday partly to practice using VueJS and
 partly because writing a program to handle this was less hassle than doing it by hand.
+* v1.1 Clean up the UI for phones & tablets
