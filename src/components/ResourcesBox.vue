@@ -19,7 +19,6 @@
             selected: {
                 get: function () {
                     const filter = this.$store.getters.resourceFilters[this.box]
-                    console.log(filter, this.box)
                     return filter === null ? "(None)": filter
                 },
                 set: function (resource) {

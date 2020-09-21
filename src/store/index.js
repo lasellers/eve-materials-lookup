@@ -237,7 +237,6 @@ export default new Vuex.Store({
                     const value = parseInt(blueprint[index].replace(/\D/g, ''))
                     // if any PI has more than 0 listed, add it to the resources array
                     if (value !== 0) {
-                        console.info('HEADER', value, store.blueprintHeaders[index])
                         resources.push(store.blueprintHeaders[index])
                     }
                 }
