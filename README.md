@@ -1,4 +1,4 @@
-# Eve Planetary Lookup
+# Eve Materials Lookup
 
 See https://lasellers.github.io/eve-materials-lookup/ for a live running version.
 
@@ -14,6 +14,7 @@ and
 a loader spinner. As-is, the almost 12mb (147k records) load that happens is a bit ...
 slow on some devices.
 * Hmm. Could re-process it so the resource column had all the resources for a single planet. Hmm...
+* May add a small suggestion area above resources suggesting some of the best planets to farm PI from, given what you are looking for.
 
 
 ## Versions
