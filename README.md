@@ -3,8 +3,11 @@
 See https://lasellers.github.io/eve-materials-lookup/ for a live running version.
 
 Data pulled from:
+
  https://docs.google.com/spreadsheets/d/1ZxHoEcl-831osyZT8eXBvSH8gTKXLpOngPmkKgRAcNk/edit#gid=1857997663
+
 and
+
  https://docs.google.com/spreadsheets/d/1qY5K7CfyuPZPun9hUf_RnchMNVpKPtMlN0iACmUOemA/edit#gid=0
 
 
@@ -23,8 +26,10 @@ partly because writing a program to handle this was less hassle than doing it by
 * v1.1 Clean up the UI for phones & tablets. Works decently on my phone and tablet now.
 Could always use more tweaking of course.
 * v1.2 Found blueprints csv data:
+
   https://docs.google.com/spreadsheets/d/1qY5K7CfyuPZPun9hUf_RnchMNVpKPtMlN0iACmUOemA/edit#gid=0
-Added a blueprints dropdown that auto-fills the resources from this.
+
+Added a blueprints dropdown that auto-fills the resources using some of this data.
 
 
 ## Project setup
