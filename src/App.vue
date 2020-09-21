@@ -44,6 +44,13 @@
                 </div>
             </div>
 
+            <b>Blueprints</b>&nbsp;
+            <div class="row">
+                <div class="col-md-6 col-lg-6">
+                    <BlueprintsBox/>
+                </div>
+            </div>
+
         </div>
 
         <DisplayedResources/>
@@ -61,6 +68,7 @@
     import DisplayedResources from '@/components/DisplayedResources'
     import Notice from './components/Notice.vue'
     import SystemBox from './components/SystemBox.vue'
+    import BlueprintsBox from './components/BlueprintsBox.vue'
 
     export default {
         name: 'App',
@@ -72,7 +80,8 @@
             ConstellationBox,
             ResourcesBox,
             Notice,
-            SystemBox
+            SystemBox,
+            BlueprintsBox
         },
         computed: {
             unimportant() {

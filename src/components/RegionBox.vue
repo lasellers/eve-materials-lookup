@@ -1,8 +1,8 @@
 <template>
     <div class="regionbox">
         <b>Region</b>&nbsp;
-        <select v-bind:id="regionsForSelection" v-on:change="onChange" v-model="selected" class="form-control">
-            <option key=-1 value="">(None)</option>
+        <select v-bind:id="regionsForSelection" v-on:change="onChange" class="form-control"
+                v-model="selected">
             <option v-for="(regionOption, index) in regionsForSelection" :key="index" v-bind:value="regionOption">
                 {{regionOption}}
             </option>
@@ -16,17 +16,25 @@
         components: {},
         data() {
             return {
-                regionsForSelection: [],
-                selected: "Delve"
+                regionsForSelection: []
             }
         },
         created() {
             this.onLoad()
         },
-        methods: {
-            region() {
-                return this.$store.getters.region
+        computed: {
+            selected: {
+                get: function () {
+                    const region = this.$store.getters.region
+                    return region === null ? "(None)" : region
+                },
+                set: function (region) {
+                    this.$store.dispatch('changeRegion', region)
+                    this.$store.dispatch('computeDisplayedResources')
+                }
             },
+        },
+        methods: {
             onLoad: function () {
                 this.regionsForSelection = this.$store.getters.regionsForSelection
             },

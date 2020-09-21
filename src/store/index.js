@@ -5,7 +5,6 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        debug: true,
         headers: [],
         resources: [],
         resourcesForSelection: [],
@@ -16,7 +15,10 @@ export default new Vuex.Store({
         constellationsForSelection: [],
         constellation: null,
         systemsForSelection: [],
-        system: null
+        system: null,
+        blueprintHeaders: [],
+        blueprints: [],
+        blueprintsForSelection: [],
     },
 
     getters: {
@@ -68,6 +70,18 @@ export default new Vuex.Store({
         system: store => {
             return store.system
         },
+        blueprintHeaders: store => {
+            return store.blueprintHeaders
+        },
+        blueprints: store => {
+            return store.blueprints
+        },
+        blueprintsCount: store => {
+            return store.blueprints.length
+        },
+        blueprintsForSelection: store => {
+            return store.blueprintsForSelection
+        },
     },
 
     mutations: {
@@ -78,7 +92,7 @@ export default new Vuex.Store({
             store.resources = rows
 
             // regions
-            store.regionsForSelection = []
+            store.regionsForSelection = ['(None)']
             rows.map(row => {
                 const regionValue = row[1]
                 if (!store.regionsForSelection.includes(regionValue))
@@ -87,7 +101,7 @@ export default new Vuex.Store({
             store.regionsForSelection.sort()
 
             // constellations
-            store.constellationsForSelection = []
+            store.constellationsForSelection = ['(None)']
             rows.map(row => {
                 const constellationValue = row[2]
                 if (!store.constellationsForSelection.includes(constellationValue))
@@ -96,7 +110,7 @@ export default new Vuex.Store({
             store.constellationsForSelection.sort()
 
             // systems
-            store.systemsForSelection = []
+            store.systemsForSelection = ['(None)']
             rows.map(row => {
                 const systemValue = row[3]
                 if (!store.systemsForSelection.includes(systemValue))
@@ -105,7 +119,7 @@ export default new Vuex.Store({
             store.systemsForSelection.sort()
 
             // resources
-            store.resourcesForSelection = []
+            store.resourcesForSelection = ['(None)']
             rows.map(row => {
                 const resourceValue = row[6]
                 if (!store.resourcesForSelection.includes(resourceValue))
@@ -182,6 +196,59 @@ export default new Vuex.Store({
                 store.displayedResources = newRows;
             }
         },
+        addBlueprintHeaders(store, value) {
+            store.blueprintHeaders = value
+        },
+        addBlueprints(store, rows) {
+            store.blueprints = rows
+
+            // regions
+            store.blueprintsForSelection = ['(None)']
+            rows.map(row => {
+                const value = row[0] + ' (' + row[1] + ')'
+                if (!store.blueprintsForSelection.includes(value))
+                    store.blueprintsForSelection.push(value)
+            })
+            store.blueprintsForSelection.sort()
+        },
+        changeBlueprint(store, value) {
+            if (value === null) {
+                store.resourceFilters = [null, null, null, null, null]
+                return
+            }
+
+            let resources = []
+
+            // get the data for the specific blueprint we'rve reference from the dropdown
+            let blueprint = null
+            for (let index = 0; index < store.blueprints.length; index++) {
+                const compValue = store.blueprints[index][0] + ' (' + store.blueprints[index][1] + ')'
+                if (compValue === value) {
+                    blueprint = store.blueprints[index]
+                    break
+                }
+            }
+
+            if (blueprint !== null) {
+                // go through data indexes 11 to 38, which are the PIs
+                // @todo get rid of magic numbers -- have it prescan to get these
+                for (let index = 11; index <= 38; index++) {
+                    // convert to a number only
+                    const value = parseInt(blueprint[index].replace(/\D/g, ''))
+                    // if any PI has more than 0 listed, add it to the resources array
+                    if (value !== 0) {
+                        console.info('HEADER', value, store.blueprintHeaders[index])
+                        resources.push(store.blueprintHeaders[index])
+                    }
+                }
+            }
+
+            if (resources.length === 0) {
+                resources = [null, null, null, null, null]
+            }
+
+            store.resourceFilters = resources
+        },
     },
 
     actions:
@@ -206,6 +273,15 @@ export default new Vuex.Store({
             },
             computeDisplayedResources(context) {
                 context.commit('computeDisplayedResources')
-            }
+            },
+            addBlueprintHeaders(context, value) {
+                context.commit('addBlueprintHeaders', value)
+            },
+            addBlueprints(context, value) {
+                context.commit('addBlueprints', value)
+            },
+            changeBlueprint(context, value) {
+                context.commit('changeBlueprint', value)
+            },
         }
 })
