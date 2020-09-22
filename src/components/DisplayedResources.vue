@@ -91,6 +91,10 @@
         margin: 0 10px;
     }
 
+    p {
+        text-align: center;
+    }
+
     /* @media only screen and (max-width: 1024px) {
         .unimportant {
             visibility: hidden;
