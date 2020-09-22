@@ -1,17 +1,22 @@
 <template>
     <div class="loaderbox">
+        <span v-if="resourcesCount===0 || blueprintsCount===0 || blueprintsForSelectionCount===0 ||
+regionsForSelectionCount===0 || constellationsForSelectionCount===0 || systemsForSelectionCount===0 ||
+resourcesForSelectionCount===0"><Spinner/></span>
         <div class="row">
             <div class="col-md-4"></div>
             <div class="col-md-4">
-                <code><ul>
-                    <li v-if="blueprintsCount===0">Loading Blueprints...</li>
-                    <li v-if="blueprintsForSelectionCount===0">Loading Blueprints For Selection...</li>
-                    <li v-if="resourcesCount===0">Loading Resources...</li>
-                    <li v-if="regionsForSelectionCount===0">Loading Regions For Selection...</li>
-                    <li v-if="constellationsForSelectionCount===0">Loading Constellations For Selection...</li>
-                    <li v-if="systemsForSelectionCount===0">Loading Systems For Selection...</li>
-                    <li v-if="resourcesForSelectionCount===0">Loading Resources For Selection...</li>
-                </ul></code>
+                <code><small>
+                    <ul>
+                        <li v-if="blueprintsCount===0">Loading Blueprints...</li>
+                        <li v-if="blueprintsForSelectionCount===0">Loading Blueprints For Selection...</li>
+                        <li v-if="resourcesCount===0">Loading Resources...</li>
+                        <li v-if="regionsForSelectionCount===0">Loading Regions For Selection...</li>
+                        <li v-if="constellationsForSelectionCount===0">Loading Constellations For Selection...</li>
+                        <li v-if="systemsForSelectionCount===0">Loading Systems For Selection...</li>
+                        <li v-if="resourcesForSelectionCount===0">Loading Resources For Selection...</li>
+                    </ul>
+                </small></code>
             </div>
             <div class="col-md-4"></div>
         </div>
@@ -19,12 +24,14 @@
 </template>
 
 <script>
+    import Spinner from './Spinner.vue'
+
     // eslint-disable-next-line
     // import productionCsv from '../assets/Production.csv'
     // import blueprintsCsv from '../assets/Blueprints.csv'
     export default {
         name: 'LoaderBox',
-        components: {},
+        components: {Spinner},
         data() {
             return {
                 publicPath: process.env.BASE_URL,
@@ -188,5 +195,9 @@
 
     ul.li {
         text-align: left;
+    }
+
+    code {
+        color: gray;
     }
 </style>
