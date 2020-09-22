@@ -7,7 +7,6 @@
                     <li v-if="blueprintsCount===0">Loading Blueprints...</li>
                     <li v-if="blueprintsForSelectionCount===0">Loading Blueprints For Selection...</li>
                     <li v-if="resourcesCount===0">Loading Resources...</li>
-                    <li v-if="resourcesCount===0">Loading Resources...</li>
                     <li v-if="regionsForSelectionCount===0">Loading Regions For Selection...</li>
                     <li v-if="constellationsForSelectionCount===0">Loading Constellations For Selection...</li>
                     <li v-if="resourcesForSelectionCount===0">Loading Resources For Selection...</li>
