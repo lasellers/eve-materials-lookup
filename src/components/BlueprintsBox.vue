@@ -1,27 +1,16 @@
 <template>
     <div class="blueprintsbox">
 
-        <div class="container-fluid">
-            <div class="row">
+        <b>Blueprints</b>&nbsp;
+        <select v-bind:id="blueprintsForSelection" v-on:change="onChange" class="form-control">
+            <option v-for="(blueprint, index) in blueprintsForSelection"
+                    :key="index"
+                    v-bind:value="blueprint">
+                {{blueprint}}
+            </option>
+        </select>
 
-                <div class="col-ms-6">
-                    <b>Blueprints</b>&nbsp;
-                    <select v-bind:id="blueprintsForSelection" v-on:change="onChange" class="form-control"
-                            style="width: 80%">
-                        <option v-for="(blueprint, index) in blueprintsForSelection"
-                                :key="index"
-                                v-bind:value="blueprint">
-                            {{blueprint}}
-                        </option>
-                    </select>
-                </div>
-
-                <div class="col-md-6 align-items-md-center">
-                    <small>Blueprints: {{blueprintsCount}}</small>
-                </div>
-
-            </div>
-        </div>
+        <p><small>Blueprints: {{blueprintsCount}}</small></p>
 
     </div>
 </template>

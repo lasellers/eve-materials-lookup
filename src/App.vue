@@ -44,12 +44,7 @@
                 </div>
             </div>
 
-            <b>Blueprints</b>&nbsp;
-            <div class="row">
-                <div class="col-md-6 col-lg-6">
-                    <BlueprintsBox/>
-                </div>
-            </div>
+             <BlueprintsBox/>
 
         </div>
 
