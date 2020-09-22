@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-md-4"></div>
             <div class="col-md-4">
-                <ul>
+                <code><ul>
                     <li v-if="blueprintsCount===0">Loading Blueprints...</li>
                     <li v-if="blueprintsForSelectionCount===0">Loading Blueprints For Selection...</li>
                     <li v-if="resourcesCount===0">Loading Resources...</li>
@@ -11,7 +11,7 @@
                     <li v-if="constellationsForSelectionCount===0">Loading Constellations For Selection...</li>
                     <li v-if="systemsForSelectionCount===0">Loading Systems For Selection...</li>
                     <li v-if="resourcesForSelectionCount===0">Loading Resources For Selection...</li>
-                </ul>
+                </ul></code>
             </div>
             <div class="col-md-4"></div>
         </div>
