@@ -26,4 +26,7 @@
 </script>
 
 <style scoped lang="scss">
+    p {
+        text-align: center;
+    }
 </style>
