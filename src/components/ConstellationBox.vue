@@ -15,11 +15,7 @@
         name: 'ConstellationBox',
         components: {},
         data() {
-            return {
-            }
-        },
-        created() {
-            this.onLoad()
+            return {}
         },
         computed: {
             constellationsForSelection: function () {
@@ -27,7 +23,7 @@
             },
         },
         methods: {
-          constellation() {
+            constellation() {
                 return this.$store.getters.constellation
             },
             onChange: async function (event) {

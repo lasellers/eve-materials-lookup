@@ -104,48 +104,50 @@ export default new Vuex.Store({
             store.headers = value
         },
         addResources(store, rows) {
-            // regions
+            store.resources = rows
+            // put data into store all at once to limit DOM rerenders
+            // Originally the *ForSelection updates were here, but moved to seperate mutations to make it easier to
+            // track performance and vuex calls
+        },
+        updateResourcesForSelection(store) {
+            let resources = ['(None)']
+            store.resources.map(row => {
+                const value = row[6]
+                if (!resources.includes(value))
+                    resources.push(value)
+            })
+            resources.sort()
+            store.resourcesForSelection = resources
+        },
+        updateRegionsForSelection(store) {
             let regions = ['(None)']
-            rows.map(row => {
-                const regionValue = row[1]
-                if (!regions.includes(regionValue))
-                    regions.push(regionValue)
+            store.resources.map(row => {
+                const value = row[1]
+                if (!regions.includes(value))
+                    regions.push(value)
             })
             regions.sort()
             store.regionsForSelection = regions
-
-            // constellations
+        },
+        updateConstellationsForSelection(store) {
             let constellations = ['(None)']
-            rows.map(row => {
-                const constellationValue = row[2]
-                if (!constellations.includes(constellationValue))
-                    constellations.push(constellationValue)
+            store.resources.map(row => {
+                const value = row[2]
+                if (!constellations.includes(value))
+                    constellations.push(value)
             })
             constellations.sort()
             store.constellationsForSelection = constellations
-
-            // systems
+        },
+        updateSystemsForSelection(store) {
             let systems = ['(None)']
-            rows.map(row => {
-                const systemValue = row[3]
-                if (!systems.includes(systemValue))
-                    systems.push(systemValue)
+            store.resources.map(row => {
+                const value = row[3]
+                if (!systems.includes(value))
+                    systems.push(value)
             })
             systems.sort()
-
-            // resources
-            let resources = ['(None)']
-            rows.map(row => {
-                const resourceValue = row[6]
-                if (!resources.includes(resourceValue))
-                    resources.push(resourceValue)
-            })
-            resources.sort()
             store.systemsForSelection = systems
-            store.resourcesForSelection = resources
-
-            // put data into store all at once to limit DOM rerenders
-            store.resources = rows
         },
         changeRegion(store, value) {
             store.region = value === "" ? null : value
@@ -276,6 +278,18 @@ export default new Vuex.Store({
             },
             addResources(context, value) {
                 context.commit('addResources', value)
+            },
+            updateResourcesForSelection(context, value) {
+                context.commit('updateResourcesForSelection', value)
+            },
+            updateRegionsForSelection(context, value) {
+                context.commit('updateRegionsForSelection', value)
+            },
+            updateConstellationsForSelection(context, value) {
+                context.commit('updateConstellationsForSelection', value)
+            },
+            updateSystemsForSelection(context, value) {
+                context.commit('updateSystemsForSelection', value)
             },
             changeRegion(context, value) {
                 context.commit('changeRegion', value)

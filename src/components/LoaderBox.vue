@@ -9,6 +9,7 @@
                     <li v-if="resourcesCount===0">Loading Resources...</li>
                     <li v-if="regionsForSelectionCount===0">Loading Regions For Selection...</li>
                     <li v-if="constellationsForSelectionCount===0">Loading Constellations For Selection...</li>
+                    <li v-if="systemsForSelectionCount===0">Loading Systems For Selection...</li>
                     <li v-if="resourcesForSelectionCount===0">Loading Resources For Selection...</li>
                 </ul>
             </div>
@@ -45,6 +46,9 @@
             constellationsForSelectionCount: function () {
                 return this.$store.getters.constellationsForSelectionCount
             },
+            systemsForSelectionCount: function () {
+                return this.$store.getters.systemsForSelectionCount
+            },
             blueprintsForSelectionCount: function () {
                 return this.$store.getters.blueprintsForSelectionCount
             },
@@ -54,8 +58,8 @@
         },
         methods: {
             onLoad: function () {
-                this.getBlueprintsCsv()
                 this.getProductionCsv()
+                this.getBlueprintsCsv()
 
                 /*
                 const [headers, resources] = this.csvToArray(productionCsv)
@@ -89,6 +93,10 @@
                         const [headers, resources] = this.csvToArray(data)
                         this.$store.dispatch('addHeaders', headers)
                         this.$store.dispatch('addResources', resources)
+                        this.$store.dispatch('updateRegionsForSelection')
+                        this.$store.dispatch('updateConstellationsForSelection')
+                        this.$store.dispatch('updateSystemsForSelection')
+                        this.$store.dispatch('updateResourcesForSelection')
                         this.$store.dispatch('computeDisplayedResources')
                     })
             },
@@ -118,8 +126,7 @@
                 const headers = rows.shift().trim().split(',')
                 const newRows = []
                 rows.forEach(row => {
-                    const line = row.trim()
-                    newRows.push(line.split(','))
+                    newRows.push(row.trim().split(','))
                 })
                 return [
                     headers,
@@ -178,6 +185,7 @@
     p {
         text-align: left;
     }
+
     ul.li {
         text-align: left;
     }

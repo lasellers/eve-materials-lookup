@@ -15,8 +15,7 @@
         name: 'SystemBox',
         components: {},
         data() {
-            return {
-            }
+            return {}
         },
         computed: {
             systemsForSelection: function () {
@@ -24,7 +23,7 @@
             },
         },
         methods: {
-          system() {
+            system() {
                 return this.$store.getters.system
             },
             onChange: async function (event) {

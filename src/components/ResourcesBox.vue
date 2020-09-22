@@ -12,14 +12,13 @@
         name: 'ResourcesBox',
         props: ['box'],
         data() {
-            return {
-            }
+            return {}
         },
         computed: {
             selected: {
                 get: function () {
                     const filter = this.$store.getters.resourceFilters[this.box]
-                    return filter === null ? "(None)": filter
+                    return filter === null ? "(None)" : filter
                 },
                 set: function (resource) {
                     this.$store.dispatch('changeResourceFilter', [this.box, resource])

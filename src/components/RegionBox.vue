@@ -15,8 +15,7 @@
         name: 'RegionBox',
         components: {},
         data() {
-            return {
-            }
+            return {}
         },
         computed: {
             selected: {
