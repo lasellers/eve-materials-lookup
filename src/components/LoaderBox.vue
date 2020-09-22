@@ -1,15 +1,27 @@
 <template>
     <div class="loaderbox">
-        <p v-if="resourcesCount===0">Loading Resources...</p>
-        <p v-if="resourcesCount===0">Loading Blueprints...</p>
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <ul>
+                    <li v-if="blueprintsCount===0">Loading Blueprints...</li>
+                    <li v-if="blueprintsForSelectionCount===0">Loading Blueprints For Selection...</li>
+                    <li v-if="resourcesCount===0">Loading Resources...</li>
+                    <li v-if="resourcesCount===0">Loading Resources...</li>
+                    <li v-if="regionsForSelectionCount===0">Loading Regions For Selection...</li>
+                    <li v-if="constellationsForSelectionCount===0">Loading Constellations For Selection...</li>
+                    <li v-if="resourcesForSelectionCount===0">Loading Resources For Selection...</li>
+                </ul>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
     </div>
 </template>
 
 <script>
     // eslint-disable-next-line
-    import productionCsv from '../assets/Production.csv'
-    import blueprintsCsv from '../assets/Blueprints.csv'
-
+    // import productionCsv from '../assets/Production.csv'
+    // import blueprintsCsv from '../assets/Blueprints.csv'
     export default {
         name: 'LoaderBox',
         components: {},
@@ -19,7 +31,7 @@
             }
         },
         created() {
-            this.onFileLoad()
+            this.onLoad()
         },
         computed: {
             resourcesCount: function () {
@@ -27,10 +39,26 @@
             },
             blueprintsCount: function () {
                 return this.$store.getters.blueprintsCount
+            },
+            regionsForSelectionCount: function () {
+                return this.$store.getters.regionsForSelectionCount
+            },
+            constellationsForSelectionCount: function () {
+                return this.$store.getters.constellationsForSelectionCount
+            },
+            blueprintsForSelectionCount: function () {
+                return this.$store.getters.blueprintsForSelectionCount
+            },
+            resourcesForSelectionCount: function () {
+                return this.$store.getters.resourcesForSelectionCount
             }
         },
         methods: {
-            onFileLoad: function () {
+            onLoad: function () {
+                this.getBlueprintsCsv()
+                this.getProductionCsv()
+
+                /*
                 const [headers, resources] = this.csvToArray(productionCsv)
                 this.$store.dispatch('addHeaders', headers)
                 this.$store.dispatch('addResources', resources)
@@ -41,7 +69,49 @@
                 this.$store.dispatch('addBlueprints', blueprints)
 
                 //
-                this.$store.dispatch('computeDisplayedResources')
+                // this.$store.dispatch('computeDisplayedResources')
+                */
+            },
+
+            async getProductionCsv() {
+                const headers = new Headers()
+                const request = new Request(
+                    "./Production.csv",
+                    {
+                        method: "GET",
+                        headers,
+                        mode: "cors",
+                        cache: "force-cache"
+                    }
+                )
+                fetch(request)
+                    .then(response => response.text())
+                    .then(data => {
+                        const [headers, resources] = this.csvToArray(data)
+                        this.$store.dispatch('addHeaders', headers)
+                        this.$store.dispatch('addResources', resources)
+                        this.$store.dispatch('computeDisplayedResources')
+                    })
+            },
+            async getBlueprintsCsv() {
+                const headers = new Headers()
+                const request = new Request(
+                    "./Blueprints.csv",
+                    {
+                        method: "GET",
+                        headers,
+                        mode: "cors",
+                        cache: "force-cache"
+                    }
+                )
+                fetch(request)
+                    .then(response => response.text())
+                    .then(data => {
+                        const [headers, blueprints] = this.csvToArrayRotated(data)
+                        this.$store.dispatch('addBlueprintHeaders', headers)
+                        this.$store.dispatch('addBlueprints', blueprints)
+                        this.$store.dispatch('computeDisplayedResources')
+                    })
             },
 
             csvToArray: function (csv) {
@@ -107,5 +177,9 @@
 
 <style scoped lang="scss">
     p {
+        text-align: left;
+    }
+    ul.li {
+        text-align: left;
     }
 </style>

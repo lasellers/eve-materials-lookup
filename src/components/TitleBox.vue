@@ -12,7 +12,14 @@
 
 <style scoped lang="scss">
     h1 {
+        text-align: center;
         margin: 0;
         font-size: x-large;
+    }
+
+    @media only screen and (max-width: 1024px) {
+        h1 {
+            font-size: smaller;
+        }
     }
 </style>

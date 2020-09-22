@@ -10,7 +10,7 @@
             </option>
         </select>
 
-        <p><small>Blueprints: {{blueprintsCount}}</small></p>
+        <p class="stats"><small>Blueprints: {{blueprintsCount}}</small></p>
 
     </div>
 </template>
@@ -20,22 +20,17 @@
         name: 'BlueprintsBox',
         components: {},
         data() {
-            return {
-                blueprintsForSelection: []
-            }
-        },
-        created() {
-            this.onLoad()
+            return {}
         },
         computed: {
             blueprintsCount() {
                 return this.$store.getters.blueprintsCount
             },
+            blueprintsForSelection: function () {
+                return this.$store.getters.blueprintsForSelection
+            },
         },
         methods: {
-            onLoad: function () {
-                this.blueprintsForSelection = this.$store.getters.blueprintsForSelection
-            },
             onChange: async function (event) {
                 const blueprint = event.target.value
                 this.$store.dispatch('changeBlueprint', blueprint)

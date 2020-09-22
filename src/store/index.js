@@ -37,6 +37,9 @@ export default new Vuex.Store({
         displayedResourcesCount: store => {
             return store.displayedResources.length
         },
+        resourcesForSelectionCount: store => {
+            return store.resourcesForSelection.length
+        },
         resourcesForSelection: store => {
             return store.resourcesForSelection
         },
@@ -45,6 +48,9 @@ export default new Vuex.Store({
         },
         regionsForSelection: store => {
             return store.regionsForSelection
+        },
+        regionsForSelectionCount: store => {
+            return store.regionsForSelection.length
         },
         regionsCount: store => {
             return store.regionsForSelection.length
@@ -55,6 +61,9 @@ export default new Vuex.Store({
         constellationsForSelection: store => {
             return store.constellationsForSelection
         },
+        constellationsForSelectionCount: store => {
+            return store.constellationsForSelection.length
+        },
         constellationsCount: store => {
             return store.constellationsForSelection.length
         },
@@ -63,6 +72,9 @@ export default new Vuex.Store({
         },
         systemsForSelection: store => {
             return store.systemsForSelection
+        },
+        systemsForSelectionCount: store => {
+            return store.systemsForSelection.length
         },
         systemsCount: store => {
             return store.systemsForSelection.length
@@ -82,6 +94,9 @@ export default new Vuex.Store({
         blueprintsForSelection: store => {
             return store.blueprintsForSelection
         },
+        blueprintsForSelectionCount: store => {
+            return store.blueprintsForSelection.length
+        },
     },
 
     mutations: {
@@ -89,44 +104,48 @@ export default new Vuex.Store({
             store.headers = value
         },
         addResources(store, rows) {
-            store.resources = rows
-
             // regions
-            store.regionsForSelection = ['(None)']
+            let regions = ['(None)']
             rows.map(row => {
                 const regionValue = row[1]
-                if (!store.regionsForSelection.includes(regionValue))
-                    store.regionsForSelection.push(regionValue)
+                if (!regions.includes(regionValue))
+                    regions.push(regionValue)
             })
-            store.regionsForSelection.sort()
+            regions.sort()
+            store.regionsForSelection = regions
 
             // constellations
-            store.constellationsForSelection = ['(None)']
+            let constellations = ['(None)']
             rows.map(row => {
                 const constellationValue = row[2]
-                if (!store.constellationsForSelection.includes(constellationValue))
-                    store.constellationsForSelection.push(constellationValue)
+                if (!constellations.includes(constellationValue))
+                    constellations.push(constellationValue)
             })
-            store.constellationsForSelection.sort()
+            constellations.sort()
+            store.constellationsForSelection = constellations
 
             // systems
-            store.systemsForSelection = ['(None)']
+            let systems = ['(None)']
             rows.map(row => {
                 const systemValue = row[3]
-                if (!store.systemsForSelection.includes(systemValue))
-                    store.systemsForSelection.push(systemValue)
+                if (!systems.includes(systemValue))
+                    systems.push(systemValue)
             })
-            store.systemsForSelection.sort()
+            systems.sort()
 
             // resources
-            store.resourcesForSelection = ['(None)']
+            let resources = ['(None)']
             rows.map(row => {
                 const resourceValue = row[6]
-                if (!store.resourcesForSelection.includes(resourceValue))
-                    store.resourcesForSelection.push(resourceValue)
+                if (!resources.includes(resourceValue))
+                    resources.push(resourceValue)
             })
-            store.resourcesForSelection.sort()
+            resources.sort()
+            store.systemsForSelection = systems
+            store.resourcesForSelection = resources
 
+            // put data into store all at once to limit DOM rerenders
+            store.resources = rows
         },
         changeRegion(store, value) {
             store.region = value === "" ? null : value

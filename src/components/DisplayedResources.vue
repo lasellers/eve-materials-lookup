@@ -3,8 +3,8 @@
 
         <div class="container-fluid">
             <div class="row">
-                <div class="col-6"><small>Resources: {{resourcesCount}}</small></div>
-                <div class="col-6"><small>Displayed Resources: {{displayedResourcesCount}}</small></div>
+                <div class="col-6 stats"><small>Resources: {{resourcesCount}}</small></div>
+                <div class="col-6 stats"><small>Displayed Resources: {{displayedResourcesCount}}</small></div>
             </div>
         </div>
 

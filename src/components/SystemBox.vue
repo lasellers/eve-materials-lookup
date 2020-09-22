@@ -16,18 +16,16 @@
         components: {},
         data() {
             return {
-                systemsForSelection: []
             }
         },
-        created() {
-            this.onLoad()
+        computed: {
+            systemsForSelection: function () {
+                return this.$store.getters.systemsForSelection
+            },
         },
         methods: {
           system() {
                 return this.$store.getters.system
-            },
-            onLoad: function () {
-                this.systemsForSelection = this.$store.getters.systemsForSelection
             },
             onChange: async function (event) {
                 const constellation = event.target.value

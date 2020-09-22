@@ -16,18 +16,19 @@
         components: {},
         data() {
             return {
-                constellationsForSelection: []
             }
         },
         created() {
             this.onLoad()
         },
+        computed: {
+            constellationsForSelection: function () {
+                return this.$store.getters.constellationsForSelection
+            },
+        },
         methods: {
           constellation() {
                 return this.$store.getters.constellation
-            },
-            onLoad: function () {
-                this.constellationsForSelection = this.$store.getters.constellationsForSelection
             },
             onChange: async function (event) {
                 const constellation = event.target.value

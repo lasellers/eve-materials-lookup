@@ -16,11 +16,7 @@
         components: {},
         data() {
             return {
-                regionsForSelection: []
             }
-        },
-        created() {
-            this.onLoad()
         },
         computed: {
             selected: {
@@ -33,11 +29,11 @@
                     this.$store.dispatch('computeDisplayedResources')
                 }
             },
+            regionsForSelection: function () {
+                return this.$store.getters.regionsForSelection
+            },
         },
         methods: {
-            onLoad: function () {
-                this.regionsForSelection = this.$store.getters.regionsForSelection
-            },
             onChange: async function (event) {
                 const region = event.target.value
                 this.$store.dispatch('changeRegion', region)
