@@ -8,6 +8,8 @@ resourcesForSelectionCount===0"><Spinner/></span>
             <div class="col-md-4">
                 <code><small>
                     <ul>
+                        <li v-if="loadProduction===false">Loading Resources data...</li>
+                        <li v-if="loadBlueprints===false">Loading Blueprint data...</li>
                         <li v-if="blueprintsCount===0">Loading Blueprints...</li>
                         <li v-if="blueprintsForSelectionCount===0">Loading Blueprints For Selection...</li>
                         <li v-if="resourcesCount===0">Loading Resources...</li>
@@ -41,6 +43,12 @@ resourcesForSelectionCount===0"><Spinner/></span>
             this.onLoad()
         },
         computed: {
+            loadProduction: function () {
+                return this.$store.getters.loadProduction
+            },
+            loadBlueprints: function () {
+                return this.$store.getters.loadBlueprints
+            },
             resourcesCount: function () {
                 return this.$store.getters.resourcesCount
             },
@@ -97,13 +105,34 @@ resourcesForSelectionCount===0"><Spinner/></span>
                 fetch(request)
                     .then(response => response.text())
                     .then(data => {
+                        this.$store.dispatch('loadProduction', true)
+
+                        // let mb = new Date()
+
                         const [headers, resources] = this.csvToArray(data)
+                        // console.log('==== csvToArray', new Date().getTime() - mb.getTime())
+                        // mb = new Date()
+
                         this.$store.dispatch('addHeaders', headers)
+                        // console.log('==== addHeaders', new Date().getTime() - mb.getTime())
+                        // mb = new Date()
                         this.$store.dispatch('addResources', resources)
+                        // console.log('==== addResources', new Date().getTime() - mb.getTime())
+                        // mb = new Date()
+
                         this.$store.dispatch('updateRegionsForSelection')
+                        // console.log('==== updateRegionsForSelection', new Date().getTime() - mb.getTime())
+                        // mb = new Date()
                         this.$store.dispatch('updateConstellationsForSelection')
+                        // console.log('==== updateConstellationsForSelection', new Date().getTime() - mb.getTime())
+                        // mb = new Date()
                         this.$store.dispatch('updateSystemsForSelection')
+                        // console.log('==== updateSystemsForSelection', new Date().getTime() - mb.getTime())
+                        // mb = new Date()
                         this.$store.dispatch('updateResourcesForSelection')
+                        // console.log('==== updateResourcesForSelection', new Date().getTime() - mb.getTime())
+                        // mb = new Date()
+
                         this.$store.dispatch('computeDisplayedResources')
                     })
             },
@@ -121,9 +150,13 @@ resourcesForSelectionCount===0"><Spinner/></span>
                 fetch(request)
                     .then(response => response.text())
                     .then(data => {
+                        this.$store.dispatch('loadBlueprints', true)
+
                         const [headers, blueprints] = this.csvToArrayRotated(data)
+
                         this.$store.dispatch('addBlueprintHeaders', headers)
                         this.$store.dispatch('addBlueprints', blueprints)
+
                         this.$store.dispatch('computeDisplayedResources')
                     })
             },
@@ -131,13 +164,20 @@ resourcesForSelectionCount===0"><Spinner/></span>
             csvToArray: function (csv) {
                 const rows = csv.trim().split('\n')
                 const headers = rows.shift().trim().split(',')
-                const newRows = []
-                rows.forEach(row => {
+                let index = 0, len = rows.length
+                while (index < len) {
+                    //newRows.push(rows[index++].trim().split(','))
+                    rows[index] = rows[index].trim().split(',')
+                    index++
+                }
+                /*
+                 const newRows = []
+                 rows.forEach(row => {
                     newRows.push(row.trim().split(','))
-                })
+                }) */
                 return [
                     headers,
-                    newRows
+                    rows //  newRows
                 ]
             },
 

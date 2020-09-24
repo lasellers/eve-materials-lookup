@@ -5,6 +5,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
+        loadProduction: false,
+        loadBlueprints: false,
         headers: [],
         resources: [],
         resourcesForSelection: [],
@@ -22,6 +24,12 @@ export default new Vuex.Store({
     },
 
     getters: {
+        loadProduction: store => {
+            return store.loadProduction
+        },
+        loadBlueprints: store => {
+            return store.loadBlueprints
+        },
         headers: store => {
             return store.headers
         },
@@ -100,6 +108,12 @@ export default new Vuex.Store({
     },
 
     mutations: {
+        loadProduction(store, value) {
+            store.loadProduction = (value === true)
+        },
+        loadBlueprints(store, value) {
+            store.loadBlueprints = (value === true)
+        },
         addHeaders(store, value) {
             store.headers = value
         },
@@ -110,42 +124,62 @@ export default new Vuex.Store({
             // track performance and vuex calls
         },
         updateResourcesForSelection(store) {
-            let resources = ['(None)']
+            let resources = store.resources.map(row => {
+                return row[6]
+            })
+            resources = [...new Set(resources)]
+            resources.unshift('(None)')
+            /* let resources = ['(None)']
             store.resources.map(row => {
                 const value = row[6]
                 if (!resources.includes(value))
                     resources.push(value)
-            })
+            }) */
             resources.sort()
             store.resourcesForSelection = resources
         },
         updateRegionsForSelection(store) {
-            let regions = ['(None)']
-            store.resources.map(row => {
+            let regions = store.resources.map(row => {
+                return row[1]
+            })
+            regions = [...new Set(regions)]
+            regions.unshift('(None)')
+            /*  let regions = ['(None)']
+                store.resources.map(row => {
                 const value = row[1]
                 if (!regions.includes(value))
                     regions.push(value)
-            })
+            }) */
             regions.sort()
             store.regionsForSelection = regions
         },
         updateConstellationsForSelection(store) {
-            let constellations = ['(None)']
-            store.resources.map(row => {
+            let constellations = store.resources.map(row => {
+                return row[2]
+            })
+            constellations = [...new Set(constellations)]
+            constellations.unshift('(None)')
+            /*  let constellations = ['(None)']
+                store.resources.map(row => {
                 const value = row[2]
                 if (!constellations.includes(value))
                     constellations.push(value)
-            })
+            }) */
             constellations.sort()
             store.constellationsForSelection = constellations
         },
         updateSystemsForSelection(store) {
-            let systems = ['(None)']
-            store.resources.map(row => {
-                const value = row[3]
-                if (!systems.includes(value))
-                    systems.push(value)
+            let systems = store.resources.map(row => {
+                return row[3]
             })
+            systems = [...new Set(systems)]
+            systems.unshift('(None)')
+            /*   let systems = ['(None)']
+                 store.resources.map(row => {
+                 const value = row[3]
+                 if (!systems.includes(value))
+                     systems.push(value)
+             })*/
             systems.sort()
             store.systemsForSelection = systems
         },
@@ -223,14 +257,19 @@ export default new Vuex.Store({
         addBlueprints(store, rows) {
             store.blueprints = rows
 
-            // regions
-            store.blueprintsForSelection = ['(None)']
+            // blueprintsForSelection
+            let blueprints = []
             rows.map(row => {
-                const value = row[0] + ' (' + row[1] + ')'
-                if (!store.blueprintsForSelection.includes(value))
-                    store.blueprintsForSelection.push(value)
+                if (row[1] !== 'Rig') {
+                    const value = row[0] + ' (' + row[1] + ')'
+                    if (!blueprints.includes(value))
+                        blueprints.push(value)
+                }
             })
-            store.blueprintsForSelection.sort()
+            blueprints.sort()
+            blueprints.unshift('(None)')
+
+            store.blueprintsForSelection = blueprints
         },
         changeBlueprint(store, value) {
             if (value === null) {
@@ -273,6 +312,12 @@ export default new Vuex.Store({
 
     actions:
         {
+            loadProduction(context, value) {
+                context.commit('loadProduction', value)
+            },
+            loadBlueprints(context, value) {
+                context.commit('loadBlueprints', value)
+            },
             addHeaders(context, value) {
                 context.commit('addHeaders', value)
             },

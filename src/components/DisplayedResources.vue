@@ -95,6 +95,18 @@
         text-align: center;
     }
 
+    @media only screen and (max-width: 414px) {
+        th, td {
+            font-size: x-small;
+        }
+    }
+
+    @media only screen and (max-width: 375px) {
+        th, td {
+            font-size: xx-small;
+        }
+    }
+
     /* @media only screen and (max-width: 1024px) {
         .unimportant {
             visibility: hidden;

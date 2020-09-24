@@ -1,6 +1,6 @@
 <template>
     <div class="titlebox">
-        <h1>Eve Echoes Planetary Materials Lookup</h1>
+        <h1>Eve Echoes Planetary Materials Lookup <small>v1.3</small></h1>
     </div>
 </template>
 

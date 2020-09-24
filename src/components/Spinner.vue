@@ -12,15 +12,15 @@
     .spinner {
         position: absolute;
         left: 50%;
-        top: 16px;
+        top: 3ex;
         z-index: 1;
 
         border: 16px solid #f3f3f3;
         border-top: 16px solid gray;
         border-radius: 50%;
-        width: 25vw;
-        height: 25vw;
-        margin: 0 0 0 -25vh;
+        width: 150px;
+        height: 150px;
+        margin: 0 0 0 -75px;
         -webkit-animation: spin 2s linear infinite;
         animation: spin 2s linear infinite;
     }
