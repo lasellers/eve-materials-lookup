@@ -34,7 +34,10 @@
         },
         methods: {
             onChange: async function (event) {
-                const region = event.target.value
+                let region = event.target.value
+                if (region === '(None)') {
+                    region = null
+                }
                 this.$store.dispatch('changeRegion', region)
                 this.$store.dispatch('computeDisplayedResources')
             },

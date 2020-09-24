@@ -105,6 +105,93 @@ export default new Vuex.Store({
         blueprintsForSelectionCount: store => {
             return store.blueprintsForSelection.length
         },
+        yields(store) {
+            let rows = []
+
+            store.resourcesForSelection.forEach(resource => {
+                let maxIndex = -1
+                let maxValue = 0
+                const startDate = new Date()
+                store.resources.forEach((row, rowIndex) => {
+                    let unfiltered = false
+                    if (store.region !== null && store.region == row[1]) {
+                        unfiltered = true
+                    }
+                    if (store.constellation !== null && store.constellation == row[1]) {
+                        unfiltered = true
+                    }
+                    if (store.system !== null && store.system == row[1]) {
+                        unfiltered = true
+                    }
+                    if (store.region === null &&
+                        store.constellation === null &&
+                        store.system === null) {
+                        unfiltered = true
+                    }
+                    if (unfiltered) {
+                        const value8 = parseInt(row[8])
+                        if (row[6] === resource && value8 > maxValue) {
+                            maxIndex = rowIndex
+                            maxValue = value8
+                        }
+                    }
+                })
+                console.log('yields', new Date().getTime() - startDate.getTime() + 'ms', resource, maxIndex, maxValue)
+                if (maxIndex >= 0) {
+                    rows.push(store.resources[maxIndex])
+                }
+            })
+
+            // sort by output DESC
+            rows.sort(function (a, b) {
+                return b[8] - a[8]
+            });
+
+            return rows
+        },
+        suggestions(store) {
+            let rows = []
+
+            store.resourcesForSelection.forEach(resource => {
+                let maxIndex = -1
+                let maxValue = 0
+                store.resources.forEach((row, rowIndex) => {
+                    let unfiltered = false
+                    if (store.region !== null && store.region == row[1]) {
+                        unfiltered = true
+                    }
+                    if (store.constellation !== null && store.constellation == row[1]) {
+                        unfiltered = true
+                    }
+                    if (store.system !== null && store.system == row[1]) {
+                        unfiltered = true
+                    }
+                    if (store.region === null &&
+                        store.constellation === null &&
+                        store.system === null) {
+                        unfiltered = true
+                    }
+                    if (unfiltered) {
+                        const value8 = parseInt(row[8])
+                        if (row[6] === resource && value8 > maxValue) {
+                            maxIndex = rowIndex
+                            maxValue = value8
+                        }
+                    }
+                })
+                // console.log(resource, maxIndex, maxValue)
+                if (maxIndex >= 0) {
+                    rows.push(store.resources[maxIndex])
+                }
+            })
+
+            // sort by output DESC
+            rows.sort(function (a, b) {
+                return b[8] - a[8]
+            });
+
+            return rows
+        },
     },
 
     mutations: {
@@ -128,7 +215,6 @@ export default new Vuex.Store({
                 return row[6]
             })
             resources = [...new Set(resources)]
-            resources.unshift('(None)')
             /* let resources = ['(None)']
             store.resources.map(row => {
                 const value = row[6]
@@ -136,6 +222,7 @@ export default new Vuex.Store({
                     resources.push(value)
             }) */
             resources.sort()
+            resources.unshift('(None)')
             store.resourcesForSelection = resources
         },
         updateRegionsForSelection(store) {
@@ -143,7 +230,6 @@ export default new Vuex.Store({
                 return row[1]
             })
             regions = [...new Set(regions)]
-            regions.unshift('(None)')
             /*  let regions = ['(None)']
                 store.resources.map(row => {
                 const value = row[1]
@@ -151,6 +237,7 @@ export default new Vuex.Store({
                     regions.push(value)
             }) */
             regions.sort()
+            regions.unshift('(None)')
             store.regionsForSelection = regions
         },
         updateConstellationsForSelection(store) {
@@ -158,7 +245,6 @@ export default new Vuex.Store({
                 return row[2]
             })
             constellations = [...new Set(constellations)]
-            constellations.unshift('(None)')
             /*  let constellations = ['(None)']
                 store.resources.map(row => {
                 const value = row[2]
@@ -166,6 +252,7 @@ export default new Vuex.Store({
                     constellations.push(value)
             }) */
             constellations.sort()
+            constellations.unshift('(None)')
             store.constellationsForSelection = constellations
         },
         updateSystemsForSelection(store) {
@@ -173,7 +260,6 @@ export default new Vuex.Store({
                 return row[3]
             })
             systems = [...new Set(systems)]
-            systems.unshift('(None)')
             /*   let systems = ['(None)']
                  store.resources.map(row => {
                  const value = row[3]
@@ -181,6 +267,7 @@ export default new Vuex.Store({
                      systems.push(value)
              })*/
             systems.sort()
+            systems.unshift('(None)')
             store.systemsForSelection = systems
         },
         changeRegion(store, value) {
@@ -268,7 +355,6 @@ export default new Vuex.Store({
             })
             blueprints.sort()
             blueprints.unshift('(None)')
-
             store.blueprintsForSelection = blueprints
         },
         changeBlueprint(store, value) {

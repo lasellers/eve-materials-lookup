@@ -27,8 +27,11 @@
                 return this.$store.getters.system
             },
             onChange: async function (event) {
-                const constellation = event.target.value
-                this.$store.dispatch('changeSystem', constellation)
+                let system = event.target.value
+                if (system === '(None)') {
+                    system = null
+                }
+                this.$store.dispatch('changeSystem', system)
                 this.$store.dispatch('computeDisplayedResources')
             },
         }

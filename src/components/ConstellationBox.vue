@@ -27,7 +27,10 @@
                 return this.$store.getters.constellation
             },
             onChange: async function (event) {
-                const constellation = event.target.value
+                let constellation = event.target.value
+                if (constellation === '(None)') {
+                    constellation = null
+                }
                 this.$store.dispatch('changeConstellation', constellation)
                 this.$store.dispatch('computeDisplayedResources')
             },

@@ -38,6 +38,7 @@ magnitude or so (ie, it is up to x10 faster now).
     * Broke up the data loader into parts that can be monitored more easily to see where any slow downs
      are taking place. 
     * Will do a code cleanup for next version if all seems stable.
+    * Todo Replace all magic numbers from CSVs
 
 
 ## Project setup

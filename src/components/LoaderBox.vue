@@ -107,30 +107,30 @@ resourcesForSelectionCount===0"><Spinner/></span>
                     .then(data => {
                         this.$store.dispatch('loadProduction', true)
 
-                        // let mb = new Date()
+                        // let startDate = new Date()
 
                         const [headers, resources] = this.csvToArray(data)
-                        // console.log('==== csvToArray', new Date().getTime() - mb.getTime())
+                        // console.log('==== csvToArray', new Date().getTime() - startDate.getTime())
                         // mb = new Date()
 
                         this.$store.dispatch('addHeaders', headers)
-                        // console.log('==== addHeaders', new Date().getTime() - mb.getTime())
+                        // console.log('==== addHeaders', new Date().getTime() - startDate.getTime())
                         // mb = new Date()
                         this.$store.dispatch('addResources', resources)
-                        // console.log('==== addResources', new Date().getTime() - mb.getTime())
+                        // console.log('==== addResources', new Date().getTime() - startDate.getTime())
                         // mb = new Date()
 
                         this.$store.dispatch('updateRegionsForSelection')
-                        // console.log('==== updateRegionsForSelection', new Date().getTime() - mb.getTime())
+                        // console.log('==== updateRegionsForSelection', new Date().getTime() - startDate.getTime())
                         // mb = new Date()
                         this.$store.dispatch('updateConstellationsForSelection')
-                        // console.log('==== updateConstellationsForSelection', new Date().getTime() - mb.getTime())
+                        // console.log('==== updateConstellationsForSelection', new Date().getTime() - startDate.getTime())
                         // mb = new Date()
                         this.$store.dispatch('updateSystemsForSelection')
-                        // console.log('==== updateSystemsForSelection', new Date().getTime() - mb.getTime())
+                        // console.log('==== updateSystemsForSelection', new Date().getTime() - startDate.getTime())
                         // mb = new Date()
                         this.$store.dispatch('updateResourcesForSelection')
-                        // console.log('==== updateResourcesForSelection', new Date().getTime() - mb.getTime())
+                        // console.log('==== updateResourcesForSelection', new Date().getTime() - startDate.getTime())
                         // mb = new Date()
 
                         this.$store.dispatch('computeDisplayedResources')

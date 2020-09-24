@@ -48,7 +48,16 @@
 
         </div>
 
-        <DisplayedResources/>
+        <div class="mr-auto">
+            <ul class="steps-inline">
+                <router-link to="/home"><div class="btn btn-step">Resources</div></router-link>
+                <router-link to="/yields"><div class="btn btn-step">Yields</div></router-link>
+                <router-link to="/suggestions"><div class="btn btn-step">Suggestions</div></router-link>
+            </ul>
+        </div>
+
+        <router-view/>
+
         <Notice/>
 
     </div>
@@ -60,7 +69,6 @@
     import RegionBox from './components/RegionBox.vue'
     import ConstellationBox from './components/ConstellationBox.vue'
     import ResourcesBox from './components/ResourcesBox.vue'
-    import DisplayedResources from '@/components/DisplayedResources'
     import Notice from './components/Notice.vue'
     import SystemBox from './components/SystemBox.vue'
     import BlueprintsBox from './components/BlueprintsBox.vue'
@@ -68,7 +76,6 @@
     export default {
         name: 'App',
         components: {
-            DisplayedResources,
             TitleBox,
             LoaderBox,
             RegionBox,
