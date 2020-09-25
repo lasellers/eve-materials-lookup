@@ -1,6 +1,6 @@
 <template>
     <div class="titlebox">
-        <h1>Eve Echoes Planetary Materials Lookup <small>v1.4<!--process.env.PACKAGE_VERSION--></small></h1>
+        <h1>Eve Echoes Planetary Materials Lookup <small>v1.4 beta<!--process.env.PACKAGE_VERSION--></small></h1>
     </div>
 </template>
 

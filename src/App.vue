@@ -72,7 +72,11 @@
 
         </div>
 
-        <router-view/>
+        <div class="container-fluid">
+
+            <router-view/>
+
+        </div>
 
         <Notice/>
 
@@ -109,9 +113,7 @@
         data() {
             return {}
         },
-        computed: {
-
-        },
+        computed: {},
         methods: {
             unimportant() {
                 return !(window.innerWidth < 1024)

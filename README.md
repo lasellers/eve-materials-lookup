@@ -39,7 +39,8 @@ magnitude or so (ie, it is up to x10 faster now).
      are taking place. 
     * Will do a code cleanup for next version if all seems stable.
     * Todo Replace all magic numbers from CSVs
-* v1.4 Add routing for "Resources", "Yields" and "Suggestions". Optimize more.
+* v1.4 Add routing for "Resources", "Yields" and "Suggestions". Optimize more -- the restructure 
+and addition of several new sections has thrown off the speed of the app.
 
 ## Project setup
 ```

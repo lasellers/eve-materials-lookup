@@ -120,6 +120,7 @@ export default new Vuex.Store({
 
             //
             let rows = new Array(0)
+            let rowCount = 0
 
             // none
             if (store.region === null && store.constellation === null && store.system === null) {
@@ -128,7 +129,7 @@ export default new Vuex.Store({
                     for (let rowIndex = 0; rowIndex < sourceResourcesLen; rowIndex++) {
                         if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
                             // rows.push(store.resources[rowIndex])
-                            rows[rows.length] = store.resources[rowIndex]
+                            rows[rowCount++] = sourceResources[rowIndex]
                             console.log('yields all', new Date().getTime() - startDate.getTime() + 'ms', resource)
                             break
                         }
@@ -140,9 +141,8 @@ export default new Vuex.Store({
                     for (let rowIndex = 0; rowIndex < sourceResourcesLen; rowIndex++) {
                         if (store.region == sourceResources[rowIndex][1]) {
                             if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
-                                console.log('yields region A', new Date().getTime() - startDate.getTime() + 'ms', resource)
                                 // rows.push(store.resources[rowIndex])
-                                rows[rows.length] = store.resources[rowIndex]
+                                rows[rowCount++] = sourceResources[rowIndex]
                                 console.log('yields region', new Date().getTime() - startDate.getTime() + 'ms', resource)
                                 break
                             }
@@ -156,7 +156,7 @@ export default new Vuex.Store({
                         if (store.constellation == sourceResources[rowIndex][2]) {
                             if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
                                 // rows.push(store.resources[rowIndex])
-                                rows[rows.length] = store.resources[rowIndex]
+                                rows[rowCount++] = sourceResources[rowIndex]
                                 console.log('yields constellation', new Date().getTime() - startDate.getTime() + 'ms', resource)
                                 break
                             }
@@ -170,7 +170,7 @@ export default new Vuex.Store({
                         if (store.system == sourceResources[rowIndex][3]) {
                             if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
                                 // rows.push(store.resources[rowIndex])
-                                rows[rows.length] = store.resources[rowIndex]
+                                rows[rowCount++] = store.resources[rowIndex] //@todo very slow
                                 console.log('yields system', new Date().getTime() - startDate.getTime() + 'ms', resource)
                                 break
                             }
@@ -450,12 +450,10 @@ export default new Vuex.Store({
 
                 console.log('computeDisplayedResources', new Date().getTime() - startDate.getTime() + 'ms')
             }
-        }
-        ,
+        },
         addBlueprintHeaders(store, value) {
             store.blueprintHeaders = value
-        }
-        ,
+        },
         addBlueprints(store, rows) {
             store.blueprints = rows
 
@@ -471,8 +469,7 @@ export default new Vuex.Store({
             blueprints.sort()
             blueprints.unshift('(None)')
             store.blueprintsForSelection = blueprints
-        }
-        ,
+        },
         changeBlueprint(store, value) {
             if (value === null) {
                 store.resourceFilters = [null, null, null, null, null]
@@ -553,11 +550,10 @@ export default new Vuex.Store({
             });
             // sort by planet ASC
             rows.sort(function (a, b) {
-                return b[8] < a[8]
+                return b[8] < a[8] ? -1 : 1
             });
 
             console.log('resourcesByPlanet last sort', new Date().getTime() - startDate.getTime() + 'ms')
-            console.log(rows)
 
             store.resourcesByPlanet = rows
         }
