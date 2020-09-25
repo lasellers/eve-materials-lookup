@@ -47,4 +47,8 @@
 
     option {
     }
+
+    .stats {
+        text-align: center;
+    }
 </style>

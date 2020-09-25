@@ -39,7 +39,8 @@
                     region = null
                 }
                 this.$store.dispatch('changeRegion', region)
-                this.$store.dispatch('computeDisplayedResources')
+                // the selected+set provokes a computeDisplayedResources so we omit it here
+                // this.$store.dispatch('computeDisplayedResources')
             },
         }
     }

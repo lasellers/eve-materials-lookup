@@ -3,6 +3,26 @@
         <TitleBox/>
         <LoaderBox/>
 
+        <div class="mr-auto">
+            <ul class="nav nav-tabs">
+                <li class="nav-item active">
+                    <router-link to="/home" class="nav-link">
+                        Resources
+                    </router-link>
+                </li>
+                <li class="nav-item">
+                    <router-link to="/suggestions" class="nav-link">
+                        Suggestions
+                    </router-link>
+                </li>
+                <li class="nav-item">
+                    <router-link to="/yields" class="nav-link">
+                        Yields
+                    </router-link>
+                </li>
+            </ul>
+        </div>
+
         <div class="container-fluid">
 
             <div class="row">
@@ -25,35 +45,31 @@
 
             <hr/>
 
-            <b>Resources</b>&nbsp;
-            <div class="row">
-                <div class="col-md-3 col-lg-2">
-                    <ResourcesBox box="0"/>
+            <div v-if="currentRouteName() !== '/yields'">
+
+                <b>Resources</b>&nbsp;
+                <div class="row">
+                    <div class="col-md-3 col-lg-2">
+                        <ResourcesBox box="0"/>
+                    </div>
+                    <div class="col-md-3 col-lg-2">
+                        <ResourcesBox box="1"/>
+                    </div>
+                    <div class="col-md-3 col-lg-2">
+                        <ResourcesBox box="2"/>
+                    </div>
+                    <div class="col-md-3 col-lg-2">
+                        <ResourcesBox box="3"/>
+                    </div>
+                    <div class="col-md-3 col-lg-2">
+                        <ResourcesBox box="4"/>
+                    </div>
                 </div>
-                <div class="col-md-3 col-lg-2">
-                    <ResourcesBox box="1"/>
-                </div>
-                <div class="col-md-3 col-lg-2">
-                    <ResourcesBox box="2"/>
-                </div>
-                <div class="col-md-3 col-lg-2">
-                    <ResourcesBox box="3"/>
-                </div>
-                <div class="col-md-3 col-lg-2">
-                    <ResourcesBox box="4"/>
-                </div>
+
+                <BlueprintsBox/>
+
             </div>
 
-             <BlueprintsBox/>
-
-        </div>
-
-        <div class="mr-auto">
-            <ul class="steps-inline">
-                <router-link to="/home"><div class="btn btn-step">Resources</div></router-link>
-                <router-link to="/yields"><div class="btn btn-step">Yields</div></router-link>
-                <router-link to="/suggestions"><div class="btn btn-step">Suggestions</div></router-link>
-            </ul>
         </div>
 
         <router-view/>
@@ -85,10 +101,24 @@
             SystemBox,
             BlueprintsBox
         },
+        created() {
+            console.info('NODE_ENV', process.env.NODE_ENV)
+            console.info('BASE_URL', process.env.BASE_URL)
+            // console.info('PACKAGE_VERSION',process.env.PACKAGE_VERSION)
+        },
+        data() {
+            return {}
+        },
         computed: {
+
+        },
+        methods: {
             unimportant() {
                 return !(window.innerWidth < 1024)
             },
+            currentRouteName() {
+                return this.$router.currentRoute.path;
+            }
         }
     }
 </script>
@@ -101,8 +131,13 @@
         color: #2c3e50;
     }
 
-    .stats {
-        text-align: center;
+    .nav-item a {
+        color: black;
+        font-weight: bold;
+    }
+
+    a.router-link-active {
+        background-color: #e3e3e3;
     }
 
     @media only screen and (max-width: 1024px) {

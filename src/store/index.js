@@ -21,6 +21,7 @@ export default new Vuex.Store({
         blueprintHeaders: [],
         blueprints: [],
         blueprintsForSelection: [],
+        resourcesByPlanet: []
     },
 
     getters: {
@@ -106,184 +107,294 @@ export default new Vuex.Store({
             return store.blueprintsForSelection.length
         },
         yields(store) {
-            let rows = []
+            const startDate = new Date()
 
-            store.resourcesForSelection.forEach(resource => {
-                let maxIndex = -1
-                let maxValue = 0
-                const startDate = new Date()
-                store.resources.forEach((row, rowIndex) => {
-                    let unfiltered = false
-                    if (store.region !== null && store.region == row[1]) {
-                        unfiltered = true
-                    }
-                    if (store.constellation !== null && store.constellation == row[1]) {
-                        unfiltered = true
-                    }
-                    if (store.system !== null && store.system == row[1]) {
-                        unfiltered = true
-                    }
-                    if (store.region === null &&
-                        store.constellation === null &&
-                        store.system === null) {
-                        unfiltered = true
-                    }
-                    if (unfiltered) {
-                        const value8 = parseInt(row[8])
-                        if (row[6] === resource && value8 > maxValue) {
-                            maxIndex = rowIndex
-                            maxValue = value8
+            // We preoptimize the searches later on by sorting the data once by output DESC
+            // That way we can break at the first match instead of doing full table searches
+            let sourceResources = store.resources
+            sourceResources.sort(function (a, b) {
+                return b[8] - a[8]
+            });
+            let sourceResourcesLen = sourceResources.length
+            console.log('yields pre-sort', new Date().getTime() - startDate.getTime() + 'ms')
+
+            //
+            let rows = new Array(0)
+
+            // none
+            if (store.region === null && store.constellation === null && store.system === null) {
+                store.resourcesForSelection.forEach(resource => {
+                    const startDate = new Date()
+                    for (let rowIndex = 0; rowIndex < sourceResourcesLen; rowIndex++) {
+                        if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
+                            // rows.push(store.resources[rowIndex])
+                            rows[rows.length] = store.resources[rowIndex]
+                            console.log('yields all', new Date().getTime() - startDate.getTime() + 'ms', resource)
+                            break
                         }
                     }
                 })
-                console.log('yields', new Date().getTime() - startDate.getTime() + 'ms', resource, maxIndex, maxValue)
-                if (maxIndex >= 0) {
-                    rows.push(store.resources[maxIndex])
-                }
-            })
+            } else if (store.region !== null) { // region
+                store.resourcesForSelection.forEach(resource => {
+                    const startDate = new Date()
+                    for (let rowIndex = 0; rowIndex < sourceResourcesLen; rowIndex++) {
+                        if (store.region == sourceResources[rowIndex][1]) {
+                            if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
+                                console.log('yields region A', new Date().getTime() - startDate.getTime() + 'ms', resource)
+                                // rows.push(store.resources[rowIndex])
+                                rows[rows.length] = store.resources[rowIndex]
+                                console.log('yields region', new Date().getTime() - startDate.getTime() + 'ms', resource)
+                                break
+                            }
+                        }
+                    }
+                })
+            } else if (store.constellation !== null) { // constellation
+                store.resourcesForSelection.forEach(resource => {
+                    const startDate = new Date()
+                    for (let rowIndex = 0; rowIndex < sourceResourcesLen; rowIndex++) {
+                        if (store.constellation == sourceResources[rowIndex][2]) {
+                            if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
+                                // rows.push(store.resources[rowIndex])
+                                rows[rows.length] = store.resources[rowIndex]
+                                console.log('yields constellation', new Date().getTime() - startDate.getTime() + 'ms', resource)
+                                break
+                            }
+                        }
+                    }
+                })
+            } else if (store.system !== null) { // system
+                store.resourcesForSelection.forEach(resource => {
+                    const startDate = new Date()
+                    for (let rowIndex = 0; rowIndex < sourceResourcesLen; rowIndex++) {
+                        if (store.system == sourceResources[rowIndex][3]) {
+                            if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
+                                // rows.push(store.resources[rowIndex])
+                                rows[rows.length] = store.resources[rowIndex]
+                                console.log('yields system', new Date().getTime() - startDate.getTime() + 'ms', resource)
+                                break
+                            }
+                        }
+                    }
+                })
+            }
 
             // sort by output DESC
             rows.sort(function (a, b) {
                 return b[8] - a[8]
             });
 
+            console.log('yields', new Date().getTime() - startDate.getTime() + 'ms')
+
             return rows
         },
-        suggestions(store) {
+        resourcesByPlanet: store => {
+            return store.resourcesByPlanet
+        },
+        resourcesByPlanetCount: store => {
+            return store.resourcesByPlanet.length
+        },
+        suggestionsForSinglePlanetWithAllResources(store) {
+            // get list of resource filters without nulls
+            const resourceFilters = store.resourceFilters.filter(item => {
+                return (item !== null)
+            })
+
             let rows = []
 
-            store.resourcesForSelection.forEach(resource => {
-                let maxIndex = -1
-                let maxValue = 0
-                store.resources.forEach((row, rowIndex) => {
-                    let unfiltered = false
-                    if (store.region !== null && store.region == row[1]) {
-                        unfiltered = true
-                    }
-                    if (store.constellation !== null && store.constellation == row[1]) {
-                        unfiltered = true
-                    }
-                    if (store.system !== null && store.system == row[1]) {
-                        unfiltered = true
-                    }
-                    if (store.region === null &&
-                        store.constellation === null &&
-                        store.system === null) {
-                        unfiltered = true
-                    }
-                    if (unfiltered) {
-                        const value8 = parseInt(row[8])
-                        if (row[6] === resource && value8 > maxValue) {
-                            maxIndex = rowIndex
-                            maxValue = value8
-                        }
-                    }
-                })
-                // console.log(resource, maxIndex, maxValue)
-                if (maxIndex >= 0) {
-                    rows.push(store.resources[maxIndex])
+            store.resourcesByPlanet.forEach((row) => {
+                if (row[6].length === 5 && row[6] == resourceFilters) {
+                    rows.push(row)
                 }
             })
 
-            // sort by output DESC
+            // sort by region ASC
             rows.sort(function (a, b) {
-                return b[8] - a[8]
+                return b[1] < a[1] ? -1 : 1
             });
 
             return rows
         },
-    },
+        suggestionsForSinglePlanetWithMostResources(store) {
+            let minNumber = 3
+
+            // get list of resource filters without nulls
+            const resourceFilters = store.resourceFilters.filter(item => {
+                return (item !== null)
+            })
+
+            let rows = []
+
+            if (store.region !== null) {
+                store.resourcesByPlanet.forEach((row) => {
+                    if (store.region === row[1]) {
+                        if (row[6].length >= minNumber) {
+                            let count = 0
+                            resourceFilters.forEach(resource => {
+                                if (row[6].includes(resource)) {
+                                    row[9] = ++count
+                                }
+                            })
+                            if (count >= minNumber) {
+                                rows.push(row)
+                            }
+                        }
+                    }
+                })
+            } else if (store.constellation !== null) {
+                store.resourcesByPlanet.forEach((row) => {
+                    if (store.constellation === row[2]) {
+                        if (row[6].length >= minNumber) {
+                            let count = 0
+                            resourceFilters.forEach(resource => {
+                                if (row[6].includes(resource)) {
+                                    row[9] = ++count
+                                }
+                            })
+                            if (count >= minNumber) {
+                                rows.push(row)
+                            }
+                        }
+                    }
+                })
+            } else if (store.system !== null) {
+                store.resourcesByPlanet.forEach((row) => {
+                    if (store.system === row[3]) {
+                        if (row[6].length >= minNumber) {
+                            let count = 0
+                            resourceFilters.forEach(resource => {
+                                if (row[6].includes(resource)) {
+                                    row[9] = ++count
+                                }
+                            })
+                            if (count >= minNumber) {
+                                rows.push(row)
+                            }
+                        }
+                    }
+                })
+            } else {
+                store.resourcesByPlanet.forEach((row) => {
+                    if (row[6].length >= minNumber) {
+                        let count = 0
+                        resourceFilters.forEach(resource => {
+                            if (row[6].includes(resource)) {
+                                row[9] = ++count
+                            }
+                        })
+                        if (count >= minNumber) {
+                            rows.push(row)
+                        }
+                    }
+                })
+            }
+
+            // sort by region ASC
+            rows.sort(function (a, b) {
+                return a[1] < b[1] ? -1 : 1
+            });
+
+            return rows
+        }
+    }
+    ,
 
     mutations: {
         loadProduction(store, value) {
             store.loadProduction = (value === true)
-        },
+        }
+        ,
         loadBlueprints(store, value) {
             store.loadBlueprints = (value === true)
-        },
+        }
+        ,
         addHeaders(store, value) {
             store.headers = value
-        },
+        }
+        ,
         addResources(store, rows) {
             store.resources = rows
             // put data into store all at once to limit DOM rerenders
             // Originally the *ForSelection updates were here, but moved to seperate mutations to make it easier to
             // track performance and vuex calls
-        },
+        }
+        ,
         updateResourcesForSelection(store) {
+            const startDate = new Date()
+
             let resources = store.resources.map(row => {
                 return row[6]
             })
             resources = [...new Set(resources)]
-            /* let resources = ['(None)']
-            store.resources.map(row => {
-                const value = row[6]
-                if (!resources.includes(value))
-                    resources.push(value)
-            }) */
             resources.sort()
             resources.unshift('(None)')
             store.resourcesForSelection = resources
-        },
+
+            console.log('updateResourcesForSelection', new Date().getTime() - startDate.getTime() + 'ms')
+        }
+        ,
         updateRegionsForSelection(store) {
+            const startDate = new Date()
+
             let regions = store.resources.map(row => {
                 return row[1]
             })
             regions = [...new Set(regions)]
-            /*  let regions = ['(None)']
-                store.resources.map(row => {
-                const value = row[1]
-                if (!regions.includes(value))
-                    regions.push(value)
-            }) */
             regions.sort()
             regions.unshift('(None)')
             store.regionsForSelection = regions
-        },
+
+            console.log('updateRegionsForSelection', new Date().getTime() - startDate.getTime() + 'ms')
+        }
+        ,
         updateConstellationsForSelection(store) {
+            const startDate = new Date()
+
             let constellations = store.resources.map(row => {
                 return row[2]
             })
             constellations = [...new Set(constellations)]
-            /*  let constellations = ['(None)']
-                store.resources.map(row => {
-                const value = row[2]
-                if (!constellations.includes(value))
-                    constellations.push(value)
-            }) */
             constellations.sort()
             constellations.unshift('(None)')
             store.constellationsForSelection = constellations
-        },
+
+            console.log('updateConstellationsForSelection', new Date().getTime() - startDate.getTime() + 'ms')
+        }
+        ,
         updateSystemsForSelection(store) {
+            const startDate = new Date()
+
             let systems = store.resources.map(row => {
                 return row[3]
             })
             systems = [...new Set(systems)]
-            /*   let systems = ['(None)']
-                 store.resources.map(row => {
-                 const value = row[3]
-                 if (!systems.includes(value))
-                     systems.push(value)
-             })*/
             systems.sort()
             systems.unshift('(None)')
             store.systemsForSelection = systems
-        },
+
+            console.log('updateSystemsForSelection', new Date().getTime() - startDate.getTime() + 'ms')
+        }
+        ,
         changeRegion(store, value) {
             store.region = value === "" ? null : value
-        },
+        }
+        ,
         changeConstellation(store, value) {
             store.constellation = value === "" ? null : value
-        },
+        }
+        ,
         changeSystem(store, value) {
             store.system = value === "" ? null : value
-        },
+        }
+        ,
         changeResourceFilter(store, values) {
             const [index, resource] = values
             store.resourceFilters[index] = resource
-        },
+        }
+        ,
         computeDisplayedResources(store) {
+            const startDate = new Date()
+
             // filter out everything by regions or constellations and optionally up to 5 resource types
             if (store.region === null && store.constellation === null && store.system === null) {
                 // short circuit
@@ -336,11 +447,15 @@ export default new Vuex.Store({
 
                 // update the store once
                 store.displayedResources = newRows;
+
+                console.log('computeDisplayedResources', new Date().getTime() - startDate.getTime() + 'ms')
             }
-        },
+        }
+        ,
         addBlueprintHeaders(store, value) {
             store.blueprintHeaders = value
-        },
+        }
+        ,
         addBlueprints(store, rows) {
             store.blueprints = rows
 
@@ -356,7 +471,8 @@ export default new Vuex.Store({
             blueprints.sort()
             blueprints.unshift('(None)')
             store.blueprintsForSelection = blueprints
-        },
+        }
+        ,
         changeBlueprint(store, value) {
             if (value === null) {
                 store.resourceFilters = [null, null, null, null, null]
@@ -380,7 +496,7 @@ export default new Vuex.Store({
                 // @todo get rid of magic numbers -- have it prescan to get these
                 for (let index = 11; index <= 38; index++) {
                     // convert to a number only
-                    const value = parseInt(blueprint[index].replace(/\D/g, ''))
+                    const value = parseFloat(blueprint[index].replace(/\D/g, ''))
                     // if any PI has more than 0 listed, add it to the resources array
                     if (value !== 0) {
                         resources.push(store.blueprintHeaders[index])
@@ -393,58 +509,129 @@ export default new Vuex.Store({
             }
 
             store.resourceFilters = resources
-        },
-    },
+        }
+        ,
+        updateResourcesByPlanet(store) {
+            const startDate = new Date()
+
+            //
+            let sourceResources = JSON.parse(JSON.stringify(store.resources))
+            sourceResources.sort(function (a, b) {
+                return (b[4] - a[4])
+            });
+
+            console.log('resourcesByPlanet first sort', new Date().getTime() - startDate.getTime() + 'ms')
+
+            //
+            let rows = []
+
+            let currentPlanet = null
+            sourceResources.forEach((row) => {
+                if (currentPlanet !== row[4]) {
+                    currentPlanet = row[4]
+                    rows.push(row)
+                    // 6 is resource names, 7 is sum of outputs, 8 is full description, 9 is count, 10 is output
+                    rows[rows.length - 1][6] = [row[6]]
+                    rows[rows.length - 1][7] = parseFloat(row[8])
+                    rows[rows.length - 1][10] = [row[6] + ' (' + row[8] + ')']
+                    rows[rows.length - 1][8] = [parseFloat(row[8])]
+                    // rows[rows.length - 1][8] = [row[8]]
+                } else {
+                    rows[rows.length - 1][6].push(row[6])
+                    rows[rows.length - 1][7] += parseFloat(row[8])
+                    rows[rows.length - 1][10].push(row[6] + ' (' + row[8] + ')')
+                    rows[rows.length - 1][8].push(parseFloat(row[8]))
+                    // rows[rows.length - 1][8].push(row[8])
+                }
+            })
+
+            console.log('resourcesByPlanet compile', new Date().getTime() - startDate.getTime() + 'ms')
+
+            // sort by output DESC
+            rows.sort(function (a, b) {
+                return b[7] - a[7]
+            });
+            // sort by planet ASC
+            rows.sort(function (a, b) {
+                return b[8] < a[8]
+            });
+
+            console.log('resourcesByPlanet last sort', new Date().getTime() - startDate.getTime() + 'ms')
+            console.log(rows)
+
+            store.resourcesByPlanet = rows
+        }
+    }
+    ,
 
     actions:
         {
             loadProduction(context, value) {
                 context.commit('loadProduction', value)
-            },
+            }
+            ,
             loadBlueprints(context, value) {
                 context.commit('loadBlueprints', value)
-            },
+            }
+            ,
             addHeaders(context, value) {
                 context.commit('addHeaders', value)
-            },
+            }
+            ,
             addResources(context, value) {
                 context.commit('addResources', value)
-            },
+            }
+            ,
             updateResourcesForSelection(context, value) {
                 context.commit('updateResourcesForSelection', value)
-            },
+            }
+            ,
             updateRegionsForSelection(context, value) {
                 context.commit('updateRegionsForSelection', value)
-            },
+            }
+            ,
             updateConstellationsForSelection(context, value) {
                 context.commit('updateConstellationsForSelection', value)
-            },
+            }
+            ,
             updateSystemsForSelection(context, value) {
                 context.commit('updateSystemsForSelection', value)
-            },
+            }
+            ,
             changeRegion(context, value) {
                 context.commit('changeRegion', value)
-            },
+            }
+            ,
             changeConstellation(context, value) {
                 context.commit('changeConstellation', value)
-            },
+            }
+            ,
             changeSystem(context, value) {
                 context.commit('changeSystem', value)
-            },
+            }
+            ,
             changeResourceFilter(context, values) {
                 context.commit('changeResourceFilter', values)
-            },
+            }
+            ,
             computeDisplayedResources(context) {
                 context.commit('computeDisplayedResources')
-            },
+            }
+            ,
             addBlueprintHeaders(context, value) {
                 context.commit('addBlueprintHeaders', value)
-            },
+            }
+            ,
             addBlueprints(context, value) {
                 context.commit('addBlueprints', value)
-            },
+            }
+            ,
             changeBlueprint(context, value) {
                 context.commit('changeBlueprint', value)
-            },
+            }
+            ,
+            updateResourcesByPlanet(context, value) {
+                context.commit('updateResourcesByPlanet', value)
+            }
         }
 })

@@ -39,7 +39,7 @@ magnitude or so (ie, it is up to x10 faster now).
      are taking place. 
     * Will do a code cleanup for next version if all seems stable.
     * Todo Replace all magic numbers from CSVs
-
+* v1.4 Add routing for "Resources", "Yields" and "Suggestions". Optimize more.
 
 ## Project setup
 ```
