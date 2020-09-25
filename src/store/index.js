@@ -232,7 +232,8 @@ export default new Vuex.Store({
                             let count = 0
                             resourceFilters.forEach(resource => {
                                 if (row[6].includes(resource)) {
-                                    row[9] = ++count
+                                    // row[9] = ++count
+                                    count++
                                 }
                             })
                             if (count >= minNumber) {
@@ -248,7 +249,8 @@ export default new Vuex.Store({
                             let count = 0
                             resourceFilters.forEach(resource => {
                                 if (row[6].includes(resource)) {
-                                    row[9] = ++count
+                                    // row[9] = ++count
+                                    count++
                                 }
                             })
                             if (count >= minNumber) {
@@ -264,7 +266,8 @@ export default new Vuex.Store({
                             let count = 0
                             resourceFilters.forEach(resource => {
                                 if (row[6].includes(resource)) {
-                                    row[9] = ++count
+                                    // row[9] = ++count
+                                    count++
                                 }
                             })
                             if (count >= minNumber) {
@@ -279,7 +282,8 @@ export default new Vuex.Store({
                         let count = 0
                         resourceFilters.forEach(resource => {
                             if (row[6].includes(resource)) {
-                                row[9] = ++count
+                                // row[9] = ++count
+                                count++
                             }
                         })
                         if (count >= minNumber) {
