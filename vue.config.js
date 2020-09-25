@@ -1,9 +1,10 @@
-import * as webpack from "webpack";
+/* import * as webpack from "webpack";
 const fs = require('fs')
 const packageJson = fs.readFileSync('./package.json')
 const version = JSON.parse(packageJson).version || 0
+*/
 module.exports = {
-    configureWebpack: {
+/*    configureWebpack: {
         plugins: [
             new webpack.DefinePlugin({
                 'process.env': {
@@ -11,7 +12,7 @@ module.exports = {
                 }
             })
         ]
-    },
+    }, */
     publicPath: './',
     assetsDir: './',
     // publicPath: process.env.BASE_URL,
