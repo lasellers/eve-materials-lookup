@@ -24,5 +24,8 @@ module.exports = {
             .use('raw-loader')
             .loader('raw-loader')
             .end()
+        config.performance
+            .maxEntrypointSize(1700000)
+            .maxAssetSize(13000000)
     },
 }

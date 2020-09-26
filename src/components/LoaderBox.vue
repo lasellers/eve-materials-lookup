@@ -1,26 +1,10 @@
 <template>
     <div class="loaderbox">
-        <span v-if="resourcesCount===0 || blueprintsCount===0 || blueprintsForSelectionCount===0 ||
-regionsForSelectionCount===0 || constellationsForSelectionCount===0 || systemsForSelectionCount===0 ||
-resourcesForSelectionCount===0"><Spinner/></span>
-        <div class="row">
-            <div class="col-md-4"></div>
-            <div class="col-md-4">
-                <code><small>
-                    <ul>
-                        <li v-if="loadProduction===false">Loading Resources data...</li>
-                        <li v-if="loadBlueprints===false">Loading Blueprint data...</li>
-                        <li v-if="blueprintsCount===0">Loading Blueprints...</li>
-                        <li v-if="blueprintsForSelectionCount===0">Loading Blueprints For Selection...</li>
-                        <li v-if="resourcesCount===0">Loading Resources...</li>
-                        <li v-if="regionsForSelectionCount===0">Loading Regions For Selection...</li>
-                        <li v-if="constellationsForSelectionCount===0">Loading Constellations For Selection...</li>
-                        <li v-if="systemsForSelectionCount===0">Loading Systems For Selection...</li>
-                        <li v-if="resourcesForSelectionCount===0">Loading Resources For Selection...</li>
-                    </ul>
-                </small></code>
+        <span v-if="showSpinner"><Spinner/></span>
+        <div class="row" v-if="showSpinner">
+            <div class="col-md-12 text-center">
+                <code>Loading data and pre-processing....</code>
             </div>
-            <div class="col-md-4"></div>
         </div>
     </div>
 </template>
@@ -40,7 +24,9 @@ resourcesForSelectionCount===0"><Spinner/></span>
             }
         },
         created() {
+            this.$store.dispatch('spinnerOn')
             this.onLoad()
+            this.$store.dispatch('spinnerOff')
         },
         computed: {
             loadProduction: function () {
@@ -48,6 +34,9 @@ resourcesForSelectionCount===0"><Spinner/></span>
             },
             loadBlueprints: function () {
                 return this.$store.getters.loadBlueprints
+            },
+            loadSystems: function () {
+                return this.$store.getters.loadSystems
             },
             resourcesCount: function () {
                 return this.$store.getters.resourcesCount
@@ -69,29 +58,24 @@ resourcesForSelectionCount===0"><Spinner/></span>
             },
             resourcesForSelectionCount: function () {
                 return this.$store.getters.resourcesForSelectionCount
-            }
+            },
+            showSpinner: function() {
+                return this.$store.getters.showSpinner
+            },
+            currentSpinnerCount: function() {
+                return this.$store.getters.currentSpinnerCount
+            },
         },
         methods: {
             onLoad: function () {
+                this.$store.dispatch('spinnerOn')
                 this.getProductionCsv()
                 this.getBlueprintsCsv()
-
-                /*
-                const [headers, resources] = this.csvToArray(productionCsv)
-                this.$store.dispatch('addHeaders', headers)
-                this.$store.dispatch('addResources', resources)
-
-                //
-                const [blueprintsHeaders, blueprints] = this.csvToArrayRotated(blueprintsCsv)
-                this.$store.dispatch('addBlueprintHeaders', blueprintsHeaders)
-                this.$store.dispatch('addBlueprints', blueprints)
-
-                //
-                // this.$store.dispatch('computeDisplayedResources')
-                */
+                this.$store.dispatch('spinnerOff')
             },
 
             async getProductionCsv() {
+                this.$store.dispatch('spinnerOn')
                 const headers = new Headers()
                 const request = new Request(
                     "./Production.csv",
@@ -105,42 +89,54 @@ resourcesForSelectionCount===0"><Spinner/></span>
                 fetch(request)
                     .then(response => response.text())
                     .then(data => {
+                        this.$store.dispatch('spinnerOn')
+
                         this.$store.dispatch('loadProduction', true)
 
                         let startDate = new Date()
 
                         const [headers, resources] = this.csvToArray(data)
-                        // console.log('==== csvToArray', new Date().getTime() - startDate.getTime())
-                        // startDate = new Date()
+                        console.log('==== csvToArray', new Date().getTime() - startDate.getTime())
+                        startDate = new Date()
 
                         this.$store.dispatch('addHeaders', headers)
-                        // console.log('==== addHeaders', new Date().getTime() - startDate.getTime())
-                        // startDate = new Date()
+                        console.log('==== addHeaders', new Date().getTime() - startDate.getTime())
+                        startDate = new Date()
+
                         this.$store.dispatch('addResources', resources)
-                        // console.log('==== addResources', new Date().getTime() - startDate.getTime())
-                        // startDate = new Date()
+                        console.log('==== addResources', new Date().getTime() - startDate.getTime())
+                        startDate = new Date()
 
                         this.$store.dispatch('updateRegionsForSelection')
-                        // console.log('==== updateRegionsForSelection', new Date().getTime() - startDate.getTime())
-                        // startDate = new Date()
+                        console.log('==== updateRegionsForSelection', new Date().getTime() - startDate.getTime())
+                        startDate = new Date()
+
                         this.$store.dispatch('updateConstellationsForSelection')
-                        // console.log('==== updateConstellationsForSelection', new Date().getTime() - startDate.getTime())
-                        // startDate = new Date()
+                        console.log('==== updateConstellationsForSelection', new Date().getTime() - startDate.getTime())
+                        startDate = new Date()
+
                         this.$store.dispatch('updateSystemsForSelection')
-                        // console.log('==== updateSystemsForSelection', new Date().getTime() - startDate.getTime())
-                        // startDate = new Date()
+                        console.log('==== updateSystemsForSelection', new Date().getTime() - startDate.getTime())
+                        startDate = new Date()
+
                         this.$store.dispatch('updateResourcesForSelection')
-                        // console.log('==== updateResourcesForSelection', new Date().getTime() - startDate.getTime())
-                        // startDate = new Date()
+                        console.log('==== updateResourcesForSelection', new Date().getTime() - startDate.getTime())
+                        startDate = new Date()
 
                         this.$store.dispatch('updateResourcesByPlanet')
                         console.log('==== updateResourcesByPlanet', new Date().getTime() - startDate.getTime())
                         startDate = new Date()
 
+                        this.$store.dispatch('yieldsPreSort')
+
                         this.$store.dispatch('computeDisplayedResources')
+
+                        this.$store.dispatch('spinnerOff')
                     })
+                this.$store.dispatch('spinnerOff')
             },
             async getBlueprintsCsv() {
+                this.$store.dispatch('spinnerOn')
                 const headers = new Headers()
                 const request = new Request(
                     "./Blueprints.csv",
@@ -154,6 +150,8 @@ resourcesForSelectionCount===0"><Spinner/></span>
                 fetch(request)
                     .then(response => response.text())
                     .then(data => {
+                        this.$store.dispatch('spinnerOn')
+
                         this.$store.dispatch('loadBlueprints', true)
 
                         const [headers, blueprints] = this.csvToArrayRotated(data)
@@ -162,7 +160,10 @@ resourcesForSelectionCount===0"><Spinner/></span>
                         this.$store.dispatch('addBlueprints', blueprints)
 
                         this.$store.dispatch('computeDisplayedResources')
+
+                        this.$store.dispatch('spinnerOff')
                     })
+                this.$store.dispatch('spinnerOff')
             },
 
             csvToArray: function (csv) {
@@ -170,18 +171,12 @@ resourcesForSelectionCount===0"><Spinner/></span>
                 const headers = rows.shift().trim().split(',')
                 let index = 0, len = rows.length
                 while (index < len) {
-                    //newRows.push(rows[index++].trim().split(','))
                     rows[index] = rows[index].trim().split(',')
                     index++
                 }
-                /*
-                 const newRows = []
-                 rows.forEach(row => {
-                    newRows.push(row.trim().split(','))
-                }) */
                 return [
                     headers,
-                    rows //  newRows
+                    rows
                 ]
             },
 

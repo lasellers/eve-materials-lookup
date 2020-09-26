@@ -5,6 +5,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
+        spinnerCount: 0,
+        loadSystems: false,
         loadProduction: false,
         loadBlueprints: false,
         headers: [],
@@ -21,10 +23,33 @@ export default new Vuex.Store({
         blueprintHeaders: [],
         blueprints: [],
         blueprintsForSelection: [],
-        resourcesByPlanet: []
+        resourcesByPlanet: [],
+        yieldsPreSort: []
     },
 
     getters: {
+        showSpinner: store => {
+            console.log('******** ########## showSpinner count', store.spinnerCount)
+
+            const status = store.resources.length > 0 &&
+                store.blueprints.length > 0 &&
+                store.blueprintsForSelection.length > 0 &&
+                store.regionsForSelection.length > 0 &&
+                store.constellationsForSelection.length > 0 &&
+                store.systemsForSelection.length > 0 &&
+                store.resourcesForSelection.length > 0 &&
+                store.resourcesByPlanet.length > 0
+            store.displayedResources.length > 0
+            store.yieldsPreSort.length > 0
+            console.log('******** showSpinner status', status)
+
+            return !(store.spinnerCount === 0 && status)
+            // return status
+        },
+        currentSpinnerCount: store => {
+            console.log('******** ########### currentSpinnerCount count', store.spinnerCount)
+            return store.spinnerCount
+        },
         loadProduction: store => {
             return store.loadProduction
         },
@@ -109,14 +134,8 @@ export default new Vuex.Store({
         yields(store) {
             const startDate = new Date()
 
-            // We preoptimize the searches later on by sorting the data once by output DESC
-            // That way we can break at the first match instead of doing full table searches
-            let sourceResources = store.resources
-            sourceResources.sort(function (a, b) {
-                return b[8] - a[8]
-            });
+            let sourceResources = store.yieldsPreSort
             let sourceResourcesLen = sourceResources.length
-            console.log('yields pre-sort', new Date().getTime() - startDate.getTime() + 'ms')
 
             //
             let rows = new Array(0)
@@ -128,7 +147,6 @@ export default new Vuex.Store({
                     const startDate = new Date()
                     for (let rowIndex = 0; rowIndex < sourceResourcesLen; rowIndex++) {
                         if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
-                            // rows.push(store.resources[rowIndex])
                             rows[rowCount++] = sourceResources[rowIndex]
                             console.log('yields all', new Date().getTime() - startDate.getTime() + 'ms', resource)
                             break
@@ -141,7 +159,6 @@ export default new Vuex.Store({
                     for (let rowIndex = 0; rowIndex < sourceResourcesLen; rowIndex++) {
                         if (store.region == sourceResources[rowIndex][1]) {
                             if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
-                                // rows.push(store.resources[rowIndex])
                                 rows[rowCount++] = sourceResources[rowIndex]
                                 console.log('yields region', new Date().getTime() - startDate.getTime() + 'ms', resource)
                                 break
@@ -155,7 +172,6 @@ export default new Vuex.Store({
                     for (let rowIndex = 0; rowIndex < sourceResourcesLen; rowIndex++) {
                         if (store.constellation == sourceResources[rowIndex][2]) {
                             if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
-                                // rows.push(store.resources[rowIndex])
                                 rows[rowCount++] = sourceResources[rowIndex]
                                 console.log('yields constellation', new Date().getTime() - startDate.getTime() + 'ms', resource)
                                 break
@@ -169,8 +185,7 @@ export default new Vuex.Store({
                     for (let rowIndex = 0; rowIndex < sourceResourcesLen; rowIndex++) {
                         if (store.system == sourceResources[rowIndex][3]) {
                             if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
-                                // rows.push(store.resources[rowIndex])
-                                rows[rowCount++] = store.resources[rowIndex] //@todo very slow
+                                rows[rowCount++] = store.resources[rowIndex]
                                 console.log('yields system', new Date().getTime() - startDate.getTime() + 'ms', resource)
                                 break
                             }
@@ -194,28 +209,9 @@ export default new Vuex.Store({
         resourcesByPlanetCount: store => {
             return store.resourcesByPlanet.length
         },
-        suggestionsForSinglePlanetWithAllResources(store) {
-            // get list of resource filters without nulls
-            const resourceFilters = store.resourceFilters.filter(item => {
-                return (item !== null)
-            })
-
-            let rows = []
-
-            store.resourcesByPlanet.forEach((row) => {
-                if (row[6].length === 5 && row[6] == resourceFilters) {
-                    rows.push(row)
-                }
-            })
-
-            // sort by region ASC
-            rows.sort(function (a, b) {
-                return b[1] < a[1] ? -1 : 1
-            });
-
-            return rows
-        },
         suggestionsForSinglePlanetWithMostResources(store) {
+            const startDate = new Date()
+
             let minNumber = 3
 
             // get list of resource filters without nulls
@@ -292,11 +288,13 @@ export default new Vuex.Store({
                     }
                 })
             }
+            console.log('suggestionsForSinglePlanetWithMostResources rows', new Date().getTime() - startDate.getTime() + 'ms')
 
             // sort by region ASC
             rows.sort(function (a, b) {
                 return a[1] < b[1] ? -1 : 1
             });
+            console.log('suggestionsForSinglePlanetWithMostResources sort', new Date().getTime() - startDate.getTime() + 'ms')
 
             return rows
         }
@@ -304,6 +302,17 @@ export default new Vuex.Store({
     ,
 
     mutations: {
+        spinnerOn(store) {
+            store.spinnerCount++
+            console.info('******** spinnerCount++', store.spinnerCount)
+        },
+        spinnerOff(store) {
+            store.spinnerCount--
+            console.info('******** spinnerCount--', store.spinnerCount)
+        },
+        loadSystems(store, value) {
+            store.loadSystems = (value === true)
+        },
         loadProduction(store, value) {
             store.loadProduction = (value === true)
         }
@@ -510,8 +519,7 @@ export default new Vuex.Store({
             }
 
             store.resourceFilters = resources
-        }
-        ,
+        },
         updateResourcesByPlanet(store) {
             const startDate = new Date()
 
@@ -560,24 +568,42 @@ export default new Vuex.Store({
             console.log('resourcesByPlanet last sort', new Date().getTime() - startDate.getTime() + 'ms')
 
             store.resourcesByPlanet = rows
-        }
-    }
-    ,
+        },
+        yieldsPreSort(store) {
+            const startDate = new Date()
+
+            // We preoptimize the searches later on by sorting the data once by output DESC
+            // That way we can break at the first match instead of doing full table searches
+            let sourceResources = store.resources
+            sourceResources.sort(function (a, b) {
+                return b[8] - a[8]
+            });
+            console.log('yields pre-sort', new Date().getTime() - startDate.getTime() + 'ms')
+
+            store.yieldsPreSort = sourceResources
+        },
+    },
 
     actions:
         {
+            spinnerOn(context) {
+                context.commit('spinnerOn')
+            },
+            spinnerOff(context) {
+                context.commit('spinnerOff')
+            },
             loadProduction(context, value) {
                 context.commit('loadProduction', value)
-            }
-            ,
+            },
             loadBlueprints(context, value) {
                 context.commit('loadBlueprints', value)
-            }
-            ,
+            },
+            loadSystems(context, value) {
+                context.commit('loadSystems', value)
+            },
             addHeaders(context, value) {
                 context.commit('addHeaders', value)
-            }
-            ,
+            },
             addResources(context, value) {
                 context.commit('addResources', value)
             }
@@ -632,6 +658,9 @@ export default new Vuex.Store({
             ,
             updateResourcesByPlanet(context, value) {
                 context.commit('updateResourcesByPlanet', value)
+            },
+            yieldsPreSort(context) {
+                context.commit('yieldsPreSort')
             }
         }
 })

@@ -12,7 +12,7 @@
     .spinner {
         position: absolute;
         left: 50%;
-        top: 3ex;
+        top: 6ex;
         z-index: 1;
 
         border: 16px solid #f3f3f3;
