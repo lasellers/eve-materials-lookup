@@ -62,15 +62,6 @@
             rows() {
                 return this.$store.getters.displayedResources
             },
-            region() {
-                return this.$store.getters.region
-            },
-            constellation() {
-                return this.$store.getters.constellation
-            },
-            resourceFilters() {
-                return this.$store.getters.resourceFilters
-            },
             resourcesCount() {
                 return this.$store.getters.resourcesCount
             },

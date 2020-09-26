@@ -38,13 +38,12 @@ export default new Vuex.Store({
                 store.constellationsForSelection.length > 0 &&
                 store.systemsForSelection.length > 0 &&
                 store.resourcesForSelection.length > 0 &&
-                store.resourcesByPlanet.length > 0
-            store.displayedResources.length > 0
-            store.yieldsPreSort.length > 0
+                store.resourcesByPlanet.length > 0 &&
+                store.displayedResources.length > 0 &&
+                store.yieldsPreSort.length > 0
             console.log('******** showSpinner status', status)
 
             return !(store.spinnerCount === 0 && status)
-            // return status
         },
         currentSpinnerCount: store => {
             console.log('******** ########### currentSpinnerCount count', store.spinnerCount)
@@ -452,11 +451,13 @@ export default new Vuex.Store({
                         return false;
                     });
                 }
+                console.log('computeDisplayedResources filter', new Date().getTime() - startDate.getTime() + 'ms')
 
                 // sort by output DESC
                 newRows.sort(function (a, b) {
                     return b[8] - a[8]
                 });
+                console.log('computeDisplayedResources sort', new Date().getTime() - startDate.getTime() + 'ms')
 
                 // update the store once
                 store.displayedResources = newRows;
