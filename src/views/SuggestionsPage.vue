@@ -15,7 +15,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(planet, index) in suggestionsForSinglePlanetWithMostResources" v-bind:key="index">
+            <tr v-for="(planet, index) in rows" v-bind:key="index">
                 <td>{{planet[1]}}</td>
                 <td>{{planet[2]}}</td>
                 <td>{{planet[3]}}</td>
@@ -28,7 +28,7 @@
             </tr>
             </tbody>
         </table>
-        <p v-if="!(suggestionsForSinglePlanetWithMostResources.length>0)">No suggestions. There may not be any such
+        <p v-if="!(rows.length>0)">No suggestions. There may not be any such
             planets.</p>
 
     </div>
@@ -37,6 +37,17 @@
 <script>
     export default {
         name: 'SuggestionsPage',
+        created() {
+            console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ reset suggestions")
+            this.$store.dispatch('spinnerReset')
+            //this.$store.dispatch('spinnerLock')
+        },
+        watch: {
+            rows: function (val) {
+                console.log('************************ SuggestionsPage rows', val)
+                this.$store.dispatch('spinnerUnlock')
+            },
+        },
         computed: {
             unimportant() {
                 return !(window.innerWidth < 1024)
@@ -44,7 +55,7 @@
             headers() {
                 return this.$store.getters.headers
             },
-            suggestionsForSinglePlanetWithMostResources() {
+            rows() {
                 return this.$store.getters.suggestionsForSinglePlanetWithMostResources
             },
         },

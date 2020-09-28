@@ -9,7 +9,7 @@ export default new Vuex.Store({
         headers: [],
         resources: [],
         resourcesForSelection: [],
-        displayedResources: [],
+        displayedResourcesLength: 0,
         resourceFilters: [null, null, null, null, null],
         regionsForSelection: [],
         region: 'Delve',
@@ -28,29 +28,11 @@ export default new Vuex.Store({
 
     getters: {
         showSpinner: store => {
-            console.log('???????? showSpinner count', store.spinnerCount)
-
-            /*
-            const status = store.resources.length > 0 &&
-                store.blueprints.length > 0 &&
-                store.blueprintsForSelection.length > 0 &&
-                store.regionsForSelection.length > 0 &&
-                store.constellationsForSelection.length > 0 &&
-                store.systemsForSelection.length > 0 &&
-                store.resourcesForSelection.length > 0 &&
-                store.resourcesByPlanet.length > 0 &&
-                store.displayedResources.length > 0 &&
-                store.yieldsPreSort.length > 0
-            console.log('???????? showSpinner status', status)
-
-            return !(store.spinnerCount === 0 && status)
-            */
-
-            return !(store.spinnerCount === 0)
-
+            console.log('???????? showSpinner count:', store.spinnerCount)
+            return (store.spinnerCount > 0)
         },
         currentSpinnerCount: store => {
-            console.log('???????? currentSpinnerCount count', store.spinnerCount)
+            console.log('???????? currentSpinnerCount count:', store.spinnerCount)
             return store.spinnerCount
         },
         headers: store => {
@@ -62,11 +44,12 @@ export default new Vuex.Store({
         resourcesCount: store => {
             return store.resources.length
         },
-        displayedResources: store => {
+        /* displayedResources: store => {
             return store.displayedResources
-        },
+        }, */
         displayedResourcesCount: store => {
-            return store.displayedResources.length
+            // return store.displayedResources.length
+            return store.displayedResourcesLength
         },
         resourcesForSelectionCount: store => {
             return store.resourcesForSelection.length
@@ -127,78 +110,6 @@ export default new Vuex.Store({
         },
         blueprintsForSelectionCount: store => {
             return store.blueprintsForSelection.length
-        },
-        yields(store) {
-            const startDate = new Date()
-
-            let sourceResources = store.yieldsPreSort
-            let sourceResourcesLen = sourceResources.length
-
-            //
-            let rows = new Array(0)
-            let rowCount = 0
-
-            // none
-            if (store.region === null && store.constellation === null && store.system === null) {
-                store.resourcesForSelection.forEach(resource => {
-                    const startDate = new Date()
-                    for (let rowIndex = 0; rowIndex < sourceResourcesLen; rowIndex++) {
-                        if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
-                            rows[rowCount++] = sourceResources[rowIndex]
-                            console.log('yields all', new Date().getTime() - startDate.getTime() + 'ms', resource)
-                            break
-                        }
-                    }
-                })
-            } else if (store.region !== null) { // region
-                store.resourcesForSelection.forEach(resource => {
-                    const startDate = new Date()
-                    for (let rowIndex = 0; rowIndex < sourceResourcesLen; rowIndex++) {
-                        if (store.region == sourceResources[rowIndex][1]) {
-                            if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
-                                rows[rowCount++] = sourceResources[rowIndex]
-                                console.log('yields region', new Date().getTime() - startDate.getTime() + 'ms', resource)
-                                break
-                            }
-                        }
-                    }
-                })
-            } else if (store.constellation !== null) { // constellation
-                store.resourcesForSelection.forEach(resource => {
-                    const startDate = new Date()
-                    for (let rowIndex = 0; rowIndex < sourceResourcesLen; rowIndex++) {
-                        if (store.constellation == sourceResources[rowIndex][2]) {
-                            if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
-                                rows[rowCount++] = sourceResources[rowIndex]
-                                console.log('yields constellation', new Date().getTime() - startDate.getTime() + 'ms', resource)
-                                break
-                            }
-                        }
-                    }
-                })
-            } else if (store.system !== null) { // system
-                store.resourcesForSelection.forEach(resource => {
-                    const startDate = new Date()
-                    for (let rowIndex = 0; rowIndex < sourceResourcesLen; rowIndex++) {
-                        if (store.system == sourceResources[rowIndex][3]) {
-                            if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
-                                rows[rowCount++] = store.resources[rowIndex]
-                                console.log('yields system', new Date().getTime() - startDate.getTime() + 'ms', resource)
-                                break
-                            }
-                        }
-                    }
-                })
-            }
-
-            // sort by output DESC
-            rows.sort(function (a, b) {
-                return b[8] - a[8]
-            });
-
-            console.log('yields', new Date().getTime() - startDate.getTime() + 'ms')
-
-            return rows
         },
         resourcesByPlanet: store => {
             return store.resourcesByPlanet
@@ -294,108 +205,15 @@ export default new Vuex.Store({
             console.log('suggestionsForSinglePlanetWithMostResources sort', new Date().getTime() - startDate.getTime() + 'ms')
 
             return rows
-        }
-    }
-    ,
-
-    mutations: {
-        spinnerLock(store) {
-            store.spinnerCount++
-            console.info('******** spinnerCount++', store.spinnerCount)
         },
-        spinnerUnlock(store) {
-            store.spinnerCount--
-            console.info('******** spinnerCount--', store.spinnerCount)
-        },
-        addHeaders(store, value) {
-            store.headers = value
-        },
-        addResources(store, rows) {
-            store.resources = rows
-            // put data into store all at once to limit DOM rerenders
-            // Originally the *ForSelection updates were here, but moved to seperate mutations to make it easier to
-            // track performance and vuex calls
-        },
-        updateResourcesForSelection(store) {
-            const startDate = new Date()
-
-            let resources = store.resources.map(row => {
-                return row[6]
-            })
-            resources = [...new Set(resources)]
-            resources.sort()
-            resources.unshift('(None)')
-            store.resourcesForSelection = resources
-
-            console.log('updateResourcesForSelection', new Date().getTime() - startDate.getTime() + 'ms')
-        }
-        ,
-        updateRegionsForSelection(store) {
-            const startDate = new Date()
-
-            let regions = store.resources.map(row => {
-                return row[1]
-            })
-            regions = [...new Set(regions)]
-            regions.sort()
-            regions.unshift('(None)')
-            store.regionsForSelection = regions
-
-            console.log('updateRegionsForSelection', new Date().getTime() - startDate.getTime() + 'ms')
-        }
-        ,
-        updateConstellationsForSelection(store) {
-            const startDate = new Date()
-
-            let constellations = store.resources.map(row => {
-                return row[2]
-            })
-            constellations = [...new Set(constellations)]
-            constellations.sort()
-            constellations.unshift('(None)')
-            store.constellationsForSelection = constellations
-
-            console.log('updateConstellationsForSelection', new Date().getTime() - startDate.getTime() + 'ms')
-        }
-        ,
-        updateSystemsForSelection(store) {
-            const startDate = new Date()
-
-            let systems = store.resources.map(row => {
-                return row[3]
-            })
-            systems = [...new Set(systems)]
-            systems.sort()
-            systems.unshift('(None)')
-            store.systemsForSelection = systems
-
-            console.log('updateSystemsForSelection', new Date().getTime() - startDate.getTime() + 'ms')
-        }
-        ,
-        changeRegion(store, value) {
-            store.region = value === "" ? null : value
-        }
-        ,
-        changeConstellation(store, value) {
-            store.constellation = value === "" ? null : value
-        }
-        ,
-        changeSystem(store, value) {
-            store.system = value === "" ? null : value
-        }
-        ,
-        changeResourceFilter(store, values) {
-            const [index, resource] = values
-            store.resourceFilters[index] = resource
-        }
-        ,
-        computeDisplayedResources(store) {
+        displayedResources(store) {
             const startDate = new Date()
 
             // filter out everything by regions or constellations and optionally up to 5 resource types
             if (store.region === null && store.constellation === null && store.system === null) {
                 // short circuit
-                store.displayedResources = [];
+                // store.displayedResources = [];
+                return []
             } else {
                 // get list of resource filters without nulls
                 const resourceFilters = store.resourceFilters.filter(item => {
@@ -436,19 +254,182 @@ export default new Vuex.Store({
                         return false;
                     });
                 }
-                console.log('computeDisplayedResources filter', new Date().getTime() - startDate.getTime() + 'ms')
+                console.log('displayedResources filter', new Date().getTime() - startDate.getTime() + 'ms')
 
                 // sort by output DESC
                 newRows.sort(function (a, b) {
                     return b[8] - a[8]
                 });
-                console.log('computeDisplayedResources sort', new Date().getTime() - startDate.getTime() + 'ms')
+                console.log('displayedResources sort', new Date().getTime() - startDate.getTime() + 'ms')
 
                 // update the store once
                 store.displayedResources = newRows;
 
-                console.log('computeDisplayedResources', new Date().getTime() - startDate.getTime() + 'ms')
+                console.log('displayedResources', new Date().getTime() - startDate.getTime() + 'ms')
+
+                store.displayedResourcesLength = newRows.length;
+
+                return newRows
             }
+        },
+        yields(store) {
+            const startDate = new Date()
+
+            let sourceResources = store.yieldsPreSort
+            let sourceResourcesLen = sourceResources.length
+
+            //
+            let rows = new Array(0)
+            let rowCount = 0
+
+            // none
+            if (store.region === null && store.constellation === null && store.system === null) {
+                store.resourcesForSelection.forEach(resource => {
+                    const startDate = new Date()
+                    for (let rowIndex = 0; rowIndex < sourceResourcesLen; rowIndex++) {
+                        if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
+                            rows[rowCount++] = sourceResources[rowIndex]
+                            console.log('yields all', new Date().getTime() - startDate.getTime() + 'ms', resource)
+                            break
+                        }
+                    }
+                })
+            } else if (store.region !== null) { // region
+                store.resourcesForSelection.forEach(resource => {
+                    const startDate = new Date()
+                    for (let rowIndex = 0; rowIndex < sourceResourcesLen; rowIndex++) {
+                        if (store.region == sourceResources[rowIndex][1]) {
+                            if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
+                                rows[rowCount++] = sourceResources[rowIndex]
+                                console.log('yields region', new Date().getTime() - startDate.getTime() + 'ms', resource)
+                                break
+                            }
+                        }
+                    }
+                })
+            } else if (store.constellation !== null) { // constellation
+                store.resourcesForSelection.forEach(resource => {
+                    const startDate = new Date()
+                    for (let rowIndex = 0; rowIndex < sourceResourcesLen; rowIndex++) {
+                        if (store.constellation == sourceResources[rowIndex][2]) {
+                            if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
+                                rows[rowCount++] = sourceResources[rowIndex]
+                                console.log('yields constellation', new Date().getTime() - startDate.getTime() + 'ms', resource)
+                                break
+                            }
+                        }
+                    }
+                })
+            } else if (store.system !== null) { // system
+                store.resourcesForSelection.forEach(resource => {
+                    const startDate = new Date()
+                    for (let rowIndex = 0; rowIndex < sourceResourcesLen; rowIndex++) {
+                        if (store.system == sourceResources[rowIndex][3]) {
+                            if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
+                                rows[rowCount++] = store.resources[rowIndex]
+                                console.log('yields system', new Date().getTime() - startDate.getTime() + 'ms', resource)
+                                break
+                            }
+                        }
+                    }
+                })
+            }
+
+            // sort by output DESC
+            rows.sort(function (a, b) {
+                return b[8] - a[8]
+            });
+
+            console.log('yields', new Date().getTime() - startDate.getTime() + 'ms')
+
+            return rows
+        },
+    },
+
+    mutations: {
+        spinnerReset(store) {
+            store.spinnerCount = 0
+            console.info('@@@@@@@@@@@@@@@@@@@@@@@@@@@ spinnerReset == 0')
+        },
+        spinnerLock(store) {
+            store.spinnerCount++
+            console.info('>>>>>>>> spinnerCount++', store.spinnerCount)
+        },
+        spinnerUnlock(store) {
+            store.spinnerCount--
+            // if(store.spinnerCount < 0) store.spinnerCount = 0
+            console.info('<<<<<<<< spinnerCount--', store.spinnerCount)
+        },
+        addHeaders(store, value) {
+            store.headers = value
+        },
+        addResources(store, rows) {
+            store.resources = rows
+        },
+        updateResourcesForSelection(store) {
+            const startDate = new Date()
+
+            let resources = store.resources.map(row => {
+                return row[6]
+            })
+            resources = [...new Set(resources)]
+            resources.sort()
+            resources.unshift('(None)')
+            store.resourcesForSelection = resources
+
+            console.log('updateResourcesForSelection', new Date().getTime() - startDate.getTime() + 'ms')
+        },
+        updateRegionsForSelection(store) {
+            const startDate = new Date()
+
+            let regions = store.resources.map(row => {
+                return row[1]
+            })
+            regions = [...new Set(regions)]
+            regions.sort()
+            regions.unshift('(None)')
+            store.regionsForSelection = regions
+
+            console.log('updateRegionsForSelection', new Date().getTime() - startDate.getTime() + 'ms')
+        },
+        updateConstellationsForSelection(store) {
+            const startDate = new Date()
+
+            let constellations = store.resources.map(row => {
+                return row[2]
+            })
+            constellations = [...new Set(constellations)]
+            constellations.sort()
+            constellations.unshift('(None)')
+            store.constellationsForSelection = constellations
+
+            console.log('updateConstellationsForSelection', new Date().getTime() - startDate.getTime() + 'ms')
+        },
+        updateSystemsForSelection(store) {
+            const startDate = new Date()
+
+            let systems = store.resources.map(row => {
+                return row[3]
+            })
+            systems = [...new Set(systems)]
+            systems.sort()
+            systems.unshift('(None)')
+            store.systemsForSelection = systems
+
+            console.log('updateSystemsForSelection', new Date().getTime() - startDate.getTime() + 'ms')
+        },
+        changeRegion(store, value) {
+            store.region = value === "" ? null : value
+        },
+        changeConstellation(store, value) {
+            store.constellation = value === "" ? null : value
+        },
+        changeSystem(store, value) {
+            store.system = value === "" ? null : value
+        },
+        changeResourceFilter(store, values) {
+            const [index, resource] = values
+            store.resourceFilters[index] = resource
         },
         addBlueprintHeaders(store, value) {
             store.blueprintHeaders = value
@@ -578,6 +559,9 @@ export default new Vuex.Store({
 
     actions:
         {
+            spinnerReset(context) {
+                context.commit('spinnerReset')
+            },
             spinnerLock(context) {
                 context.commit('spinnerLock')
             },
@@ -589,48 +573,43 @@ export default new Vuex.Store({
             },
             addResources(context, value) {
                 context.commit('addResources', value)
-            }
-            ,
+            },
+
             updateResourcesForSelection(context, value) {
                 context.commit('updateResourcesForSelection', value)
-            }
-            ,
+            },
+
             updateRegionsForSelection(context, value) {
                 context.commit('updateRegionsForSelection', value)
-            }
-            ,
+            },
+
             updateConstellationsForSelection(context, value) {
                 context.commit('updateConstellationsForSelection', value)
-            }
-            ,
+            },
+
             updateSystemsForSelection(context, value) {
                 context.commit('updateSystemsForSelection', value)
-            }
-            ,
+            },
+
             changeRegion(context, value) {
                 context.commit('changeRegion', value)
-            }
-            ,
+            },
+
             changeConstellation(context, value) {
                 context.commit('changeConstellation', value)
-            }
-            ,
+            },
+
             changeSystem(context, value) {
                 context.commit('changeSystem', value)
-            }
-            ,
+            },
+
             changeResourceFilter(context, values) {
                 context.commit('changeResourceFilter', values)
-            }
-            ,
-            computeDisplayedResources(context) {
-                context.commit('computeDisplayedResources')
-            }
-            ,
+            },
             addBlueprintHeaders(context, value) {
                 context.commit('addBlueprintHeaders', value)
-            }
-            ,
+            },
+
             addBlueprints(context, value) {
                 context.commit('addBlueprints', value)
             },
@@ -649,6 +628,5 @@ export default new Vuex.Store({
             addSystems(context, value) {
                 context.commit('addSystems', value)
             },
-
         }
 })

@@ -108,17 +108,13 @@
             console.info('BASE_URL', process.env.BASE_URL)
             // console.info('PACKAGE_VERSION',process.env.PACKAGE_VERSION)
         },
-        data() {
-            return {}
-        },
-        computed: {},
         methods: {
             unimportant() {
                 return !(window.innerWidth < 1024)
             },
             currentRouteName() {
                 return this.$router.currentRoute.path;
-            }
+            },
         }
     }
 </script>

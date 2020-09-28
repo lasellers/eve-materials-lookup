@@ -38,11 +38,17 @@
 <script>
     export default {
         name: 'YieldsPage',
-        data() {
-            return {
+        created() {
+                console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ reset yield")
+                this.$store.dispatch('spinnerReset')
+                //this.$store.dispatch('spinnerLock')
+        },
+        watch: {
+            rows: function (val) {
+                console.log('************************ YieldsPage rows', val)
+                this.$store.dispatch('spinnerUnlock')
             }
         },
-        methods: {},
         computed: {
             unimportant() {
                 return !(window.innerWidth < 1024)
@@ -52,12 +58,6 @@
             },
             rows() {
                 return this.$store.getters.yields
-            },
-            region() {
-                return this.$store.getters.region
-            },
-            constellation() {
-                return this.$store.getters.constellation
             },
         },
     }

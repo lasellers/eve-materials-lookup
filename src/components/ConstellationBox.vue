@@ -1,7 +1,9 @@
 <template>
     <div class="constellationbox">
         <b>Constellation</b>&nbsp;
-        <select v-bind:id="constellationsForSelection" v-on:change="onChange" class="form-control">
+        <select v-bind:id="constellationsForSelection" v-on:change="onChange"
+                v-on:click="$store.dispatch('spinnerLock')"
+                class="form-control">
             <option v-for="(constellation, index) in constellationsForSelection" :key="index"
                     v-bind:value="constellation">
                 {{constellation}}
@@ -14,9 +16,6 @@
     export default {
         name: 'ConstellationBox',
         components: {},
-        data() {
-            return {}
-        },
         computed: {
             constellationsForSelection: function () {
                 return this.$store.getters.constellationsForSelection
@@ -32,7 +31,9 @@
                     constellation = null
                 }
                 this.$store.dispatch('changeConstellation', constellation)
-                this.$store.dispatch('computeDisplayedResources')
+                /* this.$store.dispatch('computeDisplayedResources').then(
+                    this.$store.dispatch('spinnerUnlock')
+                ) */
             },
         }
     }

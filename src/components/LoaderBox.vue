@@ -34,7 +34,7 @@
             )
         },
         computed: {
-            resourcesCount: function () {
+           /* resourcesCount: function () {
                 return this.$store.getters.resourcesCount
             },
             blueprintsCount: function () {
@@ -54,7 +54,7 @@
             },
             resourcesForSelectionCount: function () {
                 return this.$store.getters.resourcesForSelectionCount
-            },
+            }, */
             showSpinner: function () {
                 return this.$store.getters.showSpinner
             },
@@ -141,13 +141,6 @@
                             this.$store.dispatch('spinnerUnlock')
                         })
 
-                        this.$store.dispatch('spinnerLock')
-                        this.$store.dispatch('computeDisplayedResources').then(() => {
-                            console.log('==== computeDisplayedResources', new Date().getTime() - startDate.getTime())
-                            startDate = new Date()
-                            this.$store.dispatch('spinnerUnlock')
-                        })
-
                         this.$store.dispatch('spinnerUnlock')
                     })
             },
@@ -180,13 +173,6 @@
                         this.$store.dispatch('spinnerLock')
                         this.$store.dispatch('addBlueprints', blueprints).then(() => {
                             console.log('==== addBlueprints', new Date().getTime() - startDate.getTime())
-                            startDate = new Date()
-                            this.$store.dispatch('spinnerUnlock')
-                        })
-
-                        this.$store.dispatch('spinnerLock')
-                        this.$store.dispatch('computeDisplayedResources', blueprints).then(() => {
-                            console.log('==== computeDisplayedResources', new Date().getTime() - startDate.getTime())
                             startDate = new Date()
                             this.$store.dispatch('spinnerUnlock')
                         })

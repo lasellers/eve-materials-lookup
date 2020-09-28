@@ -51,7 +51,17 @@
                 publicPath: process.env.BASE_URL
             }
         },
-        methods: {},
+        created() {
+            console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ reset home")
+            this.$store.dispatch('spinnerReset')
+            //this.$store.dispatch('spinnerLock')
+        },
+        watch: {
+            rows: function (val) {
+                console.log('************************ DisplayedResources rows', val)
+                this.$store.dispatch('spinnerUnlock')
+            },
+        },
         computed: {
             unimportant() {
                 return !(window.innerWidth < 1024)

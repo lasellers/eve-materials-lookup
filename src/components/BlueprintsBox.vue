@@ -34,7 +34,6 @@
             onChange: async function (event) {
                 const blueprint = event.target.value
                 this.$store.dispatch('changeBlueprint', blueprint)
-                this.$store.dispatch('computeDisplayedResources')
             },
         }
     }

@@ -2,6 +2,7 @@
     <div class="regionbox">
         <b>Region</b>&nbsp;
         <select v-bind:id="regionsForSelection" v-on:change="onChange" class="form-control"
+                v-on:click="$store.dispatch('spinnerLock')"
                 v-model="selected">
             <option v-for="(regionOption, index) in regionsForSelection" :key="index" v-bind:value="regionOption">
                 {{regionOption}}
@@ -14,9 +15,6 @@
     export default {
         name: 'RegionBox',
         components: {},
-        data() {
-            return {}
-        },
         computed: {
             selected: {
                 get: function () {
@@ -25,7 +23,6 @@
                 },
                 set: function (region) {
                     this.$store.dispatch('changeRegion', region)
-                    this.$store.dispatch('computeDisplayedResources')
                 }
             },
             regionsForSelection: function () {
