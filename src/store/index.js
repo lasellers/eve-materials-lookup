@@ -420,11 +420,17 @@ export default new Vuex.Store({
         },
         changeRegion(store, value) {
             store.region = value === "" ? null : value
+            store.constellation = null
+            store.system = null
         },
         changeConstellation(store, value) {
+            store.region = null
             store.constellation = value === "" ? null : value
+            store.system = null
         },
         changeSystem(store, value) {
+            store.region = null
+            store.constellation = null
             store.system = value === "" ? null : value
         },
         changeResourceFilter(store, values) {

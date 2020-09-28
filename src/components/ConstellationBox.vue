@@ -2,7 +2,7 @@
     <div class="constellationbox">
         <b>Constellation</b>&nbsp;
         <select v-bind:id="constellationsForSelection" v-on:change="onChange"
-                v-on:click="$store.dispatch('spinnerLock')"
+                v-model="selected"
                 class="form-control">
             <option v-for="(constellation, index) in constellationsForSelection" :key="index"
                     v-bind:value="constellation">
@@ -15,25 +15,27 @@
 <script>
     export default {
         name: 'ConstellationBox',
-        components: {},
         computed: {
+            selected: {
+                get: function () {
+                    const constellation = this.$store.getters.constellation
+                    return constellation === null ? "(None)" : constellation
+                },
+                set: function (constellation) {
+                    this.$store.dispatch('changeConstellation', constellation)
+                }
+            },
             constellationsForSelection: function () {
                 return this.$store.getters.constellationsForSelection
             },
         },
         methods: {
-            constellation() {
-                return this.$store.getters.constellation
-            },
             onChange: async function (event) {
                 let constellation = event.target.value
                 if (constellation === '(None)') {
                     constellation = null
                 }
                 this.$store.dispatch('changeConstellation', constellation)
-                /* this.$store.dispatch('computeDisplayedResources').then(
-                    this.$store.dispatch('spinnerUnlock')
-                ) */
             },
         }
     }

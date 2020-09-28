@@ -2,8 +2,8 @@
     <div class="systembox">
         <b>System</b>&nbsp;
         <select v-bind:id="systemsForSelection" v-on:change="onChange"
-                v-on:click="$store.dispatch('spinnerLock')"
-                class="form-control">
+                class="form-control"
+                v-model="selected">
             <option v-for="(system, index) in systemsForSelection" :key="index"
                     v-bind:value="system">
                 {{system}}
@@ -15,16 +15,21 @@
 <script>
     export default {
         name: 'SystemBox',
-        components: {},
         computed: {
+            selected: {
+                get: function () {
+                    const system = this.$store.getters.system
+                    return system === null ? "(None)" : system
+                },
+                set: function (system) {
+                    this.$store.dispatch('changeSystem', system)
+                }
+            },
             systemsForSelection: function () {
                 return this.$store.getters.systemsForSelection
             },
         },
         methods: {
-            system() {
-                return this.$store.getters.system
-            },
             onChange: async function (event) {
                 let system = event.target.value
                 if (system === '(None)') {

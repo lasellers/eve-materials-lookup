@@ -41,10 +41,14 @@ magnitude or so (ie, it is up to x10 faster now).
     * Todo Replace all magic numbers from CSVs
 * v1.4 Add routing for "Resources", "Yields" and "Suggestions". Optimize more -- the restructure 
 and addition of several new sections has thrown off the speed of the app.
-* v1.5 A lot of optimization to the generation and spinners. Still needs a bit more tweaking.
+* v1.5
+    * A lot of optimization to the generation and spinners. Still needs a bit more tweaking.
 Moved some of the vuex to computed calls so that those can be cached until the dropdowns
 that are hooked into the vuex state change. Still have some optimization and spinner issues
 to look into. 
+    * Fixed an issue with the region/constellation/system dropdown where all three could be selected.
+Now only allows one at a time. 
+    * Part of the reason I've worked on this project is to learn VueJs so ... we're getting there.
 
 
 ## Project setup
