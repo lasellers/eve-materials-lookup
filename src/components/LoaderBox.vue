@@ -24,20 +24,16 @@
             }
         },
         created() {
-            this.$store.dispatch('spinnerOn')
-            this.onLoad()
-            this.$store.dispatch('spinnerOff')
+            this.$store.dispatch('spinnerLock')
+            this.getProductionCsv().then(
+                this.getBlueprintsCsv().then(
+                    this.getSystemsCsv().then(
+                        this.$store.dispatch('spinnerUnlock')
+                    )
+                ),
+            )
         },
         computed: {
-            loadProduction: function () {
-                return this.$store.getters.loadProduction
-            },
-            loadBlueprints: function () {
-                return this.$store.getters.loadBlueprints
-            },
-            loadSystems: function () {
-                return this.$store.getters.loadSystems
-            },
             resourcesCount: function () {
                 return this.$store.getters.resourcesCount
             },
@@ -59,23 +55,16 @@
             resourcesForSelectionCount: function () {
                 return this.$store.getters.resourcesForSelectionCount
             },
-            showSpinner: function() {
+            showSpinner: function () {
                 return this.$store.getters.showSpinner
             },
-            currentSpinnerCount: function() {
+            currentSpinnerCount: function () {
                 return this.$store.getters.currentSpinnerCount
             },
         },
         methods: {
-            onLoad: function () {
-                this.$store.dispatch('spinnerOn')
-                this.getProductionCsv()
-                this.getBlueprintsCsv()
-                this.$store.dispatch('spinnerOff')
-            },
-
             async getProductionCsv() {
-                this.$store.dispatch('spinnerOn')
+                this.$store.dispatch('spinnerLock')
                 const headers = new Headers()
                 const request = new Request(
                     "./Production.csv",
@@ -89,9 +78,6 @@
                 fetch(request)
                     .then(response => response.text())
                     .then(data => {
-                        this.$store.dispatch('spinnerOn')
-
-                        this.$store.dispatch('loadProduction', true)
 
                         let startDate = new Date()
 
@@ -99,44 +85,74 @@
                         console.log('==== csvToArray', new Date().getTime() - startDate.getTime())
                         startDate = new Date()
 
-                        this.$store.dispatch('addHeaders', headers)
-                        console.log('==== addHeaders', new Date().getTime() - startDate.getTime())
-                        startDate = new Date()
+                        this.$store.dispatch('spinnerLock')
+                        this.$store.dispatch('addHeaders', headers).then(() => {
+                            console.log('==== addHeaders', new Date().getTime() - startDate.getTime())
+                            startDate = new Date()
+                            this.$store.dispatch('spinnerUnlock')
+                        })
 
-                        this.$store.dispatch('addResources', resources)
-                        console.log('==== addResources', new Date().getTime() - startDate.getTime())
-                        startDate = new Date()
+                        this.$store.dispatch('spinnerLock')
+                        this.$store.dispatch('addResources', resources).then(() => {
+                            console.log('==== addResources', new Date().getTime() - startDate.getTime())
+                            startDate = new Date()
+                            this.$store.dispatch('spinnerUnlock')
+                        })
 
-                        this.$store.dispatch('updateRegionsForSelection')
-                        console.log('==== updateRegionsForSelection', new Date().getTime() - startDate.getTime())
-                        startDate = new Date()
+                        this.$store.dispatch('spinnerLock')
+                        this.$store.dispatch('updateRegionsForSelection').then(() => {
+                            console.log('==== updateRegionsForSelection', new Date().getTime() - startDate.getTime())
+                            startDate = new Date()
+                            this.$store.dispatch('spinnerUnlock')
+                        })
 
-                        this.$store.dispatch('updateConstellationsForSelection')
-                        console.log('==== updateConstellationsForSelection', new Date().getTime() - startDate.getTime())
-                        startDate = new Date()
+                        this.$store.dispatch('spinnerLock')
+                        this.$store.dispatch('updateConstellationsForSelection').then(() => {
+                            console.log('==== updateConstellationsForSelection', new Date().getTime() - startDate.getTime())
+                            startDate = new Date()
+                            this.$store.dispatch('spinnerUnlock')
+                        })
 
-                        this.$store.dispatch('updateSystemsForSelection')
-                        console.log('==== updateSystemsForSelection', new Date().getTime() - startDate.getTime())
-                        startDate = new Date()
+                        this.$store.dispatch('spinnerLock')
+                        this.$store.dispatch('updateSystemsForSelection').then(() => {
+                            console.log('==== updateSystemsForSelection', new Date().getTime() - startDate.getTime())
+                            startDate = new Date()
+                            this.$store.dispatch('spinnerUnlock')
+                        })
 
-                        this.$store.dispatch('updateResourcesForSelection')
-                        console.log('==== updateResourcesForSelection', new Date().getTime() - startDate.getTime())
-                        startDate = new Date()
+                        this.$store.dispatch('spinnerLock')
+                        this.$store.dispatch('updateResourcesForSelection').then(() => {
+                            console.log('==== updateResourcesForSelection', new Date().getTime() - startDate.getTime())
+                            startDate = new Date()
+                            this.$store.dispatch('spinnerUnlock')
+                        })
 
-                        this.$store.dispatch('updateResourcesByPlanet')
-                        console.log('==== updateResourcesByPlanet', new Date().getTime() - startDate.getTime())
-                        startDate = new Date()
+                        this.$store.dispatch('spinnerLock')
+                        this.$store.dispatch('updateResourcesByPlanet').then(() => {
+                            console.log('==== updateResourcesByPlanet', new Date().getTime() - startDate.getTime())
+                            startDate = new Date()
+                            this.$store.dispatch('spinnerUnlock')
+                        })
 
-                        this.$store.dispatch('yieldsPreSort')
+                        this.$store.dispatch('spinnerLock')
+                        this.$store.dispatch('yieldsPreSort').then(() => {
+                            console.log('==== yieldsPreSort', new Date().getTime() - startDate.getTime())
+                            startDate = new Date()
+                            this.$store.dispatch('spinnerUnlock')
+                        })
 
-                        this.$store.dispatch('computeDisplayedResources')
+                        this.$store.dispatch('spinnerLock')
+                        this.$store.dispatch('computeDisplayedResources').then(() => {
+                            console.log('==== computeDisplayedResources', new Date().getTime() - startDate.getTime())
+                            startDate = new Date()
+                            this.$store.dispatch('spinnerUnlock')
+                        })
 
-                        this.$store.dispatch('spinnerOff')
+                        this.$store.dispatch('spinnerUnlock')
                     })
-                this.$store.dispatch('spinnerOff')
             },
             async getBlueprintsCsv() {
-                this.$store.dispatch('spinnerOn')
+                this.$store.dispatch('spinnerLock')
                 const headers = new Headers()
                 const request = new Request(
                     "./Blueprints.csv",
@@ -150,20 +166,33 @@
                 fetch(request)
                     .then(response => response.text())
                     .then(data => {
-                        this.$store.dispatch('spinnerOn')
-
-                        this.$store.dispatch('loadBlueprints', true)
+                        let startDate = new Date()
 
                         const [headers, blueprints] = this.csvToArrayRotated(data)
 
-                        this.$store.dispatch('addBlueprintHeaders', headers)
-                        this.$store.dispatch('addBlueprints', blueprints)
+                        this.$store.dispatch('spinnerLock')
+                        this.$store.dispatch('addBlueprintHeaders', headers).then(() => {
+                            console.log('==== addBlueprintHeaders', new Date().getTime() - startDate.getTime())
+                            startDate = new Date()
+                            this.$store.dispatch('spinnerUnlock')
+                        })
 
-                        this.$store.dispatch('computeDisplayedResources')
+                        this.$store.dispatch('spinnerLock')
+                        this.$store.dispatch('addBlueprints', blueprints).then(() => {
+                            console.log('==== addBlueprints', new Date().getTime() - startDate.getTime())
+                            startDate = new Date()
+                            this.$store.dispatch('spinnerUnlock')
+                        })
 
-                        this.$store.dispatch('spinnerOff')
+                        this.$store.dispatch('spinnerLock')
+                        this.$store.dispatch('computeDisplayedResources', blueprints).then(() => {
+                            console.log('==== computeDisplayedResources', new Date().getTime() - startDate.getTime())
+                            startDate = new Date()
+                            this.$store.dispatch('spinnerUnlock')
+                        })
+
+                        this.$store.dispatch('spinnerUnlock')
                     })
-                this.$store.dispatch('spinnerOff')
             },
 
             csvToArray: function (csv) {
@@ -222,6 +251,46 @@
                     headers,
                     rows
                 ]
+            },
+
+
+            async getSystemsCsv() {
+                this.$store.dispatch('spinnerLock')
+                const headers = new Headers()
+                const request = new Request(
+                    "./Systems.csv",
+                    {
+                        method: "GET",
+                        headers,
+                        mode: "cors",
+                        cache: "force-cache"
+                    }
+                )
+                fetch(request)
+                    .then(response => response.text())
+                    .then(data => {
+                        let startDate = new Date()
+
+                        const [headers, resources] = this.csvToArray(data)
+                        console.log('==== systems csvToArray', new Date().getTime() - startDate.getTime())
+                        startDate = new Date()
+
+                        this.$store.dispatch('spinnerLock')
+                        this.$store.dispatch('addSystemsHeaders', headers).then(() => {
+                            console.log('==== addSystemsHeaders', new Date().getTime() - startDate.getTime())
+                            startDate = new Date()
+                            this.$store.dispatch('spinnerUnlock')
+                        })
+
+                        this.$store.dispatch('spinnerLock')
+                        this.$store.dispatch('addSystems', resources).then(() => {
+                            console.log('==== addSystems', new Date().getTime() - startDate.getTime())
+                            startDate = new Date()
+                            this.$store.dispatch('spinnerUnlock')
+                        })
+
+                        this.$store.dispatch('spinnerUnlock')
+                    })
             },
         }
     }

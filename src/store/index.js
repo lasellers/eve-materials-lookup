@@ -6,9 +6,6 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         spinnerCount: 0,
-        loadSystems: false,
-        loadProduction: false,
-        loadBlueprints: false,
         headers: [],
         resources: [],
         resourcesForSelection: [],
@@ -24,13 +21,16 @@ export default new Vuex.Store({
         blueprints: [],
         blueprintsForSelection: [],
         resourcesByPlanet: [],
-        yieldsPreSort: []
+        yieldsPreSort: [],
+        systemsHeaders: [],
+        systems: [],
     },
 
     getters: {
         showSpinner: store => {
-            console.log('******** ########## showSpinner count', store.spinnerCount)
+            console.log('???????? showSpinner count', store.spinnerCount)
 
+            /*
             const status = store.resources.length > 0 &&
                 store.blueprints.length > 0 &&
                 store.blueprintsForSelection.length > 0 &&
@@ -41,19 +41,17 @@ export default new Vuex.Store({
                 store.resourcesByPlanet.length > 0 &&
                 store.displayedResources.length > 0 &&
                 store.yieldsPreSort.length > 0
-            console.log('******** showSpinner status', status)
+            console.log('???????? showSpinner status', status)
 
             return !(store.spinnerCount === 0 && status)
+            */
+
+            return !(store.spinnerCount === 0)
+
         },
         currentSpinnerCount: store => {
-            console.log('******** ########### currentSpinnerCount count', store.spinnerCount)
+            console.log('???????? currentSpinnerCount count', store.spinnerCount)
             return store.spinnerCount
-        },
-        loadProduction: store => {
-            return store.loadProduction
-        },
-        loadBlueprints: store => {
-            return store.loadBlueprints
         },
         headers: store => {
             return store.headers
@@ -301,36 +299,23 @@ export default new Vuex.Store({
     ,
 
     mutations: {
-        spinnerOn(store) {
+        spinnerLock(store) {
             store.spinnerCount++
             console.info('******** spinnerCount++', store.spinnerCount)
         },
-        spinnerOff(store) {
+        spinnerUnlock(store) {
             store.spinnerCount--
             console.info('******** spinnerCount--', store.spinnerCount)
         },
-        loadSystems(store, value) {
-            store.loadSystems = (value === true)
-        },
-        loadProduction(store, value) {
-            store.loadProduction = (value === true)
-        }
-        ,
-        loadBlueprints(store, value) {
-            store.loadBlueprints = (value === true)
-        }
-        ,
         addHeaders(store, value) {
             store.headers = value
-        }
-        ,
+        },
         addResources(store, rows) {
             store.resources = rows
             // put data into store all at once to limit DOM rerenders
             // Originally the *ForSelection updates were here, but moved to seperate mutations to make it easier to
             // track performance and vuex calls
-        }
-        ,
+        },
         updateResourcesForSelection(store) {
             const startDate = new Date()
 
@@ -583,24 +568,21 @@ export default new Vuex.Store({
 
             store.yieldsPreSort = sourceResources
         },
+        addSystemsHeaders(store, value) {
+            store.systemsHeaders = value
+        },
+        addSystems(store, rows) {
+            store.systems = rows
+        },
     },
 
     actions:
         {
-            spinnerOn(context) {
-                context.commit('spinnerOn')
+            spinnerLock(context) {
+                context.commit('spinnerLock')
             },
-            spinnerOff(context) {
-                context.commit('spinnerOff')
-            },
-            loadProduction(context, value) {
-                context.commit('loadProduction', value)
-            },
-            loadBlueprints(context, value) {
-                context.commit('loadBlueprints', value)
-            },
-            loadSystems(context, value) {
-                context.commit('loadSystems', value)
+            spinnerUnlock(context) {
+                context.commit('spinnerUnlock')
             },
             addHeaders(context, value) {
                 context.commit('addHeaders', value)
@@ -651,17 +633,22 @@ export default new Vuex.Store({
             ,
             addBlueprints(context, value) {
                 context.commit('addBlueprints', value)
-            }
-            ,
+            },
             changeBlueprint(context, value) {
                 context.commit('changeBlueprint', value)
-            }
-            ,
+            },
             updateResourcesByPlanet(context, value) {
                 context.commit('updateResourcesByPlanet', value)
             },
             yieldsPreSort(context) {
                 context.commit('yieldsPreSort')
-            }
+            },
+            addSystemsHeaders(context, value) {
+                context.commit('addSystemsHeaders', value)
+            },
+            addSystems(context, value) {
+                context.commit('addSystems', value)
+            },
+
         }
 })
