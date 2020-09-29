@@ -121,7 +121,7 @@ export default new Vuex.Store({
     mutations: {
         spinnerReset(store) {
             store.spinnerCount = 0
-            console.info('@@@@@@@@@@@@@@@@@@@@@@@@@@@ spinnerReset == 0')
+            console.info('000000000000 spinnerReset == 0')
         },
         spinnerLock(store) {
             store.spinnerCount++
@@ -206,11 +206,9 @@ export default new Vuex.Store({
             store.system = value === "" ? null : value
         },
         changeResourceFilter(store, values) {
-            // store.blueprint = null
             const [index, resource] = values
-            // let resourceFilters = store.resourceFilters
             store.resourceFilters[index] = resource
-            // store.resourceFilters = resourceFilters
+
             console.log('changeResourceFilter', store.resourceFilters)
         },
         addBlueprintHeaders(store, value) {
@@ -320,6 +318,13 @@ export default new Vuex.Store({
 
             store.resourcesByPlanet = rows
         },
+        addSystemsHeaders(store, value) {
+            store.systemsHeaders = value
+        },
+        addSystems(store, rows) {
+            store.systems = rows
+        },
+
         yieldsPreSort(store) {
             const startDate = new Date()
 
@@ -333,17 +338,11 @@ export default new Vuex.Store({
 
             store.yieldsPreSort = sourceResources
         },
-        addSystemsHeaders(store, value) {
-            store.systemsHeaders = value
-        },
-        addSystems(store, rows) {
-            store.systems = rows
-        },
 
         computeResources(store) {
             const startDate = new Date()
 
-            console.log('!computeResources init', new Date().getTime() - startDate.getTime() + 'ms')
+            console.log('computeResources init', new Date().getTime() - startDate.getTime() + 'ms')
 
             // get list of resource filters without nulls
             let resourceFilters = []
@@ -352,7 +351,7 @@ export default new Vuex.Store({
                     return (item !== null)
                 })
             }
-            console.log('!computeResources resourceFilters', new Date().getTime() - startDate.getTime() + 'ms',
+            console.log('computeResources resourceFilters', new Date().getTime() - startDate.getTime() + 'ms',
                 resourceFilters)
 
             // filter out everything by regions or constellations and optionally up to
@@ -361,7 +360,7 @@ export default new Vuex.Store({
                 store.region === null && store.constellation === null && store.system === null
             ) {
                 // short circuit
-                console.log('!computeResources short circuit', new Date().getTime() - startDate.getTime() + 'ms')
+                console.log('computeResources short circuit', new Date().getTime() - startDate.getTime() + 'ms')
                 return []
             }
 
@@ -404,15 +403,13 @@ export default new Vuex.Store({
                 });
             }
 
-            console.log('!computeResources filter', new Date().getTime() - startDate.getTime() + 'ms')
+            console.log('computeResources filter', new Date().getTime() - startDate.getTime() + 'ms')
 
             // sort by output DESC
             newRows.sort(function (a, b) {
                 return b[8] - a[8]
             });
-            console.log('!computeResources sort', new Date().getTime() - startDate.getTime() + 'ms')
-
-            console.log(newRows)
+            console.log('computeResources sort', new Date().getTime() - startDate.getTime() + 'ms')
 
             store.computedResources = newRows
         },
@@ -422,9 +419,6 @@ export default new Vuex.Store({
             const startDate = new Date()
 
             let minNumber = 3
-
-            const blueprint = store.blueprint + '?'
-            console.log('computeSuggestions blueprint', blueprint)
 
             // get list of resource filters without nulls
             const resourceFilters = store.resourceFilters.filter(item => {

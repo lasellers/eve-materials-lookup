@@ -1,5 +1,5 @@
 <template>
-    <div class="displayedResources">
+    <div class="resources">
 
         <div class="container-fluid">
             <div class="row">
@@ -9,7 +9,7 @@
             </div>
         </div>
 
-        <table id="displayed-resources-list" class="table table-striped table-sm">
+        <table id="resources-list" class="table table-striped table-sm">
             <thead>
             <tr>
                 <th v-if="unimportant">Planet Id</th>
@@ -45,23 +45,21 @@
 
 <script>
     export default {
-        name: 'DisplayedResources',
+        name: 'Resources',
         data() {
             return {
                 publicPath: process.env.BASE_URL
             }
         },
         created() {
-            console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ reset home")
             this.$store.dispatch('spinnerReset')
             this.$store.dispatch('spinnerLock')
             this.$store.dispatch('computeResources')
         },
         watch: {
-            rows: function (val) {
-                console.log('************************ DisplayedResources rows', val)
+            rows: function () {
                 this.$store.dispatch('spinnerUnlock')
-            },
+            }
         },
         computed: {
             unimportant() {

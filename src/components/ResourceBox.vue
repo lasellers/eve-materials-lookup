@@ -10,7 +10,6 @@
 </template>
 
 <script>
-    //  v-on:change="onChange"
     export default {
         name: 'ResourcesBox',
         props: ['box'],
@@ -25,12 +24,9 @@
                 get: function () {
                     const resourceFilters = this.$store.getters.resourceFilters
                     const filter = resourceFilters[this.boxId]
-                    console.log('get', this.boxId, filter)
-                    let resource = filter === null ? "(None)" : filter
-                    return resource
+                    return filter === null ? "(None)" : filter
                 },
                 set: function (resource) {
-                    console.log('set', this.boxId, resource)
                     this.$store.dispatch('changeBlueprint', null)
                     this.$store.dispatch('changeResourceFilter', [this.boxId, resource])
 

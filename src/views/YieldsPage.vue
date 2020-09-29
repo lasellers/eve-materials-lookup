@@ -39,14 +39,12 @@
     export default {
         name: 'YieldsPage',
         created() {
-                console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ reset yield")
-                this.$store.dispatch('spinnerReset')
-                this.$store.dispatch('spinnerLock')
-               this.$store.dispatch('computeYields')
+            this.$store.dispatch('spinnerReset')
+            this.$store.dispatch('spinnerLock')
+            this.$store.dispatch('computeYields')
         },
         watch: {
-            rows: function (val) {
-                console.log('************************ YieldsPage rows', val)
+            rows: function () {
                 this.$store.dispatch('spinnerUnlock')
             }
         },

@@ -39,16 +39,14 @@
     export default {
         name: 'SuggestionsPage',
         created() {
-            console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ reset suggestions")
             this.$store.dispatch('spinnerReset')
             this.$store.dispatch('spinnerLock')
             this.$store.dispatch('computeSuggestions')
         },
         watch: {
-            rows: function (val) {
-                console.log('************************ SuggestionsPage rows', val)
+            rows: function () {
                 this.$store.dispatch('spinnerUnlock')
-            },
+            }
         },
         computed: {
             unimportant() {
