@@ -34,9 +34,16 @@
                     this.$store.dispatch('changeBlueprint', null)
                     this.$store.dispatch('changeResourceFilter', [this.boxId, resource])
 
+                    this.$store.dispatch('spinnerLock')
+
                     // forces a computed resources rerender
-                    this.$store.dispatch('computeResources')
-                    this.$store.dispatch('computeSuggestions')
+                    if(this.$router.currentRoute.path.endsWith('home')) {
+                        this.$store.dispatch('computeResources')
+                    }
+                    if(this.$router.currentRoute.path.endsWith('suggestions')) {
+                        this.$store.dispatch('computeSuggestions')
+                    }
+
                 }
             },
             selections: function () {
@@ -44,7 +51,7 @@
             },
         },
         methods: {
-            onChange: async function (event) {
+          /*  onChange: async function (event) {
                 const resource = event.target.value
                 console.log('onChange', this.boxId, resource)
                 // this.$store.dispatch('changeBlueprint', null)
@@ -52,7 +59,7 @@
 
                 this.$store.dispatch('computeResources')
                 this.$store.dispatch('computeSuggestions')
-            },
+            }, */
         },
         watched: {
             selected(value) {

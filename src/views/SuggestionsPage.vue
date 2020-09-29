@@ -41,7 +41,7 @@
         created() {
             console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ reset suggestions")
             this.$store.dispatch('spinnerReset')
-            //this.$store.dispatch('spinnerLock')
+            this.$store.dispatch('spinnerLock')
             this.$store.dispatch('computeSuggestions')
         },
         watch: {

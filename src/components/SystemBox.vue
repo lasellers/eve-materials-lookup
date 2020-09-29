@@ -27,9 +27,19 @@
                         system = null
                     }
                     this.$store.dispatch('changeSystem', system)
-                    this.$store.dispatch('computeResources')
-                    this.$store.dispatch('computeSuggestions')
-                    this.$store.dispatch('computeYields')
+
+                    this.$store.dispatch('spinnerLock')
+
+                    if(this.$router.currentRoute.path.endsWith('home')) {
+                        this.$store.dispatch('computeResources')
+                    }
+                    if(this.$router.currentRoute.path.endsWith('suggestions')) {
+                        this.$store.dispatch('computeSuggestions')
+                    }
+                    if(this.$router.currentRoute.path.endsWith('yields')) {
+                        this.$store.dispatch('computeYields')
+                    }
+
                 }
             },
         },

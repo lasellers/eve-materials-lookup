@@ -41,7 +41,7 @@
         created() {
                 console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ reset yield")
                 this.$store.dispatch('spinnerReset')
-                //this.$store.dispatch('spinnerLock')
+                this.$store.dispatch('spinnerLock')
                this.$store.dispatch('computeYields')
         },
         watch: {

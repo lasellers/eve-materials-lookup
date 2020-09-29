@@ -45,7 +45,7 @@
 
             <hr/>
 
-            <div v-if="currentRouteName() !== '/yields'">
+            <div v-if="!currentRouteName().endsWith('yields')">
                 <ResourcesBox/>
                 <BlueprintsBox/>
             </div>
