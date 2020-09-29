@@ -5,7 +5,7 @@
             <div class="row">
                 <div class="col-4 stats"><small>Resources: {{resourcesCount}}</small></div>
                 <div class="col-4 stats"><small>Planets with: {{resourcesByPlanetCount}}</small></div>
-                <div class="col-4 stats"><small>Displayed Resources: {{displayedResourcesCount}}</small></div>
+                <div class="col-4 stats"><small>Computed Resources: {{computedResourcesCount}}</small></div>
             </div>
         </div>
 
@@ -54,7 +54,8 @@
         created() {
             console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ reset home")
             this.$store.dispatch('spinnerReset')
-            //this.$store.dispatch('spinnerLock')
+
+            this.$store.dispatch('computeResources')
         },
         watch: {
             rows: function (val) {
@@ -69,19 +70,20 @@
             headers() {
                 return this.$store.getters.headers
             },
-            rows() {
-                return this.$store.getters.displayedResources
+            resourcesByPlanetCount() {
+                return this.$store.getters.resourcesByPlanetCount
             },
             resourcesCount() {
                 return this.$store.getters.resourcesCount
             },
-            displayedResourcesCount() {
-                return this.$store.getters.displayedResourcesCount
+            computedResourcesCount() {
+                return this.$store.getters.computedResourcesCount
             },
-            resourcesByPlanetCount() {
-                return this.$store.getters.resourcesByPlanetCount
+            rows() {
+                return this.$store.getters.computedResources
             },
         },
+        methods: {}
     }
 </script>
 

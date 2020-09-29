@@ -2,8 +2,8 @@
     <div class="blueprintsbox">
 
         <b>Blueprints</b>&nbsp;
-        <select v-bind:id="blueprintsForSelection" v-on:change="onChange" class="form-control">
-            <option v-for="(blueprint, index) in blueprintsForSelection"
+        <select class="form-control" v-model="selected">
+            <option v-for="(blueprint, index) in selections"
                     :key="index"
                     v-bind:value="blueprint">
                 {{blueprint}}
@@ -18,23 +18,34 @@
 <script>
     export default {
         name: 'BlueprintsBox',
-        components: {},
-        data() {
-            return {}
-        },
         computed: {
             blueprintsCount() {
                 return this.$store.getters.blueprintsCount
             },
-            blueprintsForSelection: function () {
+            selections: function () {
                 return this.$store.getters.blueprintsForSelection
+            },
+            selected: {
+                get: function () {
+                    const blueprint = this.$store.getters.blueprint
+                    return blueprint === null ? "(None)" : blueprint
+                },
+                set: function (blueprint) {
+                    this.$store.dispatch('changeBlueprint', blueprint)
+                    this.$store.dispatch('computeResources')
+                    this.$store.dispatch('computeSuggestions')
+                    this.$store.dispatch('computeYields')
+                }
             },
         },
         methods: {
-            onChange: async function (event) {
+           /* onChange: async function (event) {
+                this.$store.dispatch('spinnerLock')
                 const blueprint = event.target.value
                 this.$store.dispatch('changeBlueprint', blueprint)
-            },
+                this.$store.dispatch('computeResources')
+                this.$store.dispatch('computeSuggestions')
+            },*/
         }
     }
 </script>

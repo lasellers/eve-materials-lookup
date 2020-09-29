@@ -49,7 +49,7 @@ to look into.
     * Fixed an issue with the region/constellation/system dropdown where all three could be selected.
 Now only allows one at a time. 
     * Part of the reason I've worked on this project is to learn VueJs so ... we're getting there.
-
+* v1.6 Todo - Optimize more.
 
 ## Project setup
 ```

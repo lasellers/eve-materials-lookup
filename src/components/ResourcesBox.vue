@@ -1,36 +1,41 @@
 <template>
-    <select v-bind:id="'resourcesForSelection'+box" v-on:change="onChange" class="form-control"
-            v-on:click="$store.dispatch('spinnerLock')"
-            v-model="selected">
-        <option v-for="(resource, index) in resourcesForSelection" :key="index" v-bind:value="resource">
-            {{resource}}
-        </option>
-    </select>
+    <div id="resourcesbox">
+        <b>Resources</b>&nbsp;
+        <div class="row">
+            <div class="col-md-3 col-lg-2">
+                <ResourceBox box="0"/>
+            </div>
+            <div class="col-md-3 col-lg-2">
+                <ResourceBox box="1"/>
+            </div>
+            <div class="col-md-3 col-lg-2">
+                <ResourceBox box="2"/>
+            </div>
+            <div class="col-md-3 col-lg-2">
+                <ResourceBox box="3"/>
+            </div>
+            <div class="col-md-3 col-lg-2">
+                <ResourceBox box="4"/>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
+    import ResourceBox from "./ResourceBox.vue";
+
     export default {
         name: 'ResourcesBox',
-        props: ['box'],
+        components: {
+            ResourceBox
+        },
+        data() {
+            return {
+            }
+        },
         computed: {
-            selected: {
-                get: function () {
-                    const filter = this.$store.getters.resourceFilters[this.box]
-                    return filter === null ? "(None)" : filter
-                },
-                set: function (resource) {
-                    this.$store.dispatch('changeResourceFilter', [this.box, resource])
-                }
-            },
-            resourcesForSelection: function () {
-                return this.$store.getters.resourcesForSelection
-            },
         },
         methods: {
-            onChange: async function (event) {
-                const resource = event.target.value
-                this.$store.dispatch('changeResourceFilter', [this.box, resource])
-            },
         }
     }
 </script>

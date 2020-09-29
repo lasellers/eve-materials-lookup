@@ -1,10 +1,8 @@
 <template>
     <div class="constellationbox">
         <b>Constellation</b>&nbsp;
-        <select v-bind:id="constellationsForSelection" v-on:change="onChange"
-                v-model="selected"
-                class="form-control">
-            <option v-for="(constellation, index) in constellationsForSelection" :key="index"
+        <select class="form-control" v-model="selected">
+            <option v-for="(constellation, index) in selections" :key="index"
                     v-bind:value="constellation">
                 {{constellation}}
             </option>
@@ -16,6 +14,9 @@
     export default {
         name: 'ConstellationBox',
         computed: {
+            selections: function () {
+                return this.$store.getters.constellationsForSelection
+            },
             selected: {
                 get: function () {
                     const constellation = this.$store.getters.constellation
@@ -23,20 +24,25 @@
                 },
                 set: function (constellation) {
                     this.$store.dispatch('changeConstellation', constellation)
+                    this.$store.dispatch('computeResources')
+                    this.$store.dispatch('computeSuggestions')
+                    this.$store.dispatch('computeYields')
                 }
-            },
-            constellationsForSelection: function () {
-                return this.$store.getters.constellationsForSelection
             },
         },
         methods: {
-            onChange: async function (event) {
+            // v-on:change="onChange"
+            /*onChange: async function (event) {
+                this.$store.dispatch('spinnerLock')
                 let constellation = event.target.value
                 if (constellation === '(None)') {
                     constellation = null
                 }
                 this.$store.dispatch('changeConstellation', constellation)
-            },
+                this.$store.dispatch('computeResources')
+                this.$store.dispatch('computeSuggestions')
+                this.$store.dispatch('computeYields')
+            }, */
         }
     }
 </script>

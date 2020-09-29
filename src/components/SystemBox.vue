@@ -1,10 +1,8 @@
 <template>
     <div class="systembox">
         <b>System</b>&nbsp;
-        <select v-bind:id="systemsForSelection" v-on:change="onChange"
-                class="form-control"
-                v-model="selected">
-            <option v-for="(system, index) in systemsForSelection" :key="index"
+        <select class="form-control" v-model="selected">
+            <option v-for="(system, index) in selections" :key="index"
                     v-bind:value="system">
                 {{system}}
             </option>
@@ -16,27 +14,38 @@
     export default {
         name: 'SystemBox',
         computed: {
+            selections: function () {
+                return this.$store.getters.systemsForSelection
+            },
             selected: {
                 get: function () {
                     const system = this.$store.getters.system
                     return system === null ? "(None)" : system
                 },
                 set: function (system) {
+                    if (system === '(None)') {
+                        system = null
+                    }
                     this.$store.dispatch('changeSystem', system)
+                    this.$store.dispatch('computeResources')
+                    this.$store.dispatch('computeSuggestions')
+                    this.$store.dispatch('computeYields')
                 }
-            },
-            systemsForSelection: function () {
-                return this.$store.getters.systemsForSelection
             },
         },
         methods: {
-            onChange: async function (event) {
+            // v-on:change="onChange"
+           /* onChange: async function (event) {
+                this.$store.dispatch('spinnerLock')
                 let system = event.target.value
                 if (system === '(None)') {
                     system = null
                 }
                 this.$store.dispatch('changeSystem', system)
-            },
+                this.$store.dispatch('computeResources')
+                this.$store.dispatch('computeSuggestions')
+                this.$store.dispatch('computeYields')
+            }, */
         }
     }
 </script>

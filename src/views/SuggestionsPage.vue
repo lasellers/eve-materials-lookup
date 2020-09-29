@@ -4,7 +4,7 @@
         <b>Suggestions for a Single Planet with most resources</b> <small>These are suggested planets to place mining
         arrays on.</small>
 
-        <table id="suggestions2-list" class="table table-striped table-sm">
+        <table id="suggestions-list" class="table table-striped table-sm">
             <thead>
             <tr>
                 <th>Region</th>
@@ -28,6 +28,7 @@
             </tr>
             </tbody>
         </table>
+
         <p v-if="!(rows.length>0)">No suggestions. There may not be any such
             planets.</p>
 
@@ -41,6 +42,7 @@
             console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ reset suggestions")
             this.$store.dispatch('spinnerReset')
             //this.$store.dispatch('spinnerLock')
+            this.$store.dispatch('computeSuggestions')
         },
         watch: {
             rows: function (val) {
@@ -56,7 +58,7 @@
                 return this.$store.getters.headers
             },
             rows() {
-                return this.$store.getters.suggestionsForSinglePlanetWithMostResources
+                return this.$store.getters.computedSuggestions
             },
         },
         methods: {

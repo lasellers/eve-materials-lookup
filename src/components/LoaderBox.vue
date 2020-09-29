@@ -34,27 +34,6 @@
             )
         },
         computed: {
-           /* resourcesCount: function () {
-                return this.$store.getters.resourcesCount
-            },
-            blueprintsCount: function () {
-                return this.$store.getters.blueprintsCount
-            },
-            regionsForSelectionCount: function () {
-                return this.$store.getters.regionsForSelectionCount
-            },
-            constellationsForSelectionCount: function () {
-                return this.$store.getters.constellationsForSelectionCount
-            },
-            systemsForSelectionCount: function () {
-                return this.$store.getters.systemsForSelectionCount
-            },
-            blueprintsForSelectionCount: function () {
-                return this.$store.getters.blueprintsForSelectionCount
-            },
-            resourcesForSelectionCount: function () {
-                return this.$store.getters.resourcesForSelectionCount
-            }, */
             showSpinner: function () {
                 return this.$store.getters.showSpinner
             },

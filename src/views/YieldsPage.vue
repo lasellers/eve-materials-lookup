@@ -42,6 +42,7 @@
                 console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ reset yield")
                 this.$store.dispatch('spinnerReset')
                 //this.$store.dispatch('spinnerLock')
+               this.$store.dispatch('computeYields')
         },
         watch: {
             rows: function (val) {
@@ -57,7 +58,7 @@
                 return this.$store.getters.headers
             },
             rows() {
-                return this.$store.getters.yields
+                return this.$store.getters.computedYields
             },
         },
     }

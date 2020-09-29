@@ -8,8 +8,11 @@ export default new Vuex.Store({
         spinnerCount: 0,
         headers: [],
         resources: [],
+        blueprintHeaders: [],
+        blueprints: [],
+        systemsHeaders: [],
+        systems: [],
         resourcesForSelection: [],
-        displayedResourcesLength: 0,
         resourceFilters: [null, null, null, null, null],
         regionsForSelection: [],
         region: 'Delve',
@@ -17,13 +20,13 @@ export default new Vuex.Store({
         constellation: null,
         systemsForSelection: [],
         system: null,
-        blueprintHeaders: [],
-        blueprints: [],
+        blueprint: null,
         blueprintsForSelection: [],
         resourcesByPlanet: [],
         yieldsPreSort: [],
-        systemsHeaders: [],
-        systems: [],
+        computedResources: [],
+        computedSuggestions: [],
+        computedYields: []
     },
 
     getters: {
@@ -35,6 +38,15 @@ export default new Vuex.Store({
             console.log('???????? currentSpinnerCount count:', store.spinnerCount)
             return store.spinnerCount
         },
+        computedResources: store => {
+            return store.computedResources
+        },
+        computedSuggestions: store => {
+            return store.computedSuggestions
+        },
+        computedYields: store => {
+            return store.computedYields
+        },
         headers: store => {
             return store.headers
         },
@@ -44,13 +56,6 @@ export default new Vuex.Store({
         resourcesCount: store => {
             return store.resources.length
         },
-        /* displayedResources: store => {
-            return store.displayedResources
-        }, */
-        displayedResourcesCount: store => {
-            // return store.displayedResources.length
-            return store.displayedResourcesLength
-        },
         resourcesForSelectionCount: store => {
             return store.resourcesForSelection.length
         },
@@ -58,7 +63,7 @@ export default new Vuex.Store({
             return store.resourcesForSelection
         },
         resourceFilters: store => {
-            return store.resourceFilters
+            return [...store.resourceFilters, store.blueprint]
         },
         regionsForSelection: store => {
             return store.regionsForSelection
@@ -78,9 +83,6 @@ export default new Vuex.Store({
         constellationsForSelectionCount: store => {
             return store.constellationsForSelection.length
         },
-        constellationsCount: store => {
-            return store.constellationsForSelection.length
-        },
         constellation: store => {
             return store.constellation
         },
@@ -88,9 +90,6 @@ export default new Vuex.Store({
             return store.systemsForSelection
         },
         systemsForSelectionCount: store => {
-            return store.systemsForSelection.length
-        },
-        systemsCount: store => {
             return store.systemsForSelection.length
         },
         system: store => {
@@ -111,238 +110,11 @@ export default new Vuex.Store({
         blueprintsForSelectionCount: store => {
             return store.blueprintsForSelection.length
         },
-        resourcesByPlanet: store => {
-            return store.resourcesByPlanet
+        computedResourcesCount: store => {
+            return store.computedResources.length
         },
         resourcesByPlanetCount: store => {
             return store.resourcesByPlanet.length
-        },
-        suggestionsForSinglePlanetWithMostResources(store) {
-            const startDate = new Date()
-
-            let minNumber = 3
-
-            // get list of resource filters without nulls
-            const resourceFilters = store.resourceFilters.filter(item => {
-                return (item !== null)
-            })
-
-            let rows = []
-
-            if (store.region !== null) {
-                store.resourcesByPlanet.forEach((row) => {
-                    if (store.region === row[1]) {
-                        if (row[6].length >= minNumber) {
-                            let count = 0
-                            resourceFilters.forEach(resource => {
-                                if (row[6].includes(resource)) {
-                                    // row[9] = ++count
-                                    count++
-                                }
-                            })
-                            if (count >= minNumber) {
-                                rows.push(row)
-                            }
-                        }
-                    }
-                })
-            } else if (store.constellation !== null) {
-                store.resourcesByPlanet.forEach((row) => {
-                    if (store.constellation === row[2]) {
-                        if (row[6].length >= minNumber) {
-                            let count = 0
-                            resourceFilters.forEach(resource => {
-                                if (row[6].includes(resource)) {
-                                    // row[9] = ++count
-                                    count++
-                                }
-                            })
-                            if (count >= minNumber) {
-                                rows.push(row)
-                            }
-                        }
-                    }
-                })
-            } else if (store.system !== null) {
-                store.resourcesByPlanet.forEach((row) => {
-                    if (store.system === row[3]) {
-                        if (row[6].length >= minNumber) {
-                            let count = 0
-                            resourceFilters.forEach(resource => {
-                                if (row[6].includes(resource)) {
-                                    // row[9] = ++count
-                                    count++
-                                }
-                            })
-                            if (count >= minNumber) {
-                                rows.push(row)
-                            }
-                        }
-                    }
-                })
-            } else {
-                store.resourcesByPlanet.forEach((row) => {
-                    if (row[6].length >= minNumber) {
-                        let count = 0
-                        resourceFilters.forEach(resource => {
-                            if (row[6].includes(resource)) {
-                                // row[9] = ++count
-                                count++
-                            }
-                        })
-                        if (count >= minNumber) {
-                            rows.push(row)
-                        }
-                    }
-                })
-            }
-            console.log('suggestionsForSinglePlanetWithMostResources rows', new Date().getTime() - startDate.getTime() + 'ms')
-
-            // sort by region ASC
-            rows.sort(function (a, b) {
-                return a[1] < b[1] ? -1 : 1
-            });
-            console.log('suggestionsForSinglePlanetWithMostResources sort', new Date().getTime() - startDate.getTime() + 'ms')
-
-            return rows
-        },
-        displayedResources(store) {
-            const startDate = new Date()
-
-            // filter out everything by regions or constellations and optionally up to 5 resource types
-            if (store.region === null && store.constellation === null && store.system === null) {
-                // short circuit
-                // store.displayedResources = [];
-                return []
-            } else {
-                // get list of resource filters without nulls
-                const resourceFilters = store.resourceFilters.filter(item => {
-                    return (item !== null)
-                })
-
-                // temp hold for new data-- we update the store only once at the end
-                let newRows = []
-
-                // if no resource filters, just region and/or constellation
-                if (resourceFilters.length === 0) {
-                    newRows = store.resources.filter(row => {
-                        if (store.region !== null && row[1] === store.region) {
-                            return true;
-                        } else if (store.constellation !== null && row[2] === store.constellation) {
-                            return true;
-                        } else if (store.system !== null && row[3] === store.system) {
-                            return true;
-                        }
-                        return false;
-                    });
-                }
-
-                // if region and/or constellation and resource filters
-                if (!(resourceFilters.length === 0)) {
-                    newRows = store.resources.filter(row => {
-                        if ((store.region !== null && row[1] === store.region) &&
-                            resourceFilters.includes(row[6])) {
-                            return true;
-                        } else if ((store.constellation !== null && row[2] === store.constellation) &&
-                            resourceFilters.includes(row[6])) {
-                            return true;
-                        } else if ((store.system !== null && row[3] === store.system) &&
-                            resourceFilters.includes(row[6])) {
-                            return true;
-                        }
-
-                        return false;
-                    });
-                }
-                console.log('displayedResources filter', new Date().getTime() - startDate.getTime() + 'ms')
-
-                // sort by output DESC
-                newRows.sort(function (a, b) {
-                    return b[8] - a[8]
-                });
-                console.log('displayedResources sort', new Date().getTime() - startDate.getTime() + 'ms')
-
-                // update the store once
-                store.displayedResources = newRows;
-
-                console.log('displayedResources', new Date().getTime() - startDate.getTime() + 'ms')
-
-                store.displayedResourcesLength = newRows.length;
-
-                return newRows
-            }
-        },
-        yields(store) {
-            const startDate = new Date()
-
-            let sourceResources = store.yieldsPreSort
-            let sourceResourcesLen = sourceResources.length
-
-            //
-            let rows = new Array(0)
-            let rowCount = 0
-
-            // none
-            if (store.region === null && store.constellation === null && store.system === null) {
-                store.resourcesForSelection.forEach(resource => {
-                    const startDate = new Date()
-                    for (let rowIndex = 0; rowIndex < sourceResourcesLen; rowIndex++) {
-                        if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
-                            rows[rowCount++] = sourceResources[rowIndex]
-                            console.log('yields all', new Date().getTime() - startDate.getTime() + 'ms', resource)
-                            break
-                        }
-                    }
-                })
-            } else if (store.region !== null) { // region
-                store.resourcesForSelection.forEach(resource => {
-                    const startDate = new Date()
-                    for (let rowIndex = 0; rowIndex < sourceResourcesLen; rowIndex++) {
-                        if (store.region == sourceResources[rowIndex][1]) {
-                            if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
-                                rows[rowCount++] = sourceResources[rowIndex]
-                                console.log('yields region', new Date().getTime() - startDate.getTime() + 'ms', resource)
-                                break
-                            }
-                        }
-                    }
-                })
-            } else if (store.constellation !== null) { // constellation
-                store.resourcesForSelection.forEach(resource => {
-                    const startDate = new Date()
-                    for (let rowIndex = 0; rowIndex < sourceResourcesLen; rowIndex++) {
-                        if (store.constellation == sourceResources[rowIndex][2]) {
-                            if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
-                                rows[rowCount++] = sourceResources[rowIndex]
-                                console.log('yields constellation', new Date().getTime() - startDate.getTime() + 'ms', resource)
-                                break
-                            }
-                        }
-                    }
-                })
-            } else if (store.system !== null) { // system
-                store.resourcesForSelection.forEach(resource => {
-                    const startDate = new Date()
-                    for (let rowIndex = 0; rowIndex < sourceResourcesLen; rowIndex++) {
-                        if (store.system == sourceResources[rowIndex][3]) {
-                            if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
-                                rows[rowCount++] = store.resources[rowIndex]
-                                console.log('yields system', new Date().getTime() - startDate.getTime() + 'ms', resource)
-                                break
-                            }
-                        }
-                    }
-                })
-            }
-
-            // sort by output DESC
-            rows.sort(function (a, b) {
-                return b[8] - a[8]
-            });
-
-            console.log('yields', new Date().getTime() - startDate.getTime() + 'ms')
-
-            return rows
         },
     },
 
@@ -434,8 +206,12 @@ export default new Vuex.Store({
             store.system = value === "" ? null : value
         },
         changeResourceFilter(store, values) {
+            // store.blueprint = null
             const [index, resource] = values
+            // let resourceFilters = store.resourceFilters
             store.resourceFilters[index] = resource
+            // store.resourceFilters = resourceFilters
+            console.log('changeResourceFilter', store.resourceFilters)
         },
         addBlueprintHeaders(store, value) {
             store.blueprintHeaders = value
@@ -457,8 +233,10 @@ export default new Vuex.Store({
             store.blueprintsForSelection = blueprints
         },
         changeBlueprint(store, value) {
+            store.blueprint = value
+
             if (value === null) {
-                store.resourceFilters = [null, null, null, null, null]
+                // store.resourceFilters = [null, null, null, null, null]
                 return
             }
 
@@ -561,6 +339,249 @@ export default new Vuex.Store({
         addSystems(store, rows) {
             store.systems = rows
         },
+
+        computeResources(store) {
+            const startDate = new Date()
+
+            console.log('!computeResources init', new Date().getTime() - startDate.getTime() + 'ms')
+
+            // get list of resource filters without nulls
+            let resourceFilters = []
+            if (store.resourceFilters !== null) {
+                resourceFilters = store.resourceFilters.filter(item => {
+                    return (item !== null)
+                })
+            }
+            console.log('!computeResources resourceFilters', new Date().getTime() - startDate.getTime() + 'ms',
+                resourceFilters)
+
+            // filter out everything by regions or constellations and optionally up to
+            // 5 resource types
+            if (
+                store.region === null && store.constellation === null && store.system === null
+            ) {
+                // short circuit
+                console.log('!computeResources short circuit', new Date().getTime() - startDate.getTime() + 'ms')
+                return []
+            }
+
+            // temp hold for new data-- we update the store only once at the end
+            let newRows = []
+
+            // if no resource filters, just region and/or constellation
+            if (resourceFilters.length === 0) {
+
+                if (store.region !== null) {
+                    newRows = store.resources.filter(row => {
+                        return (row[1] === store.region)
+                    })
+                } else if (store.constellation !== null) {
+                    newRows = store.resources.filter(row => {
+                        return (row[2] === store.constellation)
+                    })
+                } else if (store.system !== null) {
+                    newRows = store.resources.filter(row => {
+                        return (row[3] === store.system)
+                    })
+                }
+
+            }
+
+            // if region and/or constellation and resource filters
+            if (!(resourceFilters.length === 0)) {
+                newRows = store.resources.filter(row => {
+                    if ((store.region !== null && row[1] === store.region) &&
+                        resourceFilters.includes(row[6])) {
+                        return true;
+                    } else if ((store.constellation !== null && row[2] === store.constellation) &&
+                        resourceFilters.includes(row[6])) {
+                        return true;
+                    } else if ((store.system !== null && row[3] === store.system) &&
+                        resourceFilters.includes(row[6])) {
+                        return true;
+                    }
+                    return false;
+                });
+            }
+
+            console.log('!computeResources filter', new Date().getTime() - startDate.getTime() + 'ms')
+
+            // sort by output DESC
+            newRows.sort(function (a, b) {
+                return b[8] - a[8]
+            });
+            console.log('!computeResources sort', new Date().getTime() - startDate.getTime() + 'ms')
+
+            console.log(newRows)
+
+            store.computedResources = newRows
+        },
+        computeSuggestions(store) {
+            console.log('computeSuggestions')
+
+            const startDate = new Date()
+
+            let minNumber = 3
+
+            const blueprint = store.blueprint + '?'
+            console.log('computeSuggestions blueprint', blueprint)
+
+            // get list of resource filters without nulls
+            const resourceFilters = store.resourceFilters.filter(item => {
+                return (item !== null)
+            })
+
+            let rows = []
+
+            if (store.region !== null) {
+                store.resourcesByPlanet.forEach((row) => {
+                    if (store.region === row[1]) {
+                        if (row[6].length >= minNumber) {
+                            let count = 0
+                            resourceFilters.forEach(resource => {
+                                if (row[6].includes(resource)) {
+                                    // row[9] = ++count
+                                    count++
+                                }
+                            })
+                            if (count >= minNumber) {
+                                rows.push(row)
+                            }
+                        }
+                    }
+                })
+            } else if (store.constellation !== null) {
+                store.resourcesByPlanet.forEach((row) => {
+                    if (store.constellation === row[2]) {
+                        if (row[6].length >= minNumber) {
+                            let count = 0
+                            resourceFilters.forEach(resource => {
+                                if (row[6].includes(resource)) {
+                                    // row[9] = ++count
+                                    count++
+                                }
+                            })
+                            if (count >= minNumber) {
+                                rows.push(row)
+                            }
+                        }
+                    }
+                })
+            } else if (store.system !== null) {
+                store.resourcesByPlanet.forEach((row) => {
+                    if (store.system === row[3]) {
+                        if (row[6].length >= minNumber) {
+                            let count = 0
+                            resourceFilters.forEach(resource => {
+                                if (row[6].includes(resource)) {
+                                    // row[9] = ++count
+                                    count++
+                                }
+                            })
+                            if (count >= minNumber) {
+                                rows.push(row)
+                            }
+                        }
+                    }
+                })
+            } else {
+                store.resourcesByPlanet.forEach((row) => {
+                    if (row[6].length >= minNumber) {
+                        let count = 0
+                        resourceFilters.forEach(resource => {
+                            if (row[6].includes(resource)) {
+                                // row[9] = ++count
+                                count++
+                            }
+                        })
+                        if (count >= minNumber) {
+                            rows.push(row)
+                        }
+                    }
+                })
+            }
+            console.log('computeSuggestions rows', new Date().getTime() - startDate.getTime() + 'ms')
+
+            // sort by region ASC
+            rows.sort(function (a, b) {
+                return a[1] < b[1] ? -1 : 1
+            });
+            console.log('computeSuggestions sort', new Date().getTime() - startDate.getTime() + 'ms')
+
+            store.computedSuggestions = rows
+        },
+        computeYields(store) {
+            const startDate = new Date()
+
+            let sourceResources = store.yieldsPreSort
+            let sourceResourcesLen = sourceResources.length
+
+            //
+            let rows = new Array(0)
+            let rowCount = 0
+
+            // none
+            if (store.region === null && store.constellation === null && store.system === null) {
+                store.resourcesForSelection.forEach(resource => {
+                    const startDate = new Date()
+                    for (let rowIndex = 0; rowIndex < sourceResourcesLen; rowIndex++) {
+                        if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
+                            rows[rowCount++] = sourceResources[rowIndex]
+                            console.log('computeYields all', new Date().getTime() - startDate.getTime() + 'ms', resource)
+                            break
+                        }
+                    }
+                })
+            } else if (store.region !== null) { // region
+                store.resourcesForSelection.forEach(resource => {
+                    const startDate = new Date()
+                    for (let rowIndex = 0; rowIndex < sourceResourcesLen; rowIndex++) {
+                        if (store.region == sourceResources[rowIndex][1]) {
+                            if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
+                                rows[rowCount++] = sourceResources[rowIndex]
+                                console.log('computeYields region', new Date().getTime() - startDate.getTime() + 'ms', resource)
+                                break
+                            }
+                        }
+                    }
+                })
+            } else if (store.constellation !== null) { // constellation
+                store.resourcesForSelection.forEach(resource => {
+                    const startDate = new Date()
+                    for (let rowIndex = 0; rowIndex < sourceResourcesLen; rowIndex++) {
+                        if (store.constellation == sourceResources[rowIndex][2]) {
+                            if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
+                                rows[rowCount++] = sourceResources[rowIndex]
+                                console.log('computeYields constellation', new Date().getTime() - startDate.getTime() + 'ms', resource)
+                                break
+                            }
+                        }
+                    }
+                })
+            } else if (store.system !== null) { // system
+                store.resourcesForSelection.forEach(resource => {
+                    const startDate = new Date()
+                    for (let rowIndex = 0; rowIndex < sourceResourcesLen; rowIndex++) {
+                        if (store.system == sourceResources[rowIndex][3]) {
+                            if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
+                                rows[rowCount++] = store.resources[rowIndex]
+                                console.log('computeYields system', new Date().getTime() - startDate.getTime() + 'ms', resource)
+                                break
+                            }
+                        }
+                    }
+                })
+            }
+
+            // sort by output DESC
+            rows.sort(function (a, b) {
+                return b[8] - a[8]
+            });
+
+            console.log('computeYields', new Date().getTime() - startDate.getTime() + 'ms')
+
+            store.computedYields = rows
+        },
     },
 
     actions:
@@ -633,6 +654,16 @@ export default new Vuex.Store({
             },
             addSystems(context, value) {
                 context.commit('addSystems', value)
+            },
+
+            computeResources(context) {
+                context.commit('computeResources')
+            },
+            computeSuggestions(context) {
+                context.commit('computeSuggestions')
+            },
+            computeYields(context) {
+                context.commit('computeYields')
             },
         }
 })

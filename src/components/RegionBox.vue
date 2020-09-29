@@ -1,9 +1,8 @@
 <template>
     <div class="regionbox">
         <b>Region</b>&nbsp;
-        <select v-bind:id="regionsForSelection" v-on:change="onChange" class="form-control"
-                v-model="selected">
-            <option v-for="(regionOption, index) in regionsForSelection" :key="index" v-bind:value="regionOption">
+        <select class="form-control" v-model="selected">
+            <option v-for="(regionOption, index) in selections" :key="index" v-bind:value="regionOption">
                 {{regionOption}}
             </option>
         </select>
@@ -14,6 +13,9 @@
     export default {
         name: 'RegionBox',
         computed: {
+            selections: function () {
+                return this.$store.getters.regionsForSelection
+            },
             selected: {
                 get: function () {
                     const region = this.$store.getters.region
@@ -21,20 +23,26 @@
                 },
                 set: function (region) {
                     this.$store.dispatch('changeRegion', region)
+                    this.$store.dispatch('computeResources')
+                    this.$store.dispatch('computeSuggestions')
+                    this.$store.dispatch('computeYields')
                 }
-            },
-            regionsForSelection: function () {
-                return this.$store.getters.regionsForSelection
             },
         },
         methods: {
-            onChange: async function (event) {
+            // v-on:change="onChange"
+            //onChange: async function (event) {
+            /*    this.$store.dispatch('spinnerLock')
                 let region = event.target.value
                 if (region === '(None)') {
                     region = null
                 }
                 this.$store.dispatch('changeRegion', region)
-            },
+                this.$store.dispatch('computeResources')
+                this.$store.dispatch('computeSuggestions')
+                this.$store.dispatch('computeYields')
+             */
+           // },
         }
     }
 </script>

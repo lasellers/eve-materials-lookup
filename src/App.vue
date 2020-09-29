@@ -46,28 +46,8 @@
             <hr/>
 
             <div v-if="currentRouteName() !== '/yields'">
-
-                <b>Resources</b>&nbsp;
-                <div class="row">
-                    <div class="col-md-3 col-lg-2">
-                        <ResourcesBox box="0"/>
-                    </div>
-                    <div class="col-md-3 col-lg-2">
-                        <ResourcesBox box="1"/>
-                    </div>
-                    <div class="col-md-3 col-lg-2">
-                        <ResourcesBox box="2"/>
-                    </div>
-                    <div class="col-md-3 col-lg-2">
-                        <ResourcesBox box="3"/>
-                    </div>
-                    <div class="col-md-3 col-lg-2">
-                        <ResourcesBox box="4"/>
-                    </div>
-                </div>
-
+                <ResourcesBox/>
                 <BlueprintsBox/>
-
             </div>
 
         </div>
