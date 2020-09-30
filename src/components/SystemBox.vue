@@ -26,7 +26,7 @@
                     if (system === '(None)') {
                         system = null
                     }
-                    this.$store.dispatch('changeSystem', system)
+                    this.$store.dispatch('changeSystem', system === '(None)' ? null: system)
 
                     this.$store.dispatch('spinnerLock')
 

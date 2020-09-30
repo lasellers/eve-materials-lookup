@@ -37,8 +37,8 @@
             showSpinner: function () {
                 return this.$store.getters.showSpinner
             },
-            currentSpinnerCount: function () {
-                return this.$store.getters.currentSpinnerCount
+            spinnerCount: function () {
+                return this.$store.getters.spinnerCount
             },
         },
         methods: {

@@ -52,7 +52,7 @@
             }
         },
         created() {
-            this.$store.dispatch('spinnerReset')
+            // this.$store.dispatch('spinnerReset')
             this.$store.dispatch('spinnerLock')
             this.$store.dispatch('computeResources')
         },

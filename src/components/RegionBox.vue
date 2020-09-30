@@ -22,7 +22,7 @@
                     return region === null ? "(None)" : region
                 },
                 set: function (region) {
-                    this.$store.dispatch('changeRegion', region)
+                    this.$store.dispatch('changeRegion', region === '(None)' ? null: region)
 
                     this.$store.dispatch('spinnerLock')
 

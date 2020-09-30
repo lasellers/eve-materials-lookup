@@ -23,7 +23,7 @@
                     return constellation === null ? "(None)" : constellation
                 },
                 set: function (constellation) {
-                    this.$store.dispatch('changeConstellation', constellation)
+                    this.$store.dispatch('changeConstellation', constellation === '(None)' ? null: constellation)
 
                     this.$store.dispatch('spinnerLock')
 

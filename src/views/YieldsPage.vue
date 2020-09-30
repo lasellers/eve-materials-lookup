@@ -39,7 +39,7 @@
     export default {
         name: 'YieldsPage',
         created() {
-            this.$store.dispatch('spinnerReset')
+            // this.$store.dispatch('spinnerReset')
             this.$store.dispatch('spinnerLock')
             this.$store.dispatch('computeYields')
         },
