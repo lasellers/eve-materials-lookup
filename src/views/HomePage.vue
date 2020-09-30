@@ -53,8 +53,8 @@
         },
         created() {
             // this.$store.dispatch('spinnerReset')
-            this.$store.dispatch('spinnerLock')
-            this.$store.dispatch('computeResources')
+            //this.$store.dispatch('spinnerLock')
+           this.$store.dispatch('computeResources')
         },
         watch: {
             rows: function () {

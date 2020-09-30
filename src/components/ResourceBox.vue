@@ -33,10 +33,10 @@
                     this.$store.dispatch('spinnerLock')
 
                     // forces a computed resources rerender
-                    if(this.$router.currentRoute.path.endsWith('home')) {
+                    if(this.$router.currentRoute.path.endsWith('/')) {
                         this.$store.dispatch('computeResources')
                     }
-                    if(this.$router.currentRoute.path.endsWith('suggestions')) {
+                    else if(this.$router.currentRoute.path.endsWith('suggestions')) {
                         this.$store.dispatch('computeSuggestions')
                     }
 
@@ -47,20 +47,8 @@
             },
         },
         methods: {
-          /*  onChange: async function (event) {
-                const resource = event.target.value
-                console.log('onChange', this.boxId, resource)
-                // this.$store.dispatch('changeBlueprint', null)
-                this.$store.dispatch('changeResourceFilter', [this.boxId, resource])
-
-                this.$store.dispatch('computeResources')
-                this.$store.dispatch('computeSuggestions')
-            }, */
         },
         watched: {
-            selected(value) {
-                console.log(' !!!!!!!!!!! selected', value)
-            }
         }
     }
 </script>

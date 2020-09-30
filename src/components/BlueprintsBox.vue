@@ -3,9 +3,7 @@
 
         <b>Blueprints</b>&nbsp;
         <select class="form-control" v-model="selected">
-            <option v-for="(blueprint, index) in selections"
-                    :key="index"
-                    v-bind:value="blueprint">
+            <option v-for="(blueprint, index) in selections" :key="index" v-bind:value="blueprint">
                 {{blueprint}}
             </option>
         </select>
@@ -20,42 +18,36 @@
         name: 'BlueprintsBox',
         computed: {
             blueprintsCount() {
+                console.log('BlueprintsBox: blueprintsCount', this.$store.getters.blueprintsCount)
                 return this.$store.getters.blueprintsCount
             },
             selections: function () {
+                console.log('BlueprintsBox: selections', this.$store.getters.blueprintsForSelection)
                 return this.$store.getters.blueprintsForSelection
             },
             selected: {
                 get: function () {
                     const blueprint = this.$store.getters.blueprint
+                    console.log('BlueprintsBox: selected get', blueprint)
                     return blueprint === null ? "(None)" : blueprint
                 },
                 set: function (blueprint) {
+                    console.log('BlueprintsBox: selected set', blueprint)
                     this.$store.dispatch('changeBlueprint', blueprint)
 
                     this.$store.dispatch('spinnerLock')
 
-                    if(this.$router.currentRoute.path.endsWith('home')) {
+                    if(this.$router.currentRoute.path.endsWith('/')) {
                         this.$store.dispatch('computeResources')
                     }
-                    if(this.$router.currentRoute.path.endsWith('suggestions')) {
+                    else if(this.$router.currentRoute.path.endsWith('suggestions')) {
                         this.$store.dispatch('computeSuggestions')
-                    }
-                    if(this.$router.currentRoute.path.endsWith('yields')) {
-                        this.$store.dispatch('computeYields')
                     }
 
                 }
             },
         },
         methods: {
-           /* onChange: async function (event) {
-                this.$store.dispatch('spinnerLock')
-                const blueprint = event.target.value
-                this.$store.dispatch('changeBlueprint', blueprint)
-                this.$store.dispatch('computeResources')
-                this.$store.dispatch('computeSuggestions')
-            },*/
         }
     }
 </script>

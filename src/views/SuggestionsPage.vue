@@ -41,7 +41,7 @@
         created() {
             // this.$store.dispatch('spinnerReset')
             this.$store.dispatch('spinnerLock')
-            this.$store.dispatch('computeSuggestions')
+          //  this.$store.dispatch('computeSuggestions')
         },
         watch: {
             rows: function () {

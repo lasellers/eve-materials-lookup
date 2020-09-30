@@ -27,31 +27,20 @@
 
                     this.$store.dispatch('spinnerLock')
 
-                    if(this.$router.currentRoute.path.endsWith('home')) {
+                    if(this.$router.currentRoute.path.endsWith('/')) {
                         this.$store.dispatch('computeResources')
                     }
-                    if(this.$router.currentRoute.path.endsWith('suggestions')) {
+                    else if(this.$router.currentRoute.path.endsWith('suggestions')) {
                         this.$store.dispatch('computeSuggestions')
                     }
-                    if(this.$router.currentRoute.path.endsWith('yields')) {
+                    else if(this.$router.currentRoute.path.endsWith('yields')) {
                         this.$store.dispatch('computeYields')
                     }
+
                 }
             },
         },
         methods: {
-            // v-on:change="onChange"
-            /*onChange: async function (event) {
-                this.$store.dispatch('spinnerLock')
-                let constellation = event.target.value
-                if (constellation === '(None)') {
-                    constellation = null
-                }
-                this.$store.dispatch('changeConstellation', constellation)
-                this.$store.dispatch('computeResources')
-                this.$store.dispatch('computeSuggestions')
-                this.$store.dispatch('computeYields')
-            }, */
         }
     }
 </script>

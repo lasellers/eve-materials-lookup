@@ -20,7 +20,7 @@ export default new Vuex.Store({
         constellation: null,
         systemsForSelection: [],
         system: null,
-        blueprint: null,
+        blueprint: 'Coercer II (Destroyer)',
         blueprintsForSelection: [],
         resourcesByPlanet: [],
         yieldsPreSort: [],
@@ -101,6 +101,9 @@ export default new Vuex.Store({
         blueprints: store => {
             return store.blueprints
         },
+        blueprint: store => {
+            return store.blueprint
+        },
         blueprintsCount: store => {
             return store.blueprints.length
         },
@@ -110,11 +113,17 @@ export default new Vuex.Store({
         blueprintsForSelectionCount: store => {
             return store.blueprintsForSelection.length
         },
+        resourcesByPlanetCount: store => {
+            return store.resourcesByPlanet.length
+        },
         computedResourcesCount: store => {
             return store.computedResources.length
         },
-        resourcesByPlanetCount: store => {
-            return store.resourcesByPlanet.length
+        computedSuggestionsCount: store => {
+            return store.computedSuggestions.length
+        },
+        computedYieldsCount: store => {
+            return store.computedYields.length
         },
     },
 
@@ -129,7 +138,7 @@ export default new Vuex.Store({
         },
         spinnerUnlock(store) {
             store.spinnerCount--
-            // if(store.spinnerCount < 0) store.spinnerCount = 0
+            if(store.spinnerCount < 0) store.spinnerCount = 0
             console.info('<<<<<<<< spinnerCount--', store.spinnerCount)
         },
         addHeaders(store, value) {
@@ -422,6 +431,7 @@ export default new Vuex.Store({
             const resourceFilters = store.resourceFilters.filter(item => {
                 return (item !== null)
             })
+            console.log('computeSuggestions resourceFilters', new Date().getTime() - startDate.getTime() + 'ms', resourceFilters)
 
             let rows = []
 
@@ -492,13 +502,13 @@ export default new Vuex.Store({
                     }
                 })
             }
-            console.log('computeSuggestions rows', new Date().getTime() - startDate.getTime() + 'ms')
+            console.log('computeSuggestions rows', new Date().getTime() - startDate.getTime() + 'ms', rows.length)
 
             // sort by region ASC
             rows.sort(function (a, b) {
                 return a[1] < b[1] ? -1 : 1
             });
-            console.log('computeSuggestions sort', new Date().getTime() - startDate.getTime() + 'ms')
+            console.log('computeSuggestions sort', new Date().getTime() - startDate.getTime() + 'ms', rows)
 
             store.computedSuggestions = rows
         },

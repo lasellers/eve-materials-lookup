@@ -40,8 +40,8 @@
         name: 'YieldsPage',
         created() {
             // this.$store.dispatch('spinnerReset')
-            this.$store.dispatch('spinnerLock')
-            this.$store.dispatch('computeYields')
+            //this.$store.dispatch('spinnerLock')
+           this.$store.dispatch('computeYields')
         },
         watch: {
             rows: function () {

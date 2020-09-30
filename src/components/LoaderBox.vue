@@ -10,6 +10,10 @@
 </template>
 
 <script>
+    /**
+     * The LoaderBox has become a bit complicated over time, but it pre-loads and pre-computes
+     * everything that is needed for the normal operation of the app. In the correct order.
+     */
     import Spinner from './Spinner.vue'
 
     // eslint-disable-next-line
@@ -27,10 +31,11 @@
             this.$store.dispatch('spinnerLock')
             this.getProductionCsv().then(
                 this.getBlueprintsCsv().then(
-                    this.getSystemsCsv().then(
-                        this.$store.dispatch('spinnerUnlock')
+                    this.getSystemsCsv().then(() => {
+                            this.$store.dispatch('spinnerUnlock')
+                        }
                     )
-                ),
+                )
             )
         },
         computed: {
@@ -120,6 +125,31 @@
                             this.$store.dispatch('spinnerUnlock')
                         })
 
+                        this.$store.dispatch('spinnerLock')
+                        this.$store.dispatch('computeResources').then(() => {
+                            console.log('==== computeResources', new Date().getTime() - startDate.getTime())
+                            startDate = new Date()
+                            this.$store.dispatch('spinnerUnlock')
+                        })
+
+                        // when initially created, we pre-pop the resources and suggestions for whatwver blueprint is
+                        // the default in the vuex store (Currently a Coercer II)
+                        const blueprint = this.$store.getters.blueprint
+                        this.$store.dispatch('changeBlueprint', blueprint)
+
+                        this.$store.dispatch('spinnerLock')
+                        this.$store.dispatch('computeSuggestions').then(() => {
+                            console.log('==== computeSuggestions', new Date().getTime() - startDate.getTime())
+                            startDate = new Date()
+                            this.$store.dispatch('spinnerUnlock')
+                        })
+                        this.$store.dispatch('spinnerLock')
+                        this.$store.dispatch('computeYields').then(() => {
+                            console.log('==== computeYields', new Date().getTime() - startDate.getTime())
+                            startDate = new Date()
+                            this.$store.dispatch('spinnerUnlock')
+                        })
+
                         this.$store.dispatch('spinnerUnlock')
                     })
             },
@@ -168,10 +198,7 @@
                     rows[index] = rows[index].trim().split(',')
                     index++
                 }
-                return [
-                    headers,
-                    rows
-                ]
+                return [headers, rows]
             },
 
             loadCsvTo2dArray: function (csv) {
@@ -217,7 +244,6 @@
                     rows
                 ]
             },
-
 
             async getSystemsCsv() {
                 this.$store.dispatch('spinnerLock')
