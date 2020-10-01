@@ -29,7 +29,7 @@
         </div>
 
 
-        <div v-if="!(currentRouteName().endsWith('/') || currentRouteName().endsWith('home'))">
+        <div v-if="!(currentRouteName().endsWith('/') || currentRouteName().endsWith('home') || currentRouteName().endsWith('stats'))">
 
             <div class="container-fluid">
 
@@ -67,6 +67,12 @@
         </div>
 
         <Notice/>
+
+        <div class="container-fluid">
+            <p class="text-right">
+                <router-link to="./stats">Stats</router-link>
+            </p>
+        </div>
 
     </div>
 </template>
