@@ -35,11 +35,11 @@ const routes = [
         component: HomePage
     },
     {
-        path: '/eve-materials-lookup/',
-        redirect: '/eve-materials-lookup/home'
+        path: '/eve-materials-lookup/home',
+        redirect: '/eve-materials-lookup/'
     },
     {
-        path: '/eve-materials-lookup/home',
+        path: '/eve-materials-lookup/',
         component: HomePage
     },
     {
