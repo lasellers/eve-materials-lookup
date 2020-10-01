@@ -1,9 +1,15 @@
 <template>
-    <div class="yields-page">
+    <div class="resources">
 
-        <b>Yields</b> <small>These are the highest yield planets for each resource type in the area selected.
-        If no areas are selected, then the suggestions are universal.</small>
-        <table id="yields-list" class="table table-striped table-sm">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-4 stats"><small>Resources: {{resourcesCount}}</small></div>
+                <div class="col-4 stats"><small>Planets with: {{resourcesByPlanetCount}}</small></div>
+                <div class="col-4 stats"><small>Computed Resources: {{computedResourcesCount}}</small></div>
+            </div>
+        </div>
+
+        <table id="resources-list" class="table table-striped table-sm">
             <thead>
             <tr>
                 <th v-if="unimportant">Planet Id</th>
@@ -13,6 +19,7 @@
                 <th>Planet Name</th>
                 <th>Resource</th>
                 <th>Output</th>
+                <th v-if="unimportant">Planet Type</th>
                 <th v-if="unimportant">Richness</th>
             </tr>
             </thead>
@@ -25,19 +32,20 @@
                 <td>{{planet[4]}}</td>
                 <td>{{planet[6]}}</td>
                 <td><b>{{planet[8]}}</b></td>
+                <td v-if="unimportant">{{planet[5]}}</td>
                 <td v-if="unimportant">{{planet[7]}}</td>
             </tr>
             </tbody>
         </table>
 
-        <p v-if="!(rows.length>0)">No yields -- Select Region, Constellation, etc to begin.</p>
+        <p v-if="!(rows.length>0)">No displayed resources -- Select Region, Constellation, etc to begin.</p>
 
     </div>
 </template>
 
 <script>
     export default {
-        name: 'YieldsPage',
+        name: 'Resources',
         computed: {
             unimportant() {
                 return !(window.innerWidth < 1024)
@@ -45,8 +53,17 @@
             headers() {
                 return this.$store.getters.headers
             },
+            resourcesByPlanetCount() {
+                return this.$store.getters.resourcesByPlanetCount
+            },
+            resourcesCount() {
+                return this.$store.getters.resourcesCount
+            },
+            computedResourcesCount() {
+                return this.$store.getters.computedResourcesCount
+            },
             rows() {
-                return this.$store.getters.computedYields
+                return this.$store.getters.computedResources
             },
         },
     }
@@ -64,6 +81,10 @@
     }
 
     p {
+        text-align: center;
+    }
+
+    .stats {
         text-align: center;
     }
 

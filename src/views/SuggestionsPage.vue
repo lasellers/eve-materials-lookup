@@ -38,16 +38,6 @@
 <script>
     export default {
         name: 'SuggestionsPage',
-        created() {
-            // this.$store.dispatch('spinnerReset')
-            this.$store.dispatch('spinnerLock')
-          //  this.$store.dispatch('computeSuggestions')
-        },
-        watch: {
-            rows: function () {
-                this.$store.dispatch('spinnerUnlock')
-            }
-        },
         computed: {
             unimportant() {
                 return !(window.innerWidth < 1024)

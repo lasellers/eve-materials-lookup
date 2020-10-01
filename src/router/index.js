@@ -2,8 +2,9 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import HomePage from '../views/HomePage.vue'
-import YieldsPage from '../views/YieldsPage.vue'
+import ResourcesPage from '../views/ResourcesPage.vue'
 import SuggestionsPage from '../views/SuggestionsPage.vue'
+import YieldsPage from '../views/YieldsPage.vue'
 import NotFound from '../views/NotFound.vue'
 
 Vue.use(VueRouter)
@@ -18,12 +19,20 @@ const routes = [
         component: HomePage
     },
     {
-        path: '/yields',
-        component: YieldsPage
+        path: '/resources',
+        component: ResourcesPage
     },
     {
         path: '/suggestions',
         component: SuggestionsPage
+    },
+    {
+        path: '/yields',
+        component: YieldsPage
+    },
+    {
+        path: '/stats',
+        component: HomePage
     },
     {
         path: '/eve-materials-lookup/',
@@ -34,12 +43,20 @@ const routes = [
         component: HomePage
     },
     {
-        path: '/eve-materials-lookup/yields',
-        component: YieldsPage
+        path: '/eve-materials-lookup/resources',
+        component: ResourcesPage
     },
     {
         path: '/eve-materials-lookup/suggestions',
         component: SuggestionsPage
+    },
+    {
+        path: '/eve-materials-lookup/yields',
+        component: YieldsPage
+    },
+    {
+        path: '/eve-materials-lookup/stats',
+        component: HomePage
     },
     {
         path: '/*',

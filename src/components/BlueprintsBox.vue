@@ -18,46 +18,37 @@
         name: 'BlueprintsBox',
         computed: {
             blueprintsCount() {
-                console.log('BlueprintsBox: blueprintsCount', this.$store.getters.blueprintsCount)
                 return this.$store.getters.blueprintsCount
             },
             selections: function () {
-                console.log('BlueprintsBox: selections', this.$store.getters.blueprintsForSelection)
                 return this.$store.getters.blueprintsForSelection
             },
             selected: {
                 get: function () {
                     const blueprint = this.$store.getters.blueprint
-                    console.log('BlueprintsBox: selected get', blueprint)
                     return blueprint === null ? "(None)" : blueprint
                 },
                 set: function (blueprint) {
-                    console.log('BlueprintsBox: selected set', blueprint)
                     this.$store.dispatch('changeBlueprint', blueprint)
 
                     this.$store.dispatch('spinnerLock')
 
-                    if(this.$router.currentRoute.path.endsWith('/')) {
+                    if (this.$router.currentRoute.path.endsWith('resources')) {
                         this.$store.dispatch('computeResources')
-                    }
-                    else if(this.$router.currentRoute.path.endsWith('suggestions')) {
+                    } else if (this.$router.currentRoute.path.endsWith('suggestions')) {
                         this.$store.dispatch('computeSuggestions')
                     }
 
+                    this.$store.dispatch('spinnerUnlock')
                 }
             },
         },
-        methods: {
-        }
     }
 </script>
 
 <style scoped lang="scss">
     select {
         margin: .25em;
-    }
-
-    option {
     }
 
     .stats {

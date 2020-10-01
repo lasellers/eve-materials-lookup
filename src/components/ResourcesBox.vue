@@ -29,14 +29,6 @@
         components: {
             ResourceBox
         },
-        data() {
-            return {
-            }
-        },
-        computed: {
-        },
-        methods: {
-        }
     }
 </script>
 

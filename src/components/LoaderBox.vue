@@ -13,6 +13,7 @@
     /**
      * The LoaderBox has become a bit complicated over time, but it pre-loads and pre-computes
      * everything that is needed for the normal operation of the app. In the correct order.
+     * Need to review this at some point and simplify.
      */
     import Spinner from './Spinner.vue'
 
@@ -21,22 +22,44 @@
     // import blueprintsCsv from '../assets/Blueprints.csv'
     export default {
         name: 'LoaderBox',
-        components: {Spinner},
-        data() {
-            return {
-                publicPath: process.env.BASE_URL,
-            }
+        components: {
+            Spinner
         },
-        created() {
+        async created() {
             this.$store.dispatch('spinnerLock')
-            this.getProductionCsv().then(
-                this.getBlueprintsCsv().then(
-                    this.getSystemsCsv().then(() => {
-                            this.$store.dispatch('spinnerUnlock')
-                        }
-                    )
-                )
-            )
+            await this.getBlueprintsCsv()
+            await this.getSystemsCsv()
+            await this.getProductionCsv()
+
+            //
+            let startDate = new Date()
+
+            this.$store.dispatch('spinnerLock')
+            await this.$store.dispatch('computeResources').then(() => {
+                console.log('==== computeResources', new Date().getTime() - startDate.getTime(), 'ms')
+                startDate = new Date()
+                this.$store.dispatch('spinnerUnlock')
+            })
+
+            // when initially created, we pre-pop the resources and suggestions for whatwver blueprint is
+            // the default in the vuex store (Currently a Coercer II)
+            const blueprint = await this.$store.getters.blueprint
+            await this.$store.dispatch('changeBlueprint', blueprint)
+
+            this.$store.dispatch('spinnerLock')
+            await this.$store.dispatch('computeSuggestions').then(() => {
+                console.log('==== computeSuggestions', new Date().getTime() - startDate.getTime(), 'ms')
+                startDate = new Date()
+                this.$store.dispatch('spinnerUnlock')
+            })
+            this.$store.dispatch('spinnerLock')
+            await this.$store.dispatch('computeYields').then(() => {
+                console.log('==== computeYields', new Date().getTime() - startDate.getTime(), 'ms')
+                startDate = new Date()
+                this.$store.dispatch('spinnerUnlock')
+            })
+
+            this.$store.dispatch('spinnerUnlock')
         },
         computed: {
             showSpinner: function () {
@@ -59,93 +82,70 @@
                         cache: "force-cache"
                     }
                 )
-                fetch(request)
+                await fetch(request)
                     .then(response => response.text())
-                    .then(data => {
+                    .then(async (data) => {
+                        // @note Since some of the pre-calcs do require other pre-calced data, we generally
+                        // just add awaits to all ops here so everything occurs in order.
 
                         let startDate = new Date()
 
                         const [headers, resources] = this.csvToArray(data)
-                        console.log('==== csvToArray', new Date().getTime() - startDate.getTime())
+                        console.log('==== csvToArray', new Date().getTime() - startDate.getTime(), 'ms')
                         startDate = new Date()
 
                         this.$store.dispatch('spinnerLock')
-                        this.$store.dispatch('addHeaders', headers).then(() => {
-                            console.log('==== addHeaders', new Date().getTime() - startDate.getTime())
+                        await this.$store.dispatch('addHeaders', headers).then(() => {
+                            console.log('==== addHeaders', new Date().getTime() - startDate.getTime(), 'ms')
                             startDate = new Date()
                             this.$store.dispatch('spinnerUnlock')
                         })
 
                         this.$store.dispatch('spinnerLock')
-                        this.$store.dispatch('addResources', resources).then(() => {
-                            console.log('==== addResources', new Date().getTime() - startDate.getTime())
+                        await this.$store.dispatch('addResources', resources).then(() => {
+                            console.log('==== addResources', new Date().getTime() - startDate.getTime(), 'ms')
                             startDate = new Date()
                             this.$store.dispatch('spinnerUnlock')
                         })
 
                         this.$store.dispatch('spinnerLock')
-                        this.$store.dispatch('updateRegionsForSelection').then(() => {
-                            console.log('==== updateRegionsForSelection', new Date().getTime() - startDate.getTime())
+                        await this.$store.dispatch('updateRegionsForSelection').then(() => {
+                            console.log('==== updateRegionsForSelection', new Date().getTime() - startDate.getTime(), 'ms')
                             startDate = new Date()
                             this.$store.dispatch('spinnerUnlock')
                         })
 
                         this.$store.dispatch('spinnerLock')
-                        this.$store.dispatch('updateConstellationsForSelection').then(() => {
-                            console.log('==== updateConstellationsForSelection', new Date().getTime() - startDate.getTime())
+                        await this.$store.dispatch('updateConstellationsForSelection').then(() => {
+                            console.log('==== updateConstellationsForSelection', new Date().getTime() - startDate.getTime(), 'ms')
                             startDate = new Date()
                             this.$store.dispatch('spinnerUnlock')
                         })
 
                         this.$store.dispatch('spinnerLock')
-                        this.$store.dispatch('updateSystemsForSelection').then(() => {
-                            console.log('==== updateSystemsForSelection', new Date().getTime() - startDate.getTime())
+                        await this.$store.dispatch('updateSystemsForSelection').then(() => {
+                            console.log('==== updateSystemsForSelection', new Date().getTime() - startDate.getTime(), 'ms')
                             startDate = new Date()
                             this.$store.dispatch('spinnerUnlock')
                         })
 
                         this.$store.dispatch('spinnerLock')
-                        this.$store.dispatch('updateResourcesForSelection').then(() => {
-                            console.log('==== updateResourcesForSelection', new Date().getTime() - startDate.getTime())
+                        await this.$store.dispatch('updateResourcesForSelection').then(() => {
+                            console.log('==== updateResourcesForSelection', new Date().getTime() - startDate.getTime(), 'ms')
                             startDate = new Date()
                             this.$store.dispatch('spinnerUnlock')
                         })
 
                         this.$store.dispatch('spinnerLock')
-                        this.$store.dispatch('updateResourcesByPlanet').then(() => {
-                            console.log('==== updateResourcesByPlanet', new Date().getTime() - startDate.getTime())
+                        await this.$store.dispatch('updateResourcesByPlanet').then(() => {
+                            console.log('==== updateResourcesByPlanet', new Date().getTime() - startDate.getTime(), 'ms')
                             startDate = new Date()
                             this.$store.dispatch('spinnerUnlock')
                         })
 
                         this.$store.dispatch('spinnerLock')
-                        this.$store.dispatch('yieldsPreSort').then(() => {
-                            console.log('==== yieldsPreSort', new Date().getTime() - startDate.getTime())
-                            startDate = new Date()
-                            this.$store.dispatch('spinnerUnlock')
-                        })
-
-                        this.$store.dispatch('spinnerLock')
-                        this.$store.dispatch('computeResources').then(() => {
-                            console.log('==== computeResources', new Date().getTime() - startDate.getTime())
-                            startDate = new Date()
-                            this.$store.dispatch('spinnerUnlock')
-                        })
-
-                        // when initially created, we pre-pop the resources and suggestions for whatwver blueprint is
-                        // the default in the vuex store (Currently a Coercer II)
-                        const blueprint = this.$store.getters.blueprint
-                        this.$store.dispatch('changeBlueprint', blueprint)
-
-                        this.$store.dispatch('spinnerLock')
-                        this.$store.dispatch('computeSuggestions').then(() => {
-                            console.log('==== computeSuggestions', new Date().getTime() - startDate.getTime())
-                            startDate = new Date()
-                            this.$store.dispatch('spinnerUnlock')
-                        })
-                        this.$store.dispatch('spinnerLock')
-                        this.$store.dispatch('computeYields').then(() => {
-                            console.log('==== computeYields', new Date().getTime() - startDate.getTime())
+                        await this.$store.dispatch('yieldsPreSort').then(() => {
+                            console.log('==== yieldsPreSort', new Date().getTime() - startDate.getTime(), 'ms')
                             startDate = new Date()
                             this.$store.dispatch('spinnerUnlock')
                         })
@@ -165,7 +165,7 @@
                         cache: "force-cache"
                     }
                 )
-                fetch(request)
+                await fetch(request)
                     .then(response => response.text())
                     .then(data => {
                         let startDate = new Date()
@@ -174,14 +174,14 @@
 
                         this.$store.dispatch('spinnerLock')
                         this.$store.dispatch('addBlueprintHeaders', headers).then(() => {
-                            console.log('==== addBlueprintHeaders', new Date().getTime() - startDate.getTime())
+                            console.log('==== addBlueprintHeaders', new Date().getTime() - startDate.getTime(), 'ms')
                             startDate = new Date()
                             this.$store.dispatch('spinnerUnlock')
                         })
 
                         this.$store.dispatch('spinnerLock')
                         this.$store.dispatch('addBlueprints', blueprints).then(() => {
-                            console.log('==== addBlueprints', new Date().getTime() - startDate.getTime())
+                            console.log('==== addBlueprints', new Date().getTime() - startDate.getTime(), 'ms')
                             startDate = new Date()
                             this.$store.dispatch('spinnerUnlock')
                         })
@@ -257,25 +257,25 @@
                         cache: "force-cache"
                     }
                 )
-                fetch(request)
+                await fetch(request)
                     .then(response => response.text())
                     .then(data => {
                         let startDate = new Date()
 
                         const [headers, resources] = this.csvToArray(data)
-                        console.log('==== systems csvToArray', new Date().getTime() - startDate.getTime())
+                        console.log('==== systems csvToArray', new Date().getTime() - startDate.getTime(), 'ms')
                         startDate = new Date()
 
                         this.$store.dispatch('spinnerLock')
                         this.$store.dispatch('addSystemsHeaders', headers).then(() => {
-                            console.log('==== addSystemsHeaders', new Date().getTime() - startDate.getTime())
+                            console.log('==== addSystemsHeaders', new Date().getTime() - startDate.getTime(), 'ms')
                             startDate = new Date()
                             this.$store.dispatch('spinnerUnlock')
                         })
 
                         this.$store.dispatch('spinnerLock')
                         this.$store.dispatch('addSystems', resources).then(() => {
-                            console.log('==== addSystems', new Date().getTime() - startDate.getTime())
+                            console.log('==== addSystems', new Date().getTime() - startDate.getTime(), 'ms')
                             startDate = new Date()
                             this.$store.dispatch('spinnerUnlock')
                         })

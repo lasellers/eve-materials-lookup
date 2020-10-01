@@ -26,25 +26,22 @@
                     if (system === '(None)') {
                         system = null
                     }
-                    this.$store.dispatch('changeSystem', system === '(None)' ? null: system)
+                    this.$store.dispatch('changeSystem', system === '(None)' ? null : system)
 
                     this.$store.dispatch('spinnerLock')
 
-                    if(this.$router.currentRoute.path.endsWith('/')) {
+                    if (this.$router.currentRoute.path.endsWith('resources')) {
                         this.$store.dispatch('computeResources')
-                    }
-                    else if(this.$router.currentRoute.path.endsWith('suggestions')) {
+                    } else if (this.$router.currentRoute.path.endsWith('suggestions')) {
                         this.$store.dispatch('computeSuggestions')
-                    }
-                    else if(this.$router.currentRoute.path.endsWith('yields')) {
+                    } else if (this.$router.currentRoute.path.endsWith('yields')) {
                         this.$store.dispatch('computeYields')
                     }
 
+                    this.$store.dispatch('spinnerUnlock')
                 }
             },
         },
-        methods: {
-        }
     }
 </script>
 

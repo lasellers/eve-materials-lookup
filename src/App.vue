@@ -6,7 +6,7 @@
         <div class="mr-auto">
             <ul class="nav nav-tabs">
                 <li class="nav-item active">
-                    <router-link to="./home" class="nav-link">
+                    <router-link to="./resources" class="nav-link">
                         Resources
                     </router-link>
                 </li>
@@ -20,34 +20,44 @@
                         Yields
                     </router-link>
                 </li>
+                <li class="nav-item active">
+                    <router-link to="./home" class="nav-link">
+                        Home
+                    </router-link>
+                </li>
             </ul>
         </div>
 
-        <div class="container-fluid">
 
-            <div class="row">
-                <div class="col-md-4 col-ld-4">
-                    <RegionBox/>
-                </div>
-                <div class="col-md-1 col-lg-1 d-flex align-items-md-center" v-if="unimportant">
-                    <b>And/Or</b>
-                </div>
-                <div class="col-md-3 col-lg-3">
-                    <ConstellationBox/>
-                </div>
-                <div class="col-md-1 col-lg-1 d-flex align-items-md-center" v-if="unimportant">
-                    <b>And/Or</b>
-                </div>
-                <div class="col-md-3 col-lg-3">
-                    <SystemBox/>
-                </div>
-            </div>
+        <div v-if="!(currentRouteName().endsWith('/') || currentRouteName().endsWith('home'))">
 
-            <hr/>
+            <div class="container-fluid">
 
-            <div v-if="!currentRouteName().endsWith('yields')">
-                <ResourcesBox/>
-                <BlueprintsBox/>
+                <div class="row">
+                    <div class="col-md-4 col-ld-4">
+                        <RegionBox/>
+                    </div>
+                    <div class="col-md-1 col-lg-1 d-flex align-items-md-center" v-if="unimportant">
+                        <b>And/Or</b>
+                    </div>
+                    <div class="col-md-3 col-lg-3">
+                        <ConstellationBox/>
+                    </div>
+                    <div class="col-md-1 col-lg-1 d-flex align-items-md-center" v-if="unimportant">
+                        <b>And/Or</b>
+                    </div>
+                    <div class="col-md-3 col-lg-3">
+                        <SystemBox/>
+                    </div>
+                </div>
+
+                <hr/>
+
+                <div v-if="!currentRouteName().endsWith('yields')">
+                    <ResourcesBox/>
+                    <BlueprintsBox/>
+                </div>
+
             </div>
 
         </div>
@@ -82,6 +92,11 @@
             Notice,
             SystemBox,
             BlueprintsBox
+        },
+        data() {
+            return {
+                publicPath: process.env.BASE_URL
+            }
         },
         created() {
             console.info('NODE_ENV', process.env.NODE_ENV)
