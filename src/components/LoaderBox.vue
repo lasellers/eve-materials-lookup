@@ -36,7 +36,7 @@
 
             this.$store.dispatch('spinnerLock')
             await this.$store.dispatch('computeResources').then(() => {
-                console.log('==== computeResources', new Date().getTime() - startDate.getTime(), 'ms')
+                console.log('computeResources', new Date().getTime() - startDate.getTime(), 'ms')
                 startDate = new Date()
                 this.$store.dispatch('spinnerUnlock')
             })
@@ -48,13 +48,13 @@
 
             this.$store.dispatch('spinnerLock')
             await this.$store.dispatch('computeSuggestions').then(() => {
-                console.log('==== computeSuggestions', new Date().getTime() - startDate.getTime(), 'ms')
+                console.log('computeSuggestions', new Date().getTime() - startDate.getTime(), 'ms')
                 startDate = new Date()
                 this.$store.dispatch('spinnerUnlock')
             })
             this.$store.dispatch('spinnerLock')
             await this.$store.dispatch('computeYields').then(() => {
-                console.log('==== computeYields', new Date().getTime() - startDate.getTime(), 'ms')
+                console.log('computeYields', new Date().getTime() - startDate.getTime(), 'ms')
                 startDate = new Date()
                 this.$store.dispatch('spinnerUnlock')
             })
@@ -91,61 +91,61 @@
                         let startDate = new Date()
 
                         const [headers, resources] = this.csvToArray(data)
-                        console.log('==== csvToArray', new Date().getTime() - startDate.getTime(), 'ms')
+                        console.log('csvToArray', new Date().getTime() - startDate.getTime(), 'ms')
                         startDate = new Date()
 
                         this.$store.dispatch('spinnerLock')
                         await this.$store.dispatch('addHeaders', headers).then(() => {
-                            console.log('==== addHeaders', new Date().getTime() - startDate.getTime(), 'ms')
+                            console.log('addHeaders', new Date().getTime() - startDate.getTime(), 'ms')
                             startDate = new Date()
                             this.$store.dispatch('spinnerUnlock')
                         })
 
                         this.$store.dispatch('spinnerLock')
                         await this.$store.dispatch('addResources', resources).then(() => {
-                            console.log('==== addResources', new Date().getTime() - startDate.getTime(), 'ms')
+                            console.log('addResources', new Date().getTime() - startDate.getTime(), 'ms')
                             startDate = new Date()
                             this.$store.dispatch('spinnerUnlock')
                         })
 
                         this.$store.dispatch('spinnerLock')
                         await this.$store.dispatch('updateRegionsForSelection').then(() => {
-                            console.log('==== updateRegionsForSelection', new Date().getTime() - startDate.getTime(), 'ms')
+                            console.log('updateRegionsForSelection', new Date().getTime() - startDate.getTime(), 'ms')
                             startDate = new Date()
                             this.$store.dispatch('spinnerUnlock')
                         })
 
                         this.$store.dispatch('spinnerLock')
                         await this.$store.dispatch('updateConstellationsForSelection').then(() => {
-                            console.log('==== updateConstellationsForSelection', new Date().getTime() - startDate.getTime(), 'ms')
+                            console.log('updateConstellationsForSelection', new Date().getTime() - startDate.getTime(), 'ms')
                             startDate = new Date()
                             this.$store.dispatch('spinnerUnlock')
                         })
 
                         this.$store.dispatch('spinnerLock')
                         await this.$store.dispatch('updateSystemsForSelection').then(() => {
-                            console.log('==== updateSystemsForSelection', new Date().getTime() - startDate.getTime(), 'ms')
+                            console.log('updateSystemsForSelection', new Date().getTime() - startDate.getTime(), 'ms')
                             startDate = new Date()
                             this.$store.dispatch('spinnerUnlock')
                         })
 
                         this.$store.dispatch('spinnerLock')
                         await this.$store.dispatch('updateResourcesForSelection').then(() => {
-                            console.log('==== updateResourcesForSelection', new Date().getTime() - startDate.getTime(), 'ms')
+                            console.log('updateResourcesForSelection', new Date().getTime() - startDate.getTime(), 'ms')
                             startDate = new Date()
                             this.$store.dispatch('spinnerUnlock')
                         })
 
                         this.$store.dispatch('spinnerLock')
                         await this.$store.dispatch('updateResourcesByPlanet').then(() => {
-                            console.log('==== updateResourcesByPlanet', new Date().getTime() - startDate.getTime(), 'ms')
+                            console.log('updateResourcesByPlanet', new Date().getTime() - startDate.getTime(), 'ms')
                             startDate = new Date()
                             this.$store.dispatch('spinnerUnlock')
                         })
 
                         this.$store.dispatch('spinnerLock')
                         await this.$store.dispatch('yieldsPreSort').then(() => {
-                            console.log('==== yieldsPreSort', new Date().getTime() - startDate.getTime(), 'ms')
+                            console.log('yieldsPreSort', new Date().getTime() - startDate.getTime(), 'ms')
                             startDate = new Date()
                             this.$store.dispatch('spinnerUnlock')
                         })
@@ -174,14 +174,14 @@
 
                         this.$store.dispatch('spinnerLock')
                         this.$store.dispatch('addBlueprintHeaders', headers).then(() => {
-                            console.log('==== addBlueprintHeaders', new Date().getTime() - startDate.getTime(), 'ms')
+                            console.log('addBlueprintHeaders', new Date().getTime() - startDate.getTime(), 'ms')
                             startDate = new Date()
                             this.$store.dispatch('spinnerUnlock')
                         })
 
                         this.$store.dispatch('spinnerLock')
                         this.$store.dispatch('addBlueprints', blueprints).then(() => {
-                            console.log('==== addBlueprints', new Date().getTime() - startDate.getTime(), 'ms')
+                            console.log('addBlueprints', new Date().getTime() - startDate.getTime(), 'ms')
                             startDate = new Date()
                             this.$store.dispatch('spinnerUnlock')
                         })
@@ -263,19 +263,19 @@
                         let startDate = new Date()
 
                         const [headers, resources] = this.csvToArray(data)
-                        console.log('==== systems csvToArray', new Date().getTime() - startDate.getTime(), 'ms')
+                        console.log('systems csvToArray', new Date().getTime() - startDate.getTime(), 'ms')
                         startDate = new Date()
 
                         this.$store.dispatch('spinnerLock')
                         this.$store.dispatch('addSystemsHeaders', headers).then(() => {
-                            console.log('==== addSystemsHeaders', new Date().getTime() - startDate.getTime(), 'ms')
+                            console.log('addSystemsHeaders', new Date().getTime() - startDate.getTime(), 'ms')
                             startDate = new Date()
                             this.$store.dispatch('spinnerUnlock')
                         })
 
                         this.$store.dispatch('spinnerLock')
                         this.$store.dispatch('addSystems', resources).then(() => {
-                            console.log('==== addSystems', new Date().getTime() - startDate.getTime(), 'ms')
+                            console.log('addSystems', new Date().getTime() - startDate.getTime(), 'ms')
                             startDate = new Date()
                             this.$store.dispatch('spinnerUnlock')
                         })

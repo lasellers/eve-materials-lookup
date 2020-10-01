@@ -52,6 +52,7 @@ Now only allows one at a time.
 * v1.6 Minor optimization tweaking. Added a home/stats page with in-app instructions.
 Fixed a bug with the "Suggestions" page where the resources for the default blueprint were not loading
 do to a load order issue. Started to remove the abundant console logging for debugging issues.
+Optimized speed for computing initial suggestions planet grouping.
  
  
 ## Project setup

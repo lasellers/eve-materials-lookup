@@ -268,45 +268,42 @@ export default new Vuex.Store({
             //
             let sourceResources = JSON.parse(JSON.stringify(store.resources))
             sourceResources.sort(function (a, b) {
-                return (b[4] - a[4])
+                return (b[4] - a[4]) // Planet Name
             });
-             console.log('resourcesByPlanet first sort', new Date().getTime() - startDate.getTime() + 'ms')
+             console.log(' resourcesByPlanet planet name sort', new Date().getTime() - startDate.getTime() + 'ms')
 
             //
             let rows = []
 
+            // create new list of resources, group by planet with the resources as a data array
             let currentPlanet = null
             sourceResources.forEach((row) => {
                 if (currentPlanet !== row[4]) {
                     currentPlanet = row[4]
                     rows.push(row)
-                    // 6 is resource names, 7 is sum of outputs, 8 is full description, 9 is count, 10 is output
+                    // 6 is resource names, 7 is sum of outputs, 10 is full description, 8 is output array
                     rows[rows.length - 1][6] = [row[6]]
                     rows[rows.length - 1][7] = parseFloat(row[8])
                     rows[rows.length - 1][10] = [row[6] + ' (' + row[8] + ')']
                     rows[rows.length - 1][8] = [parseFloat(row[8])]
-                    // rows[rows.length - 1][8] = [row[8]]
                 } else {
                     rows[rows.length - 1][6].push(row[6])
                     rows[rows.length - 1][7] += parseFloat(row[8])
                     rows[rows.length - 1][10].push(row[6] + ' (' + row[8] + ')')
                     rows[rows.length - 1][8].push(parseFloat(row[8]))
-                    // rows[rows.length - 1][8].push(row[8])
                 }
             })
+            console.log(' resourcesByPlanet compile', new Date().getTime() - startDate.getTime() + 'ms')
 
-            console.log('resourcesByPlanet compile', new Date().getTime() - startDate.getTime() + 'ms')
-
-            // sort by output DESC
             rows.sort(function (a, b) {
-                return b[7] - a[7]
+                // output
+                if((b[7] - a[7])>0) return 1
+                if((b[7] - a[7])<0) return -1
+                // planet name
+                if(b[4]< a[4]) return -1
+                if(b[4] > a[4]) return 1
             });
-            console.log('resourcesByPlanet last sort 1', new Date().getTime() - startDate.getTime() + 'ms')
-            // sort by planet ASC
-            rows.sort(function (a, b) {
-                return b[8] < a[8] ? -1 : 1
-            });
-            console.log('resourcesByPlanet last sort 2', new Date().getTime() - startDate.getTime() + 'ms')
+            console.log(' resourcesByPlanet last sort', new Date().getTime() - startDate.getTime() + 'ms')
 
             store.resourcesByPlanet = rows
         },
@@ -478,28 +475,22 @@ export default new Vuex.Store({
             let rows = new Array(0)
             let rowCount = 0
 
-            // console.log(store.region, store.constellation, store.system)
             // none
             if (store.region === null && store.constellation === null && store.system === null) {
-                // console.log('computeYields all begin', new Date().getTime() - startDate.getTime() + 'ms')
                 store.resourcesForSelection.forEach(resource => {
-                    // const startDate = new Date()
                     for (let rowIndex = 0; rowIndex < sourceResourcesLen; rowIndex++) {
                         if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
                             rows[rowCount++] = sourceResources[rowIndex]
-                            // console.log('computeYields all', new Date().getTime() - startDate.getTime() + 'ms', resource)
                             break
                         }
                     }
                 })
             } else if (store.region !== null) { // region
                 store.resourcesForSelection.forEach(resource => {
-                    // const startDate = new Date()
                     for (let rowIndex = 0; rowIndex < sourceResourcesLen; rowIndex++) {
                         if (store.region == sourceResources[rowIndex][1]) {
                             if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
                                 rows[rowCount++] = sourceResources[rowIndex]
-                                // console.log('computeYields region', new Date().getTime() - startDate.getTime() + 'ms', resource)
                                 break
                             }
                         }
@@ -507,12 +498,10 @@ export default new Vuex.Store({
                 })
             } else if (store.constellation !== null) { // constellation
                 store.resourcesForSelection.forEach(resource => {
-                    // const startDate = new Date()
                     for (let rowIndex = 0; rowIndex < sourceResourcesLen; rowIndex++) {
                         if (store.constellation == sourceResources[rowIndex][2]) {
                             if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
                                 rows[rowCount++] = sourceResources[rowIndex]
-                                // console.log('computeYields constellation', new Date().getTime() - startDate.getTime() + 'ms', resource)
                                 break
                             }
                         }
@@ -520,26 +509,21 @@ export default new Vuex.Store({
                 })
             } else if (store.system !== null) { // system
                 store.resourcesForSelection.forEach(resource => {
-                    // const startDate = new Date()
                     for (let rowIndex = 0; rowIndex < sourceResourcesLen; rowIndex++) {
                         if (store.system == sourceResources[rowIndex][3]) {
                             if (sourceResources[rowIndex][6] === resource && parseFloat(sourceResources[rowIndex][8]) > 0) {
                                 rows[rowCount++] = store.resources[rowIndex]
-                                // console.log('computeYields system', new Date().getTime() - startDate.getTime() + 'ms', resource)
                                 break
                             }
                         }
                     }
                 })
             }
-            // console.log('computeYields build', new Date().getTime() - startDate.getTime() + 'ms')
 
             // sort by output DESC
             rows.sort(function (a, b) {
                 return b[8] - a[8]
             });
-
-            // console.log('computeYields last sort', new Date().getTime() - startDate.getTime() + 'ms', rows)
 
             store.computedYields = rows
         },
