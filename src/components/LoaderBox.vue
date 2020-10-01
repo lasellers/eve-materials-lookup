@@ -34,17 +34,20 @@
             //
             let startDate = new Date()
 
+            // when initially created, we pre-pop the resources and suggestions for whatwver blueprint is
+            // the default in the vuex store (Currently a Coercer II)
+            const blueprint = await this.$store.getters.blueprint
+            await this.$store.dispatch('changeBlueprint', blueprint)
+
+            const region = await this.$store.getters.region
+            await this.$store.dispatch('changeRegion', region)
+
             this.$store.dispatch('spinnerLock')
             await this.$store.dispatch('computeResources').then(() => {
                 console.log('computeResources', new Date().getTime() - startDate.getTime(), 'ms')
                 startDate = new Date()
                 this.$store.dispatch('spinnerUnlock')
             })
-
-            // when initially created, we pre-pop the resources and suggestions for whatwver blueprint is
-            // the default in the vuex store (Currently a Coercer II)
-            const blueprint = await this.$store.getters.blueprint
-            await this.$store.dispatch('changeBlueprint', blueprint)
 
             this.$store.dispatch('spinnerLock')
             await this.$store.dispatch('computeSuggestions').then(() => {
