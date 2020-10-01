@@ -34,7 +34,7 @@
             //
             let startDate = new Date()
 
-            // when initially created, we pre-pop the resources and suggestions for whatwver blueprint is
+            // when initially created, we pre-pop the resources and suggestions for whatever blueprint is
             // the default in the vuex store (Currently a Coercer II)
             const blueprint = await this.$store.getters.blueprint
             await this.$store.dispatch('changeBlueprint', blueprint)
