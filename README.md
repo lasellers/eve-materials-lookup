@@ -11,12 +11,6 @@ and
  https://docs.google.com/spreadsheets/d/1qY5K7CfyuPZPun9hUf_RnchMNVpKPtMlN0iACmUOemA/edit#gid=0
 
 
-## Todo
-
-* Hmm. Could re-process it so the resource column had all the resources for a single planet. Hmm...
-* May add a small suggestion area above resources suggesting some of the best planets to farm PI from, given what you are looking for.
-
-
 ## Versions
 * v1 September 19 2020. Pulled together in a few hours Saturday partly to practice using VueJS and
 partly because writing a program to handle this was less hassle than doing it by hand.
