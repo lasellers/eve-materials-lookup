@@ -70,7 +70,6 @@
 
         <div class="container-fluid">
             <p class="text-right">
-                <router-link to="./stats">Stats</router-link>
             </p>
         </div>
 
@@ -107,7 +106,8 @@
         created() {
             console.info('NODE_ENV', process.env.NODE_ENV)
             console.info('BASE_URL', process.env.BASE_URL)
-            // console.info('PACKAGE_VERSION',process.env.PACKAGE_VERSION)
+            console.info('VUE_APP_VERSION', process.env.VUE_APP_VERSION)
+            console.info('env', process.env)
         },
         methods: {
             unimportant() {

@@ -53,7 +53,9 @@ Now only allows one at a time.
 Fixed a bug with the "Suggestions" page where the resources for the default blueprint were not loading
 do to a load order issue. Started to remove the abundant console logging for debugging issues.
 Optimized speed for computing initial suggestions planet grouping.
- 
+* v1.7 Refactored a bit more -- pruning away code that wasn't needed now that I thought about it.
+Shaved about 500 + 250 ish ms off of the "resources by planet" pre-calc function.
+
  
 ## Project setup
 ```
