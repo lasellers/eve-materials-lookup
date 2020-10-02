@@ -22,17 +22,17 @@
                     const constellation = this.$store.getters.constellation
                     return constellation === null ? "(None)" : constellation
                 },
-                set: function (constellation) {
-                    this.$store.dispatch('changeConstellation', constellation === '(None)' ? null : constellation)
-
+                set: async function (constellation) {
                     this.$store.dispatch('spinnerLock')
 
+                    await this.$store.dispatch('changeConstellation', constellation === '(None)' ? null : constellation)
+
                     if (this.$router.currentRoute.path.endsWith('resources')) {
-                        this.$store.dispatch('computeResources')
+                        await this.$store.dispatch('computeResources')
                     } else if (this.$router.currentRoute.path.endsWith('suggestions')) {
-                        this.$store.dispatch('computeSuggestions')
+                        await this.$store.dispatch('computeSuggestions')
                     } else if (this.$router.currentRoute.path.endsWith('yields')) {
-                        this.$store.dispatch('computeYields')
+                        await this.$store.dispatch('computeYields')
                     }
 
                     this.$store.dispatch('spinnerUnlock')

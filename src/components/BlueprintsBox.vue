@@ -28,15 +28,15 @@
                     const blueprint = this.$store.getters.blueprint
                     return blueprint === null ? "(None)" : blueprint
                 },
-                set: function (blueprint) {
-                    this.$store.dispatch('changeBlueprint', blueprint)
-
+                set: async function (blueprint) {
                     this.$store.dispatch('spinnerLock')
 
+                    await this.$store.dispatch('changeBlueprint', blueprint)
+
                     if (this.$router.currentRoute.path.endsWith('resources')) {
-                        this.$store.dispatch('computeResources')
+                        await this.$store.dispatch('computeResources')
                     } else if (this.$router.currentRoute.path.endsWith('suggestions')) {
-                        this.$store.dispatch('computeSuggestions')
+                        await this.$store.dispatch('computeSuggestions')
                     }
 
                     this.$store.dispatch('spinnerUnlock')

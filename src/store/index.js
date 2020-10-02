@@ -262,9 +262,8 @@ export default new Vuex.Store({
         updateResourcesByPlanet(store) {
             //let sourceResources = JSON.parse(JSON.stringify(store.resources))
             let sourceResources = store.resources
-            sourceResources.sort(function (a, b) {
-                return (b[4] - a[4]) // Planet Name
-            });
+            // Planet Name sort
+            sourceResources.sort((a, b) => b[4] - a[4]);
 
             //
             let rows = []
@@ -291,7 +290,7 @@ export default new Vuex.Store({
             })
 
             // sort by output + planet name
-            rows.sort(function (a, b) {
+            rows.sort((a, b) => {
                 // output
                 if ((b[7] - a[7]) > 0) return 1
                 if ((b[7] - a[7]) < 0) return -1
@@ -313,9 +312,7 @@ export default new Vuex.Store({
             // We preoptimize the searches later on by sorting the data once by output DESC
             // That way we can break at the first match instead of doing full table searches
             store.yieldsPreSort = store.resources
-            store.yieldsPreSort.sort(function (a, b) {
-                return b[8] - a[8]
-            });
+            store.yieldsPreSort.sort((a, b) => b[8] - a[8]);
         },
 
         computeResources(store) {
@@ -375,7 +372,7 @@ export default new Vuex.Store({
             }
 
             // sort by output DESC
-            newRows.sort(function (a, b) {
+            newRows.sort((a, b) => {
                 return b[8] - a[8]
             });
 
@@ -456,7 +453,7 @@ export default new Vuex.Store({
             }
 
             // sort by region ASC
-            rows.sort(function (a, b) {
+            rows.sort((a, b) => {
                 return a[1] < b[1] ? -1 : 1
             });
 
@@ -516,7 +513,7 @@ export default new Vuex.Store({
             }
 
             // sort by output DESC
-            rows.sort(function (a, b) {
+            rows.sort((a, b) => {
                 return b[8] - a[8]
             });
 

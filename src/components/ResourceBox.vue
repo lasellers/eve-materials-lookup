@@ -26,17 +26,17 @@
                     const filter = resourceFilters[this.boxId]
                     return filter === null ? "(None)" : filter
                 },
-                set: function (resource) {
-                    this.$store.dispatch('changeBlueprint', null)
-                    this.$store.dispatch('changeResourceFilter', [this.boxId, resource])
-
+                set: async function (resource) {
                     this.$store.dispatch('spinnerLock')
+
+                    await this.$store.dispatch('changeBlueprint', null)
+                    await this.$store.dispatch('changeResourceFilter', [this.boxId, resource])
 
                     // forces a computed resources rerender
                     if (this.$router.currentRoute.path.endsWith('resources')) {
-                        this.$store.dispatch('computeResources')
+                        await this.$store.dispatch('computeResources')
                     } else if (this.$router.currentRoute.path.endsWith('suggestions')) {
-                        this.$store.dispatch('computeSuggestions')
+                        await this.$store.dispatch('computeSuggestions')
                     }
 
                     this.$store.dispatch('spinnerUnlock')
@@ -52,8 +52,5 @@
 <style scoped lang="scss">
     select {
         margin: .25em;
-    }
-
-    option {
     }
 </style>

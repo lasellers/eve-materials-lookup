@@ -21,17 +21,17 @@
                     const region = this.$store.getters.region
                     return region === null ? "(None)" : region
                 },
-                set: function (region) {
-                    this.$store.dispatch('changeRegion', region === '(None)' ? null : region)
-
+                set: async function (region) {
                     this.$store.dispatch('spinnerLock')
 
+                    await this.$store.dispatch('changeRegion', region === '(None)' ? null : region)
+
                     if (this.$router.currentRoute.path.endsWith('resources')) {
-                        this.$store.dispatch('computeResources')
+                        await this.$store.dispatch('computeResources')
                     } else if (this.$router.currentRoute.path.endsWith('suggestions')) {
-                        this.$store.dispatch('computeSuggestions')
+                        await this.$store.dispatch('computeSuggestions')
                     } else if (this.$router.currentRoute.path.endsWith('yields')) {
-                        this.$store.dispatch('computeYields')
+                        await this.$store.dispatch('computeYields')
                     }
 
                     this.$store.dispatch('spinnerUnlock')

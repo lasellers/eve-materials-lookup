@@ -17,9 +17,6 @@
      */
     import Spinner from './Spinner.vue'
 
-    // eslint-disable-next-line
-    // import productionCsv from '../assets/Production.csv'
-    // import blueprintsCsv from '../assets/Blueprints.csv'
     export default {
         name: 'LoaderBox',
         components: {
@@ -72,78 +69,116 @@
             async getProductionCsv() {
                 this.$store.dispatch('spinnerLock')
 
-                const headers = new Headers()
-                const request = new Request(
-                    "./Production.csv",
-                    {
-                        method: "GET",
-                        headers,
-                        mode: "cors",
-                        cache: "force-cache"
-                    }
-                )
-                await fetch(request)
-                    .then(response => response.text())
-                    .then(async (data) => {
-                        // @note Since some of the pre-calcs do require other pre-calced data, we generally
-                        // just add awaits to all ops here so everything occurs in order.
+                if (localStorage.headers && localStorage.resources) {
+                    this.timingLog('fetch Production.csv (localStorage)')
 
-                        const [headers, resources] = this.csvToArray(data)
-                        this.timingLog('csvToArray')
+                    await this.$store.dispatch('addHeaders', JSON.parse(localStorage.headers))
+                    this.timingLog('addHeaders (localStorage)')
 
-                        await this.$store.dispatch('addHeaders', headers)
-                        this.timingLog('addHeaders')
+                    await this.$store.dispatch('addResources', JSON.parse(localStorage.resources))
+                    this.timingLog('addResources (localStorage)')
+                } else {
+                    const headers = new Headers()
+                    const request = new Request(
+                        "./Production.csv",
+                        {
+                            method: "GET",
+                            headers,
+                            mode: "cors",
+                            cache: "force-cache"
+                        }
+                    )
+                    await fetch(request)
+                        .then(response => response.text())
+                        .then(async (data) => {
+                            this.timingLog('fetch Production.csv')
+                            // @note Since some of the pre-calcs do require other pre-calced data, we generally
+                            // just add awaits to all ops here so everything occurs in order.
 
-                        await this.$store.dispatch('addResources', resources)
-                        this.timingLog('addResources')
+                            const [headers, resources] = this.csvToArray(data)
+                            this.timingLog('csvToArray')
 
-                        await this.$store.dispatch('updateRegionsForSelection')
-                        this.timingLog('updateRegionsForSelection')
+                            await this.$store.dispatch('addHeaders', headers)
+                            this.timingLog('addHeaders')
 
-                        await this.$store.dispatch('updateConstellationsForSelection')
-                        this.timingLog('updateConstellationsForSelection')
+                            await this.$store.dispatch('addResources', resources)
+                            this.timingLog('addResources')
 
-                        await this.$store.dispatch('updateSystemsForSelection')
-                        this.timingLog('csvToArray')
+                            try {
+                                localStorage.headers = JSON.stringify(headers)
+                                localStorage.resources = JSON.stringify(resources)
+                            } catch { // (e) =>
+                                // console.error(e)
+                            }
+                        })
+                }
 
-                        await this.$store.dispatch('updateResourcesForSelection')
-                        this.timingLog('updateResourcesForSelection')
+                await this.$store.dispatch('updateRegionsForSelection')
+                this.timingLog('updateRegionsForSelection')
 
-                        await this.$store.dispatch('updateResourcesByPlanet')
-                        this.timingLog('updateResourcesByPlanet')
+                await this.$store.dispatch('updateConstellationsForSelection')
+                this.timingLog('updateConstellationsForSelection')
 
-                        await this.$store.dispatch('yieldsPreSort')
-                        this.timingLog('yieldsPreSort')
+                await this.$store.dispatch('updateSystemsForSelection')
+                this.timingLog('csvToArray')
 
-                        this.$store.dispatch('spinnerUnlock')
-                    })
+                await this.$store.dispatch('updateResourcesForSelection')
+                this.timingLog('updateResourcesForSelection')
+
+                await this.$store.dispatch('updateResourcesByPlanet')
+                this.timingLog('updateResourcesByPlanet')
+
+                await this.$store.dispatch('yieldsPreSort')
+                this.timingLog('yieldsPreSort')
+
+                this.$store.dispatch('spinnerUnlock')
             },
             async getBlueprintsCsv() {
                 this.$store.dispatch('spinnerLock')
 
-                const headers = new Headers()
-                const request = new Request(
-                    "./Blueprints.csv",
-                    {
-                        method: "GET",
-                        headers,
-                        mode: "cors",
-                        cache: "force-cache"
-                    }
-                )
-                await fetch(request)
-                    .then(response => response.text())
-                    .then(data => {
-                        const [headers, blueprints] = this.csvToArrayRotated(data)
+                if (localStorage.blueprintHeaders && localStorage.blueprints) {
+                    this.timingLog('fetch Blueprints.csv (localStorage)')
 
-                        this.$store.dispatch('addBlueprintHeaders', headers)
-                        this.timingLog('addBlueprintHeaders')
+                    await this.$store.dispatch('addBlueprintHeaders', JSON.parse(localStorage.blueprintHeaders))
+                    this.timingLog('addBlueprintHeaders (localStorage)')
 
-                        this.$store.dispatch('addBlueprints', blueprints)
-                        this.timingLog('addBlueprints')
+                    await this.$store.dispatch('addBlueprints', JSON.parse(localStorage.blueprints))
+                    this.timingLog('addBlueprints (localStorage)')
+                } else {
+                    const headers = new Headers()
+                    const request = new Request(
+                        "./Blueprints.csv",
+                        {
+                            method: "GET",
+                            headers,
+                            mode: "cors",
+                            cache: "force-cache"
+                        }
+                    )
+                    await fetch(request)
+                        .then(response => response.text())
+                        .then(data => {
+                            this.timingLog('fetch Blueprints.csv')
 
-                        this.$store.dispatch('spinnerUnlock')
-                    })
+                            const [headers, blueprints] = this.csvToArrayRotated(data)
+                            this.timingLog('csvToArrayRotated')
+
+                            this.$store.dispatch('addBlueprintHeaders', headers)
+                            this.timingLog('addBlueprintHeaders')
+
+                            this.$store.dispatch('addBlueprints', blueprints)
+                            this.timingLog('addBlueprints')
+
+                            try {
+                                localStorage.blueprintHeaders = JSON.stringify(headers)
+                                localStorage.blueprints = JSON.stringify(blueprints)
+                            } catch (e) {
+                                console.error(e)
+                            }
+                        })
+                }
+
+                this.$store.dispatch('spinnerUnlock')
             },
 
             csvToArray: function (csv) {
@@ -204,30 +239,51 @@
             async getSystemsCsv() {
                 this.$store.dispatch('spinnerLock')
 
-                const headers = new Headers()
-                const request = new Request(
-                    "./Systems.csv",
-                    {
-                        method: "GET",
-                        headers,
-                        mode: "cors",
-                        cache: "force-cache"
-                    }
-                )
-                await fetch(request)
-                    .then(response => response.text())
-                    .then(data => {
-                        const [headers, resources] = this.csvToArray(data)
-                        this.timingLog('csvToArray')
+                if (localStorage.systemsHeaders && localStorage.systems) {
+                    this.timingLog('fetch Systems.csv (localStorage)')
 
-                        this.$store.dispatch('addSystemsHeaders', headers)
-                        this.timingLog('addSystemsHeaders')
+                    await this.$store.dispatch('addSystemsHeaders', JSON.parse(localStorage.systemsHeaders))
+                    this.timingLog('addSystemsHeaders (localStorage)')
 
-                        this.$store.dispatch('addSystems', resources)
-                        this.timingLog('addSystems')
+                    await this.$store.dispatch('addSystems', JSON.parse(localStorage.systems))
+                    this.timingLog('addSystems (localStorage)')
+                } else {
 
-                        this.$store.dispatch('spinnerUnlock')
-                    })
+                    const headers = new Headers()
+                    const request = new Request(
+                        "./Systems.csv",
+                        {
+                            method: "GET",
+                            headers,
+                            mode: "cors",
+                            cache: "force-cache"
+                        }
+                    )
+                    await fetch(request)
+                        .then(response => response.text())
+                        .then(data => {
+                            this.timingLog('fetch Systems.csv')
+
+                            const [headers, systems] = this.csvToArray(data)
+                            this.timingLog('csvToArray')
+
+                            this.$store.dispatch('addSystemsHeaders', headers)
+                            this.timingLog('addSystemsHeaders')
+
+                            this.$store.dispatch('addSystems', systems)
+                            this.timingLog('addSystems')
+
+                            try {
+                                localStorage.systemsHeaders = JSON.stringify(headers)
+                                localStorage.systems = JSON.stringify(systems)
+                            } catch (e) {
+                                console.error(e)
+                            }
+
+                        })
+                }
+
+                this.$store.dispatch('spinnerUnlock')
             },
         }
     }

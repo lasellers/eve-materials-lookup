@@ -49,6 +49,14 @@ do to a load order issue. Started to remove the abundant console logging for deb
 Optimized speed for computing initial suggestions planet grouping.
 * v1.7 Refactored a bit more -- pruning away code that wasn't needed now that I thought about it.
 Shaved about 500 + 250 ish ms off of the "resources by planet" pre-calc function.
+Removed the old
+```
+import productionCsv from '../assets/Production.csv'
+import blueprintsCsv from '../assets/Blueprints.csv'
+```
+reference lines, etc as well. Originally the app bundled the csvs into the dist folder itself.
+Which worked -- but it took several long seconds for anything to appear. Looked like the site was down.
+The refactor to a spinner looks much better.
 
  
 ## Project setup

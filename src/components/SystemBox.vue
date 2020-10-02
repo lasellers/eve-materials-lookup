@@ -22,20 +22,20 @@
                     const system = this.$store.getters.system
                     return system === null ? "(None)" : system
                 },
-                set: function (system) {
+                set: async function (system) {
+                    this.$store.dispatch('spinnerLock')
+
                     if (system === '(None)') {
                         system = null
                     }
-                    this.$store.dispatch('changeSystem', system === '(None)' ? null : system)
-
-                    this.$store.dispatch('spinnerLock')
+                    await this.$store.dispatch('changeSystem', system === '(None)' ? null : system)
 
                     if (this.$router.currentRoute.path.endsWith('resources')) {
-                        this.$store.dispatch('computeResources')
+                        await this.$store.dispatch('computeResources')
                     } else if (this.$router.currentRoute.path.endsWith('suggestions')) {
-                        this.$store.dispatch('computeSuggestions')
+                        await this.$store.dispatch('computeSuggestions')
                     } else if (this.$router.currentRoute.path.endsWith('yields')) {
-                        this.$store.dispatch('computeYields')
+                        await this.$store.dispatch('computeYields')
                     }
 
                     this.$store.dispatch('spinnerUnlock')
@@ -48,8 +48,5 @@
 <style scoped lang="scss">
     select {
         margin: .25em;
-    }
-
-    option {
     }
 </style>
