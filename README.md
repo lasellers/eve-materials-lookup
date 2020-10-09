@@ -12,7 +12,7 @@ and
 
 ## Todo
 
-* The app is stable now, but I've been looking into various "dynamic proogramming" techniques to
+* The app is stable now, but I've been looking into various dynamic proogramming techniques to
 optimize the responsiveness. For the next version, going to update the algs to see if we can't improve speed by about 100x.
 
 
