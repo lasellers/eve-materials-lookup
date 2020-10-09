@@ -6,7 +6,7 @@ Do you like to build things, like ships? Lots and lots of ships?
 
 Well, then you're probably hunting all over Eve looking for the materials to build them.
 
-This is a SPA reference app to help you track down what star system are the best to setup planetary mining on based on what you're trying to build.
+This is a SPA reference app to help you track down what star systems are the best to setup planetary mining on based on what you're trying to build.
 
 Btw, if you travel on down to Delve .... try to hunt me down and say Hello.
 
