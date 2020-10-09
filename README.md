@@ -1,13 +1,22 @@
 # Eve Echoes Planetary Materials Lookup
 
 Do you play the mobile game Eve Echoes? (ie, the mobile version of Eve Online) 
+
 Do you like to build things, like ships? Lots and lots of ships?
+
 Well, then you're probably hunting all over Eve looking for the materials to build them.
 
 This is a SPA reference app to help you track down what star system are the best to setup planetary mining on based on what you're trying to build.
 
+Btw, if you travel on down to Delve .... try to hunt me down and say Hello.
+
+
+## Live version
 
 See https://lasellers.github.io/eve-materials-lookup/ for a live running version hosted on githubs own pages.
+
+
+## Data
 
 Data pulled from:
 
@@ -16,6 +25,7 @@ Data pulled from:
 and
 
  https://docs.google.com/spreadsheets/d/1qY5K7CfyuPZPun9hUf_RnchMNVpKPtMlN0iACmUOemA/edit#gid=0
+
 
 ## Todo
 
