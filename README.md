@@ -10,6 +10,11 @@ and
 
  https://docs.google.com/spreadsheets/d/1qY5K7CfyuPZPun9hUf_RnchMNVpKPtMlN0iACmUOemA/edit#gid=0
 
+## Todo
+
+* The app is stable now, but I've been looking into various "dynamic proogramming" techniques to
+optimize the responsiveness. For the next version, going to update the algs to see if we can't improve speed by about 100x.
+
 
 ## Versions
 * v1 September 19 2020. Pulled together in a few hours Saturday partly to practice using VueJS and
